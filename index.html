@@ -1,0 +1,2998 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="page-title">الشيخ المجيز - نور الوحي لتعليم القرآن الكريم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* CSS Variables for consistent styling */
+        :root {
+            --primary-dark-blue: #1A3E63;
+            --bright-gold: #D4AF37;
+            --warm-sandy-beige: #F8F4ED;
+            --dark-brown: #2C2018;
+            --off-white: #FFFFFF;
+            --shadow-subtle: rgba(0,0,0,0.05);
+            --shadow-medium: rgba(0,0,0,0.12);
+            --shadow-strong: rgba(0,0,0,0.25);
+            --border-radius-main: 12px;
+            --transition-speed: 0.4s;
+        }
+
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling - Direction handled by JS on html tag */
+        body {
+            font-family: 'Cairo', sans-serif;
+            line-height: 1.8;
+            background-color: var(--warm-sandy-beige);
+            color: var(--dark-brown);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Headings Styling */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Amiri', serif;
+            color: var(--primary-dark-blue);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 3.2em;
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 60px;
+            letter-spacing: 0.5px;
+        }
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background-color: var(--bright-gold);
+            border-radius: 3px;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .section-header.animate h2::after {
+            width: 160px;
+        }
+
+        /* Container for content width */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        /* Animations & Scroll Reveal */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .fade-in.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .scale-in.animate {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Header Styling */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.5s ease;
+            box-shadow: 0 6px 20px var(--shadow-subtle);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 2.2em;
+            font-weight: 700;
+            color: var(--primary-dark-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .logo:hover {
+            color: var(--bright-gold);
+        }
+        .logo img {
+            height: 70px; /* Adjusted height for better balance */
+            width: auto;
+            box-shadow: 0 4px 12px var(--shadow-medium);
+            object-fit: contain;
+            border: 3px solid var(--bright-gold);
+            border-radius: 8px;
+            vertical-align: middle; /* Ensures proper vertical alignment with text */
+            margin-inline-end: 15px; /* Default margin for RTL */
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary-dark-blue);
+            font-weight: 600;
+            font-size: 1.15em;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-bottom: 8px;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 4px;
+            background-color: var(--bright-gold);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .nav-links a:hover {
+            color: var(--bright-gold);
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 7px;
+        }
+
+        .menu-toggle .bar {
+            width: 32px;
+            height: 4px;
+            background-color: var(--primary-dark-blue);
+            transition: all 0.3s ease;
+        }
+
+        .language-switcher {
+            position: relative;
+            color: var(--primary-dark-blue);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1.15em;
+        }
+        /* RTL specific styles for language switcher */
+        html[dir="rtl"] .language-switcher {
+            margin-right: 20px;
+        }
+        html[dir="ltr"] .language-switcher {
+            margin-left: 20px;
+        }
+
+        .language-switcher .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--off-white);
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: var(--border-radius-main);
+            overflow: hidden;
+        }
+        html[dir="rtl"] .language-switcher .dropdown-content {
+            right: 0; /* Align to the right for RTL */
+            left: unset;
+        }
+        html[dir="ltr"] .language-switcher .dropdown-content {
+            left: 0; /* Align to the left for LTR */
+            right: unset;
+        }
+
+        .language-switcher .dropdown-content a {
+            color: var(--primary-dark-blue);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+        html[dir="rtl"] .language-switcher .dropdown-content a {
+            text-align: right; /* Adjusted text-align for RTL */
+        }
+        html[dir="ltr"] .language-switcher .dropdown-content a {
+            text-align: left; /* Adjusted text-align for LTR */
+        }
+        .language-switcher .dropdown-content a:hover {
+            background-color: var(--warm-sandy-beige);
+            color: var(--bright-gold);
+        }
+        .language-switcher.active .dropdown-content {
+            display: block;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark-blue) 0%, #4A7BA8 100%);
+            color: var(--off-white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 150px;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(26, 62, 99, 0.7), rgba(26, 62, 99, 0.85));
+            z-index: 1;
+        }
+        .hero .container {
+            position: relative;
+            z-index: 2;
+            padding-top: 60px;
+            padding-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 4.2em;
+            margin-bottom: 30px;
+            color: var(--bright-gold);
+            text-shadow: 4px 4px 12px var(--shadow-medium);
+            animation: fadeInDown 1.2s ease-out forwards;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-70px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero p {
+            font-size: 1.9em;
+            max-width: 900px;
+            margin: 0 auto 60px auto;
+            line-height: 1.7;
+            animation: fadeIn 1.4s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hero .btn {
+            display: inline-block;
+            background-color: var(--bright-gold);
+            color: var(--primary-dark-blue);
+            padding: 22px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.5em;
+            font-weight: 700;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 10px 30px var(--shadow-medium);
+            animation: fadeInUp 1.4s ease-out 0.6s forwards;
+            opacity: 0;
+            border: 2px solid var(--bright-gold);
+        }
+        .hero .btn:hover {
+            background-color: transparent;
+            color: var(--bright-gold);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 40px var(--shadow-strong);
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(70px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Sections General Styling */
+        section {
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+        }
+        section:nth-of-type(even) {
+            background-color: var(--off-white);
+        }
+        section:nth-of-type(odd) {
+            background-color: var(--warm-sandy-beige);
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* About Section */
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 70px;
+            padding-top: 50px;
+        }
+        html[dir="rtl"] .about-content {
+            text-align: right;
+            direction: rtl;
+        }
+        html[dir="ltr"] .about-content {
+            text-align: left;
+            direction: ltr;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 350px;
+            max-width: 550px;
+            border-radius: var(--border-radius-main);
+            overflow: hidden;
+            box-shadow: 0 18px 45px var(--shadow-medium);
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateY(0);
+        }
+        .about-image.animate {
+            transform: translateY(-25px) rotate(1deg);
+        }
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--border-radius-main);
+            transition: transform 0.5s ease;
+        }
+        .about-image img:hover {
+            transform: scale(1.05);
+        }
+        .about-text {
+            flex: 2;
+            min-width: 300px;
+            font-size: 1.3em;
+            color: var(--dark-brown);
+        }
+        .about-text h3 {
+            font-size: 2.8em;
+            color: var(--primary-dark-blue);
+            margin-bottom: 35px;
+            position: relative;
+        }
+        html[dir="rtl"] .about-text h3 {
+            text-align: right;
+            padding-right: 30px;
+            padding-left: 0;
+        }
+        html[dir="ltr"] .about-text h3 {
+            text-align: left;
+            padding-left: 30px;
+            padding-right: 0;
+        }
+        .about-text h3::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 100%;
+            background-color: var(--bright-gold);
+            border-radius: 4px;
+        }
+        html[dir="rtl"] .about-text h3::before {
+            right: 0;
+            left: unset;
+        }
+        html[dir="ltr"] .about-text h3::before {
+            left: 0;
+            right: unset;
+        }
+        .about-text p {
+            margin-bottom: 25px;
+            line-height: 1.9;
+        }
+
+        /* Ijazat Section */
+        .ijazat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 60px;
+            margin-top: 70px;
+        }
+        .ijaza-card {
+            background-color: var(--off-white);
+            border-radius: var(--border-radius-main);
+            padding: 48px;
+            box-shadow: 0 12px 35px var(--shadow-subtle);
+            transition: all var(--transition-speed) ease-out;
+            border-bottom: 8px solid var(--primary-dark-blue);
+            position: relative;
+            overflow: hidden;
+        }
+        html[dir="rtl"] .ijaza-card {
+            text-align: right;
+        }
+        html[dir="ltr"] .ijaza-card {
+            text-align: left;
+        }
+        .ijaza-card::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            background: radial-gradient(circle, rgba(255, 195, 0, 0.1) 0%, rgba(255, 195, 0, 0) 70%);
+            transform: scale(0);
+            transition: transform 0.6s ease-out;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .ijaza-card:hover {
+            transform: translateY(-18px);
+            box-shadow: 0 22px 50px var(--shadow-medium);
+            border-color: var(--bright-gold);
+        }
+        .ijaza-card:hover::before {
+            transform: scale(1);
+        }
+        .ijaza-card h3 {
+            color: var(--primary-dark-blue);
+            font-size: 2.5em;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 1;
+        }
+        html[dir="rtl"] .ijaza-card h3 {
+            text-align: right;
+        }
+        html[dir="ltr"] .ijaza-card h3 {
+            text-align: left;
+        }
+        .ijaza-card p {
+            color: var(--dark-brown);
+            line-height: 1.9;
+            position: relative;
+            z-index: 1;
+        }
+        .ijaza-card ul {
+            list-style: none;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        html[dir="rtl"] .ijaza-card ul {
+            padding-right: 35px;
+            padding-left: 0;
+            text-align: right;
+        }
+        html[dir="ltr"] .ijaza-card ul {
+            padding-left: 35px;
+            padding-right: 0;
+            text-align: left;
+        }
+        .ijaza-card ul li {
+            position: relative;
+            margin-bottom: 18px;
+            color: var(--dark-brown);
+            font-size: 1.15em;
+        }
+        html[dir="rtl"] .ijaza-card ul li {
+            padding-right: 35px;
+            padding-left: 0;
+        }
+        html[dir="ltr"] .ijaza-card ul li {
+            padding-left: 35px;
+            padding-right: 0;
+        }
+        .ijaza-card ul li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            color: var(--bright-gold);
+            position: absolute;
+            top: 2px;
+            font-size: 1.4em;
+        }
+        html[dir="rtl"] .ijaza-card ul li::before {
+            right: 0;
+            left: unset;
+        }
+        html[dir="ltr"] .ijaza-card ul li::before {
+            left: 0;
+            right: unset;
+        }
+
+        /* Courses Section */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px;
+            margin-top: 70px;
+        }
+        .course-card {
+            background-color: var(--off-white);
+            border-radius: var(--border-radius-main);
+            padding: 45px;
+            box-shadow: 0 12px 35px var(--shadow-subtle);
+            transition: all var(--transition-speed) ease-out;
+            text-align: center;
+            border-top: 8px solid var(--primary-dark-blue);
+            position: relative;
+            overflow: hidden;
+        }
+        .course-card:hover {
+            transform: translateY(-18px) rotate(1deg);
+            box-shadow: 0 22px 50px var(--shadow-medium);
+            border-color: var(--bright-gold);
+        }
+        .course-card .icon {
+            font-size: 5em;
+            color: var(--bright-gold);
+            margin-bottom: 35px;
+            animation: bounceIn 1s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        .course-card h3 {
+            color: var(--primary-dark-blue);
+            font-size: 2.4em;
+            margin-bottom: 22px;
+        }
+        .course-card p {
+            color: var(--dark-brown);
+            line-height: 1.8;
+        }
+        .course-card .btn {
+            display: inline-block;
+            background-color: var(--primary-dark-blue);
+            color: var(--off-white);
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-dark-blue);
+        }
+        .course-card .btn:hover {
+            background-color: transparent;
+            color: var(--primary-dark-blue);
+            border-color: var(--bright-gold);
+        }
+
+        /* Certificates Section */
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 70px;
+            justify-content: center;
+        }
+        .certificate-item {
+            background-color: var(--off-white);
+            border-radius: var(--border-radius-main);
+            box-shadow: 0 12px 35px var(--shadow-subtle);
+            overflow: hidden;
+            transition: all var(--transition-speed) ease;
+        }
+        .certificate-item:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 20px 45px var(--shadow-medium);
+        }
+        .certificate-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+        .certificate-item .caption {
+            padding: 20px;
+            color: var(--primary-dark-blue);
+            font-weight: 600;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        /* Student Journey Section */
+        .journey-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 70px;
+            position: relative;
+        }
+        .journey-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 5px;
+            background-color: var(--primary-dark-blue);
+            z-index: 0;
+            display: none; /* Hidden on small screens, shown on larger ones */
+        }
+        @media (min-width: 768px) {
+            .journey-steps::before {
+                display: block;
+            }
+        }
+        .journey-step-card {
+            background-color: var(--off-white);
+            border-radius: var(--border-radius-main);
+            padding: 35px;
+            box-shadow: 0 12px 35px var(--shadow-subtle);
+            text-align: center;
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+            position: relative;
+            z-index: 1;
+            transition: all var(--transition-speed) ease;
+            border-bottom: 5px solid var(--bright-gold);
+        }
+        .journey-step-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 45px var(--shadow-medium);
+        }
+        .journey-step-card .step-number {
+            background-color: var(--primary-dark-blue);
+            color: var(--off-white);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.2em;
+            font-weight: 700;
+            margin: -65px auto 25px auto;
+            border: 4px solid var(--bright-gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        .journey-step-card:hover .step-number {
+            background-color: var(--bright-gold);
+            color: var(--primary-dark-blue);
+            transform: scale(1.1);
+        }
+        .journey-step-card h3 {
+            font-size: 2em;
+            color: var(--primary-dark-blue);
+            margin-bottom: 15px;
+        }
+        .journey-step-card p {
+            font-size: 1.1em;
+            color: var(--dark-brown);
+            line-height: 1.7;
+        }
+
+        /* Why Us Section */
+        .why-us-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 50px;
+            margin-top: 70px;
+        }
+        .why-us-item {
+            background-color: var(--off-white);
+            border-radius: var(--border-radius-main);
+            padding: 45px;
+            box-shadow: 0 12px 35px var(--shadow-subtle);
+            text-align: center;
+            transition: all var(--transition-speed) ease;
+            border: 2px solid transparent;
+        }
+        .why-us-item:hover {
+            background-color: var(--warm-sandy-beige);
+            transform: translateY(-12px) scale(1.02);
+            border-color: var(--primary-dark-blue);
+            box-shadow: 0 18px 40px var(--shadow-medium);
+        }
+        .why-us-item .icon {
+            font-size: 5em;
+            color: var(--primary-dark-blue);
+            margin-bottom: 35px;
+            animation: rotateIn 1s ease-out;
+        }
+        @keyframes rotateIn {
+            from { opacity: 0; transform: rotate(-100deg) scale(0.5); }
+            to { opacity: 1; transform: rotate(0deg) scale(1); }
+        }
+        .why-us-item h3 {
+            color: var(--primary-dark-blue);
+            font-size: 2.2em;
+            margin-bottom: 20px;
+        }
+        .why-us-item p {
+            color: var(--dark-brown);
+            line-height: 1.8;
+        }
+
+        /* Testimonials Section */
+        .testimonials-slider {
+            margin-top: 70px;
+            padding: 30px 0;
+            position: relative;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .testimonial-card {
+            background-color: var(--off-white);
+            border-radius: var(--border-radius-main);
+            padding: 45px;
+            box-shadow: 0 12px 35px var(--shadow-subtle);
+            text-align: center;
+            max-width: 550px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-speed) ease;
+        }
+        html[dir="rtl"] .testimonial-card {
+            direction: rtl;
+            border-right: 8px solid var(--bright-gold);
+            border-left: unset;
+        }
+        html[dir="ltr"] .testimonial-card {
+            direction: ltr;
+            border-left: 8px solid var(--bright-gold);
+            border-right: unset;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 45px var(--shadow-medium);
+        }
+        .testimonial-card::before {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 25px;
+            font-size: 7em;
+            color: rgba(26, 62, 99, 0.05);
+            z-index: 0;
+        }
+        html[dir="rtl"] .testimonial-card::before {
+            content: '\f10e'; /* quote-right */
+            left: 25px;
+            right: unset;
+        }
+        html[dir="ltr"] .testimonial-card::before {
+            content: '\f10d'; /* quote-left */
+            right: 25px;
+            left: unset;
+        }
+        .testimonial-card .quote-icon {
+            font-size: 4em;
+            color: var(--bright-gold);
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        .testimonial-card p {
+            font-size: 1.3em;
+            line-height: 1.9;
+            margin-bottom: 30px;
+            font-style: italic;
+            color: var(--dark-brown);
+            position: relative;
+            z-index: 1;
+        }
+        .testimonial-card .student-name {
+            font-weight: 700;
+            color: var(--primary-dark-blue);
+            font-size: 1.4em;
+        }
+        .testimonial-card .student-title {
+            font-size: 1.1em;
+            color: #777;
+            margin-top: 10px;
+        }
+
+        /* Blog Section */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-top: 70px;
+        }
+        .blog-post-card {
+            background-color: var(--off-white);
+            border-radius: var(--border-radius-main);
+            box-shadow: 0 12px 35px var(--shadow-subtle);
+            overflow: hidden;
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            flex-direction: column;
+        }
+        html[dir="rtl"] .blog-post-card {
+            text-align: right;
+        }
+        html[dir="ltr"] .blog-post-card {
+            text-align: left;
+        }
+        .blog-post-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 45px var(--shadow-medium);
+            border-color: var(--bright-gold);
+        }
+        .blog-post-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        .blog-post-card .content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .blog-post-card h3 {
+            color: var(--primary-dark-blue);
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        html[dir="rtl"] .blog-post-card h3 {
+            text-align: right;
+        }
+        html[dir="ltr"] .blog-post-card h3 {
+            text-align: left;
+        }
+        .blog-post-card .meta {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        html[dir="rtl"] .blog-post-card .meta {
+            justify-content: flex-end;
+        }
+        html[dir="ltr"] .blog-post-card .meta {
+            justify-content: flex-start;
+        }
+        .blog-post-card .meta i {
+            color: var(--bright-gold);
+        }
+        .blog-post-card p {
+            color: var(--dark-brown);
+            line-height: 1.7;
+            font-size: 1em;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        .blog-post-card .read-more {
+            display: inline-block;
+            color: var(--bright-gold);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        html[dir="rtl"] .blog-post-card .read-more {
+            text-align: left;
+            align-self: flex-end;
+        }
+        html[dir="ltr"] .blog-post-card .read-more {
+            text-align: right;
+            align-self: flex-start;
+        }
+        html[dir="rtl"] .blog-post-card .read-more i {
+            transform: rotate(0deg); /* Default arrow direction for RTL */
+        }
+        html[dir="ltr"] .blog-post-card .read-more i {
+            transform: rotate(180deg); /* Flip arrow for LTR */
+        }
+        .blog-post-card .read-more:hover {
+            color: var(--primary-dark-blue);
+        }
+        .blog-post-card .blog-cta-btn {
+            display: inline-block;
+            background-color: var(--primary-dark-blue);
+            color: var(--off-white);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.95em;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-dark-blue);
+            align-self: center;
+        }
+        .blog-post-card .blog-cta-btn:hover {
+            background-color: transparent;
+            color: var(--primary-dark-blue);
+            border-color: var(--bright-gold);
+        }
+
+        /* Newsletter Section */
+        .newsletter-section {
+            background-color: var(--primary-dark-blue);
+            color: var(--off-white);
+            padding: 80px 0;
+            text-align: center;
+        }
+        .newsletter-section h2 {
+            color: var(--bright-gold);
+            margin-bottom: 30px;
+        }
+        .newsletter-section p {
+            font-size: 1.3em;
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            line-height: 1.7;
+        }
+        .newsletter-form {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+        .newsletter-form input[type="email"] {
+            flex-grow: 1;
+            padding: 18px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--dark-brown);
+            transition: all 0.3s ease;
+        }
+        html[dir="rtl"] .newsletter-form input[type="email"] {
+            text-align: right;
+        }
+        html[dir="ltr"] .newsletter-form input[type="email"] {
+            text-align: left;
+        }
+        .newsletter-form input[type="email"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px var(--bright-gold);
+        }
+        .newsletter-form button {
+            background-color: var(--bright-gold);
+            color: var(--primary-dark-blue);
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .newsletter-form button:hover {
+            background-color: var(--off-white);
+            color: var(--primary-dark-blue);
+        }
+
+        /* FAQ Section */
+        .faq-accordion {
+            margin-top: 70px;
+            max-width: 950px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        html[dir="rtl"] .faq-accordion {
+            text-align: right;
+        }
+        html[dir="ltr"] .faq-accordion {
+            text-align: left;
+        }
+        .faq-item {
+            background-color: var(--off-white);
+            border-radius: var(--border-radius-main);
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px var(--shadow-subtle);
+            overflow: hidden;
+            border: 1px solid #eee;
+            transition: all var(--transition-speed) ease;
+        }
+        .faq-item:hover {
+            box-shadow: 0 12px 30px var(--shadow-medium);
+            transform: translateY(-7px);
+        }
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 35px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.25em;
+            color: var(--primary-dark-blue);
+            transition: background-color var(--transition-speed) ease;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .faq-question:hover {
+            background-color: #fcfcfc;
+        }
+        .faq-question.active {
+            background-color: var(--warm-sandy-beige);
+            color: var(--bright-gold);
+        }
+        .faq-question .icon {
+            font-size: 1.4em;
+            transition: transform var(--transition-speed) ease;
+        }
+        .faq-question.active .icon {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            padding: 0 35px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), padding 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            color: var(--dark-brown);
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+        html[dir="rtl"] .faq-answer {
+            text-align: right;
+        }
+        html[dir="ltr"] .faq-answer {
+            text-align: left;
+        }
+
+        /* Contact Section */
+        .contact-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 70px;
+            margin-top: 70px;
+            justify-content: center;
+        }
+        html[dir="rtl"] .contact-content {
+            text-align: right;
+        }
+        html[dir="ltr"] .contact-content {
+            text-align: left;
+        }
+        .contact-info, .booking-form-wrapper {
+            background-color: var(--off-white);
+            padding: 55px;
+            border-radius: var(--border-radius-main);
+            box-shadow: 0 18px 45px var(--shadow-medium);
+            flex: 1;
+            min-width: 480px;
+            transition: transform 0.5s ease-out;
+        }
+        html[dir="rtl"] .contact-info, html[dir="rtl"] .booking-form-wrapper {
+            border-right: 8px solid var(--primary-dark-blue);
+            border-left: unset;
+        }
+        html[dir="ltr"] .contact-info, html[dir="ltr"] .booking-form-wrapper {
+            border-left: 8px solid var(--primary-dark-blue);
+            border-right: unset;
+        }
+        .contact-info:hover, .booking-form-wrapper:hover {
+            transform: translateY(-12px);
+        }
+        .contact-info h3, .booking-form-wrapper h3 {
+            font-size: 2.8em;
+            color: var(--primary-dark-blue);
+            margin-bottom: 40px;
+            position: relative;
+        }
+        html[dir="rtl"] .contact-info h3, html[dir="rtl"] .booking-form-wrapper h3 {
+            text-align: right;
+            padding-right: 30px;
+            padding-left: 0;
+        }
+        html[dir="ltr"] .contact-info h3, html[dir="ltr"] .booking-form-wrapper h3 {
+            text-align: left;
+            padding-left: 30px;
+            padding-right: 0;
+        }
+        .contact-info h3::before, .booking-form-wrapper h3::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 100%;
+            background-color: var(--bright-gold);
+            border-radius: 4px;
+        }
+        html[dir="rtl"] .contact-info h3::before, html[dir="rtl"] .booking-form-wrapper h3::before {
+            right: 0;
+            left: unset;
+        }
+        html[dir="ltr"] .contact-info h3::before, html[dir="ltr"] .booking-form-wrapper h3::before {
+            left: 0;
+            right: unset;
+        }
+
+        .contact-info p {
+            margin-bottom: 25px;
+            font-size: 1.25em;
+            color: var(--dark-brown);
+        }
+        .contact-info p i {
+            color: var(--bright-gold);
+            font-size: 1.5em;
+        }
+        html[dir="rtl"] .contact-info p i {
+            margin-left: 15px;
+            margin-right: 0;
+        }
+        html[dir="ltr"] .contact-info p i {
+            margin-right: 15px;
+            margin-left: 0;
+        }
+
+        .contact-info .social-links {
+            margin-top: 50px;
+            display: flex;
+            gap: 35px;
+        }
+        html[dir="rtl"] .contact-info .social-links {
+            justify-content: flex-end;
+        }
+        html[dir="ltr"] .contact-info .social-links {
+            justify-content: flex-start;
+        }
+        .contact-info .social-links a {
+            color: var(--primary-dark-blue);
+            font-size: 3.5em;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .contact-info .social-links a:hover {
+            color: var(--bright-gold);
+            transform: translateY(-12px) rotate(8deg);
+        }
+
+        .booking-form-wrapper form {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+        .booking-form-wrapper label {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--primary-dark-blue);
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+        .booking-form-wrapper input[type="text"],
+        .booking-form-wrapper input[type="email"],
+        .booking-form-wrapper input[type="tel"],
+        .booking-form-wrapper input[type="date"],
+        .booking-form-wrapper textarea {
+            width: 100%;
+            padding: 18px;
+            border: 1px solid #e0e0e0;
+            border-radius: 14px;
+            font-size: 1.15em;
+            color: var(--dark-brown);
+            background-color: var(--warm-sandy-beige);
+            transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+        html[dir="rtl"] .booking-form-wrapper input, html[dir="rtl"] .booking-form-wrapper textarea {
+            text-align: right;
+        }
+        html[dir="ltr"] .booking-form-wrapper input, html[dir="ltr"] .booking-form-wrapper textarea {
+            text-align: left;
+        }
+        .booking-form-wrapper input[type="text"]:focus,
+        .booking-form-wrapper input[type="email"]:focus,
+        .booking-form-wrapper input[type="tel"]:focus,
+        .booking-form-wrapper input[type="date"]:focus,
+        .booking-form-wrapper textarea:focus {
+            border-color: var(--bright-gold);
+            box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.3);
+            outline: none;
+        }
+        .booking-form-wrapper textarea {
+            resize: vertical;
+            min-height: 160px;
+        }
+        .time-slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-top: 20px;
+        }
+        html[dir="rtl"] .time-slots {
+            justify-content: flex-end;
+        }
+        html[dir="ltr"] .time-slots {
+            justify-content: flex-start;
+        }
+        .time-slot {
+            padding: 16px 25px;
+            border: 2px solid var(--primary-dark-blue);
+            border-radius: 35px;
+            cursor: pointer;
+            background-color: var(--off-white);
+            color: var(--primary-dark-blue);
+            font-weight: 600;
+            transition: all var(--transition-speed) ease;
+        }
+        .time-slot:hover {
+            background-color: var(--primary-dark-blue);
+            color: var(--off-white);
+            border-color: var(--primary-dark-blue);
+            transform: translateY(-5px);
+        }
+        .time-slot.selected {
+            background-color: var(--bright-gold);
+            color: var(--primary-dark-blue);
+            border-color: var(--bright-gold);
+            box-shadow: 0 5px 18px var(--shadow-medium);
+        }
+        .time-slot-error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: none;
+        }
+        html[dir="rtl"] .time-slot-error {
+            text-align: right;
+        }
+        html[dir="ltr"] .time-slot-error {
+            text-align: left;
+        }
+        .booking-form-wrapper button[type="submit"] {
+            background-color: var(--primary-dark-blue);
+            color: var(--off-white);
+            padding: 22px 45px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.5em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 10px 30px var(--shadow-subtle);
+            margin-top: 40px;
+            border: 2px solid var(--primary-dark-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .booking-form-wrapper button[type="submit"]:hover {
+            background-color: transparent;
+            color: var(--primary-dark-blue);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px var(--shadow-medium);
+        }
+        .booking-form-wrapper button[type="submit"]:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+            color: #666666;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--bright-gold);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-dark-blue);
+            color: var(--off-white);
+            padding: 70px 0;
+            text-align: center;
+        }
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+        html[dir="rtl"] .footer-content {
+            text-align: right;
+        }
+        html[dir="ltr"] .footer-content {
+            text-align: left;
+        }
+        footer .footer-col {
+            flex: 1;
+            min-width: 320px;
+            padding: 20px;
+        }
+        footer .footer-col h3 {
+            color: var(--bright-gold);
+            font-size: 2em;
+            margin-bottom: 35px;
+            position: relative;
+        }
+        html[dir="rtl"] footer .footer-col h3 {
+            text-align: right;
+            padding-right: 25px;
+            padding-left: 0;
+        }
+        html[dir="ltr"] footer .footer-col h3 {
+            text-align: left;
+            padding-left: 25px;
+            padding-right: 0;
+        }
+        footer .footer-col h3::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 100%;
+            background-color: var(--off-white);
+            border-radius: 3px;
+        }
+        html[dir="rtl"] footer .footer-col h3::before {
+            right: 0;
+            left: unset;
+        }
+        html[dir="ltr"] footer .footer-col h3::before {
+            left: 0;
+            right: unset;
+        }
+
+        footer .footer-col p, footer .footer-col ul {
+            font-size: 1.1em;
+            line-height: 2.1;
+        }
+        footer .footer-col ul {
+            list-style: none;
+        }
+        footer .footer-col ul li {
+            margin-bottom: 18px;
+        }
+        footer .footer-col ul li a {
+            color: var(--off-white);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        footer .footer-col ul li a:hover {
+            color: var(--bright-gold);
+        }
+        footer .social-links {
+            margin-top: 40px;
+            display: flex;
+            gap: 30px;
+        }
+        html[dir="rtl"] footer .social-links {
+            justify-content: flex-end;
+        }
+        html[dir="ltr"] footer .social-links {
+            justify-content: flex-start;
+        }
+        footer .social-links a {
+            color: var(--off-white);
+            font-size: 2.8em;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
+        footer .social-links a:hover {
+            color: var(--bright-gold);
+            transform: translateY(-8px);
+        }
+        footer .copyright {
+            margin-top: 60px;
+            padding-top: 35px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 1.05em;
+        }
+
+        /* WhatsApp Fixed Button */
+        .whatsapp-button {
+            position: fixed;
+            bottom: 40px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            width: 75px;
+            height: 75px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3.5em;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            z-index: 100;
+            transition: transform 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
+            text-decoration: none;
+            animation: pulse 2s infinite;
+        }
+        html[dir="rtl"] .whatsapp-button {
+            right: 40px;
+            left: unset;
+        }
+        html[dir="ltr"] .whatsapp-button {
+            left: 40px;
+            right: unset;
+        }
+        .whatsapp-button:hover {
+            transform: scale(1.15) rotate(5deg);
+            background-color: #1DA851;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.5);
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 25px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* Back to Top Button */
+        #back-to-top {
+            position: fixed;
+            bottom: 40px;
+            background-color: var(--bright-gold);
+            color: var(--primary-dark-blue);
+            border-radius: 50%;
+            width: 65px;
+            height: 65px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.2em;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
+        html[dir="rtl"] #back-to-top {
+            left: 40px;
+            right: unset;
+        }
+        html[dir="ltr"] #back-to-top {
+            right: 40px;
+            left: unset;
+        }
+        #back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-10px);
+        }
+        #back-to-top:hover {
+            background-color: #B8860B;
+            transform: translateY(-15px) scale(1.08);
+        }
+
+        /* Custom Modal for Booking Confirmation */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--off-white);
+            margin: auto;
+            padding: 40px;
+            border-radius: var(--border-radius-main);
+            box-shadow: 0 15px 40px var(--shadow-strong);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            transform: translateY(-50px);
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-content h3 {
+            color: var(--primary-dark-blue);
+            font-size: 2.2em;
+            margin-bottom: 25px;
+        }
+
+        .modal-content p {
+            font-size: 1.1em;
+            color: var(--dark-brown);
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+
+        .modal-content .close-button {
+            background-color: var(--bright-gold);
+            color: var(--primary-dark-blue);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content .close-button:hover {
+            background-color: var(--primary-dark-blue);
+            color: var(--off-white);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3.2em;
+            }
+            .hero p {
+                font-size: 1.6em;
+            }
+            h2 {
+                font-size: 2.8em;
+            }
+            .testimonial-card {
+                padding: 35px;
+            }
+            .faq-question {
+                padding: 20px 30px;
+                font-size: 1.2em;
+            }
+            .faq-answer {
+                padding: 0 30px 20px 30px;
+            }
+        }
+        @media (max-width: 768px) {
+            nav {
+                padding: 18px 20px;
+                flex-wrap: wrap;
+            }
+            .logo {
+                font-size: 1.8em;
+            }
+            .logo img {
+                height: 80px;
+                width: auto;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                background: rgba(255, 255, 255, 0.98);
+                position: absolute;
+                top: 86px;
+                left: 0;
+                padding: 25px 0;
+                box-shadow: 0 6px 20px var(--shadow-subtle);
+                z-index: 999;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-links li {
+                margin: 15px 0;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .language-switcher {
+                order: -1;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 15px;
+                padding: 10px 0;
+                background-color: var(--warm-sandy-beige);
+                border-radius: var(--border-radius-main);
+                box-shadow: 0 2px 5px var(--shadow-subtle);
+            }
+            .language-switcher .dropdown-content {
+                position: static;
+                box-shadow: none;
+                background-color: transparent;
+                min-width: unset;
+            }
+            .language-switcher .dropdown-content a {
+                padding: 8px 16px;
+                font-size: 1em;
+            }
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            .hero p {
+                font-size: 1.3em;
+            }
+            .hero .btn {
+                padding: 18px 38px;
+                font-size: 1.3em;
+            }
+
+            section {
+                padding: 80px 0;
+            }
+            h2 {
+                font-size: 2.5em;
+                margin-bottom: 50px;
+            }
+            h2::after {
+                width: 80px;
+                height: 4px;
+            }
+            .section-header.animate h2::after {
+                width: 120px;
+            }
+
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+                /* Removed 'direction: ltr;' to keep RTL for Arabic content */
+                gap: 50px;
+            }
+            .about-image {
+                max-width: 320px;
+            }
+            .about-text {
+                text-align: center;
+                font-size: 1.15em;
+            }
+            .about-text h3 {
+                text-align: center;
+                padding-left: 0;
+                padding-right: 0;
+                font-size: 2.2em;
+            }
+            .about-text h3::before {
+                display: none;
+            }
+            .ijaza-card h3, .ijaza-card ul, .ijaza-card p {
+                text-align: center;
+            }
+            .ijaza-card ul {
+                padding-left: 0;
+                padding-right: 0;
+            }
+            .ijaza-card ul li {
+                padding-left: 0;
+                padding-right: 0;
+            }
+            .ijaza-card ul li::before {
+                position: static;
+                margin-right: 8px;
+                margin-left: 0;
+            }
+
+            .course-card .icon, .why-us-item .icon {
+                font-size: 4em;
+            }
+            .course-card h3, .why-us-item h3 {
+                font-size: 2em;
+            }
+            .testimonials-slider {
+                flex-direction: column;
+            }
+
+            .contact-content {
+                flex-direction: column;
+                gap: 50px;
+            }
+            .contact-info, .booking-form-wrapper {
+                min-width: unset;
+                width: 100%;
+                padding: 40px;
+            }
+            .contact-info h3, .booking-form-wrapper h3 {
+                text-align: center;
+                padding-left: 0;
+                padding-right: 0;
+                font-size: 2.2em;
+            }
+            .contact-info h3::before, .booking-form-wrapper h3::before {
+                display: none;
+            }
+            .contact-info .social-links, footer .social-links {
+                justify-content: center;
+            }
+            .booking-form-wrapper input, .booking-form-wrapper textarea, .booking-form-wrapper button {
+                font-size: 1.1em;
+                padding: 16px;
+            }
+            .booking-form-wrapper button[type="submit"] {
+                padding: 20px 35px;
+            }
+
+            footer {
+                padding: 50px 0;
+            }
+            footer .footer-content {
+                flex-direction: column;
+                gap: 40px;
+            }
+            footer .footer-col h3 {
+                text-align: center;
+                padding-left: 0;
+                padding-right: 0;
+                font-size: 1.8em;
+            }
+            footer .footer-col h3::before {
+                display: none;
+            }
+            footer .footer-col p, footer .footer-col ul {
+                font-size: 1em;
+            }
+            .whatsapp-button {
+                width: 65px;
+                height: 65px;
+                font-size: 3em;
+                bottom: 30px;
+                right: 30px;
+            }
+            #back-to-top {
+                width: 55px;
+                height: 55px;
+                font-size: 2em;
+                bottom: 30px;
+                left: 30px;
+            }
+        }
+        /* New breakpoint for very small mobile screens */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8em; /* Further reduced for very small screens */
+                margin-bottom: 20px;
+            }
+            .hero p {
+                font-size: 0.9em; /* Further reduced for very small screens */
+                margin-bottom: 40px;
+            }
+            .hero .btn {
+                padding: 12px 25px;
+                font-size: 1em;
+            }
+            section {
+                padding: 60px 0; /* Reduced vertical padding */
+            }
+            .container {
+                padding: 0 15px; /* Added horizontal padding for smaller screens */
+            }
+            h2 {
+                font-size: 2em;
+                margin-bottom: 40px;
+            }
+            .ijazat-grid, .courses-grid, .certificates-grid, .blog-grid, .why-us-grid, .journey-steps {
+                grid-template-columns: 1fr;
+                gap: 30px; /* Reduced gap */
+            }
+            .journey-steps::before {
+                display: none; /* Hide line on very small screens */
+            }
+            .ijaza-card, .course-card, .why-us-item, .testimonial-card, .blog-post-card, .faq-item, .contact-info, .booking-form-wrapper {
+                padding: 30px; /* Reduced card padding */
+            }
+            .ijaza-card h3, .course-card h3, .why-us-item h3, .contact-info h3, .booking-form-wrapper h3 {
+                font-size: 1.8em; /* Reduced heading sizes in cards */
+                margin-bottom: 20px;
+            }
+            .ijaza-card p, .course-card p, .why-us-item p, .testimonial-card p, .faq-answer p, .contact-info p {
+                font-size: 0.95em; /* Adjusted paragraph font size */
+            }
+            .ijaza-card ul li {
+                font-size: 1em; /* Adjusted list item font size */
+            }
+            .newsletter-form {
+                flex-direction: column; /* Stack input and button vertically */
+                gap: 15px;
+            }
+            .newsletter-form input[type="email"], .newsletter-form button {
+                width: 100%; /* Full width for form elements */
+            }
+            .faq-question {
+                font-size: 1.1em; /* Adjusted FAQ question font size */
+                padding: 18px 25px;
+            }
+            .faq-answer {
+                padding: 0 25px 15px 25px;
+            }
+            .booking-form-wrapper label {
+                font-size: 1.1em;
+                margin-bottom: 8px;
+            }
+            .booking-form-wrapper input, .booking-form-wrapper textarea {
+                padding: 14px;
+                font-size: 1em;
+            }
+            .time-slots {
+                gap: 10px; /* Reduced gap for time slots */
+            }
+            .time-slot {
+                padding: 12px 20px;
+                font-size: 0.95em;
+            }
+            .booking-form-wrapper button[type="submit"] {
+                padding: 18px 30px;
+                font-size: 1.3em;
+            }
+            footer .footer-col {
+                min-width: unset; /* Allow cols to shrink further */
+                padding: 10px;
+            }
+            footer .footer-col h3 {
+                font-size: 1.6em;
+            }
+            footer .footer-col p, footer .footer-col ul {
+                font-size: 0.9em;
+            }
+            .whatsapp-button {
+                width: 60px;
+                height: 60px;
+                font-size: 2.8em;
+                bottom: 20px;
+                right: 20px;
+            }
+            #back-to-top {
+                width: 50px;
+                height: 50px;
+                font-size: 1.8em;
+                bottom: 20px;
+                left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="container">
+            <a href="#hero" class="logo">
+                <img src="https://live.staticflickr.com/65535/54548816811_e6b9238718.jpg" data-key="logo-alt" alt="شعار الشيخ عبد الرحمن حماده خليل" onerror="this.onerror=null; this.src='https://placehold.co/100x100/1A3E63/D4AF37?text=Shaykh+Abdelrahman'; console.error('Failed to load logo image from Flickr.');">
+            </a>
+            <ul class="nav-links">
+                <li><a href="#hero" data-key="nav-home">الرئيسية</a></li>
+                <li><a href="#about" data-key="nav-about">عن الشيخ</a></li>
+                <li><a href="#ijazat" data-key="nav-ijazat">الإجازات والمؤهلات</a></li>
+                <li><a href="#courses" data-key="nav-courses">دوراتنا</a></li>
+                <li><a href="#certificates" data-key="nav-certificates">معرض الشهادات</a></li>
+                <li><a href="#journey" data-key="nav-journey">رحلة الطالب</a></li>
+                <li><a href="#why-us" data-key="nav-why-us">لماذا تختارنا؟</a></li>
+                <li><a href="#testimonials" data-key="nav-testimonials">آراء طلابنا</a></li>
+                <li><a href="#blog" data-key="nav-blog">المدونة</a></li>
+                <li><a href="#faq" data-key="nav-faq">الأسئلة الشائعة</a></li>
+                <li><a href="#contact" data-key="nav-contact">تواصل معنا</a></li>
+            </ul>
+            <div class="language-switcher">
+                <span data-key="current-lang-display">العربية</span> <i class="fas fa-chevron-down"></i>
+                <div class="dropdown-content">
+                    <a href="#" data-lang="ar">العربية</a>
+                    <a href="#" data-lang="en">English</a>
+                </div>
+            </div>
+            <div class="menu-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="container">
+                <h1 data-key="hero-h1">تعلم تلاوة القرءان الكريم بالتجويد واحصل على إجازة بالسند المتصل</h1>
+                <p data-key="hero-p">انطلق في رحلتك القرآنية معنا. نُقدم لك تعليماً مُيسراً، تجربة فريدة في تعلم كتاب الله.</p>
+                <a href="#contact" class="btn" data-key="hero-btn">ابدأ رحلتك القرآنية الآن</a>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container section-header fade-in">
+                <h2 data-key="about-h2">عن الشيخ عبد الرحمن حماده خليل</h2>
+            </div>
+            <div class="container about-content fade-in">
+                <div class="about-image scale-in">
+                    <img src="https://placehold.co/550x350/2C2018/F8F4ED?text=Shaykh+Abdelrahman" data-key="about-img-alt" alt="صورة الشيخ عبد الرحمن حماده خليل">
+                </div>
+                <div class="about-text fade-in">
+                    <h3 data-key="about-h3">نبذة عن مسيرتي في خدمة القرآن</h3>
+                    <p data-key="about-p1">الحمد لله رب العالمين، والصلاة والسلام على خاتم الأنبياء والمرسلين. أنا الشيخ عبد الرحمن حماده خليل، مُجاز ومعلم للقرآن الكريم. لقد كرست حياتي لخدمة كتاب الله العزيز، تلقيت العلم من شيوخ أجلاء وحصلت على الإجازات الشرعية التي تؤهلني لتعليم وإقراء كتاب الله بسندٍ متصل إلى نبينا الكريم محمد صلى الله عليه وسلم.</p>
+                    <p data-key="about-p2">أؤمن بأن تعلم القرآن هو رحلة نور وسكينة، وأن كل طالب يستحق أن يتلقى العلم بأفضل الطرق وأيسرها. لهذا، أقدم لكم عبر هذه المنصة منهجي التعليمي الذي يجمع بين أصالة التلقي ومتطلبات التعليم الحديث عن بُعد، لكي تتمكنوا من إتقان التلاوة، وتجويد الحروف، وتحقيق الإجازة، وأن تكونوا من أهل القرآن الذين هم أهل الله وخاصته.</p>
+                    <p data-key="about-p3">أسأل الله تعالى أن يتقبل منا ومنكم صالح الأعمال، وأن يجعلنا جميعاً خداماً لكتابه الكريم.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="ijazat" class="ijazat">
+            <div class="container section-header fade-in">
+                <h2 data-key="ijazat-h2">الإجازات والمؤهلات</h2>
+            </div>
+            <div class="container ijazat-grid fade-in">
+                <div class="ijaza-card scale-in">
+                    <h3 data-key="ijaza-card1-h3">الإجازة في القرآن الكريم</h3>
+                    <p data-key="ijaza-card1-p">أتشرف بحمل الإجازة في القرآن الكريم، وهي أعلى مراتب التلقي والإقراء، حيث تلقيت القرآن غضاً طرياً بالسند المتصل إلى رسول الله صلى الله عليه وسلم، مما يضمن دقة وصحة التلاوة التي سأنقلها إليكم.</p>
+                    <ul>
+                        <li data-key="ijaza-card1-li1"><i class="fas fa-check-circle"></i> إجازة بالسند المتصل في تلاوة القرآن الكريم.</li>
+                        <li data-key="ijaza-card1-li2"><i class="fas fa-check-circle"></i> تلقي القرآن عن شيوخ أجلاء مشهود لهم بالعلم والفضل.</li>
+                        <li data-key="ijaza-card1-li3"><i class="fas fa-check-circle"></i> إتقان أحكام التجويد والرسم العثماني.</li>
+                        <li data-key="ijaza-card1-li4"><i class="fas fa-check-circle"></i> التأهيل الكامل لإقراء الطلاب ومنحهم الإجازة.</li>
+                    </ul>
+                </div>
+                <div class="ijaza-card scale-in" style="transition-delay: 0.2s;">
+                    <h3 data-key="ijaza-card2-h3">المؤهلات التعليمية والخبرات</h3>
+                    <p data-key="ijaza-card2-p">بفضل الله، أمتلك إلى جانب الإجازات القرآنية، خبرة واسعة في تدريس القرآن الكريم وعلومه، ومهارات تعليمية تضمن تجربة فريدة ومثمرة لطلابنا الكرام من مختلف الأعمار والمستويات.</p>
+                    <ul>
+                        <li data-key="ijaza-card2-li1"><i class="fas fa-check-circle"></i> خبرة طويلة في تدريس القرآن والتجويد عن بُعد.</li>
+                        <li data-key="ijaza-card2-li2"><i class="fas fa-check-circle"></i> منهجية تعليمية مرنة ومخصصة تناسب احتياجات كل طالب.</li>
+                        <li data-key="ijaza-card2-li3"><i class="fas fa-check-circle"></i> إعداد الطلاب للاختبارات والمنافسات القرآنية.</li>
+                        <li data-key="ijaza-card2-li4"><i class="fas fa-check-circle"></i> مهارات تواصل ممتازة لضمان بيئة تعليمية محفزة.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="courses" class="courses">
+            <div class="container section-header fade-in">
+                <h2 data-key="courses-h2">دوراتنا وبرامجنا التعليمية</h2>
+            </div>
+            <div class="container courses-grid fade-in">
+                <div class="course-card scale-in">
+                    <i class="fas fa-book-open icon"></i>
+                    <h3 data-key="course-card1-h3">دورة التجويد الشاملة</h3>
+                    <p data-key="course-card1-p">تعلم أحكام التجويد الأساسية والمتقدمة، من مخارج الحروف وصفاتها إلى أحكام المدود والإدغامات، مع التطبيق العملي المكثف.</p>
+                    <a href="#contact" class="btn" data-key="course-card1-btn">تفاصيل الدورة</a>
+                </div>
+                <div class="course-card scale-in" style="transition-delay: 0.1s;">
+                    <i class="fas fa-quran icon"></i>
+                    <h3 data-key="course-card2-h3">برنامج تحفيظ القرآن الكريم</h3>
+                    <p data-key="course-card2-p">مسارات مخصصة لحفظ القرآن الكريم كاملاً أو أجزاء منه، مع المراجعة الدورية وتقنيات التثبيت لضمان حفظ متين.</p>
+                    <a href="#contact" class="btn" data-key="course-card2-btn">انضم الآن</a>
+                </div>
+                <div class="course-card scale-in" style="transition-delay: 0.2s;">
+                    <i class="fas fa-hands-helping icon"></i>
+                    <h3 data-key="course-card3-h3">مسار الإجازة بالسند</h3>
+                    <p data-key="course-card3-p">تأهيل الطلاب المجيدين للقراءة للحصول على إجازة بالسند المتصل إلى النبي صلى الله عليه وسلم، في الروايات المختلفة.</p>
+                    <a href="#contact" class="btn" data-key="course-card3-btn">تعرف أكثر</a>
+                </div>
+                <div class="course-card scale-in" style="transition-delay: 0.3s;">
+                    <i class="fas fa-child icon"></i>
+                    <h3 data-key="course-card4-h3">دورات للأطفال والمبتدئين</h3>
+                    <p data-key="course-card4-p">تعليم القراءة الصحيحة والتهجي والتجويد المبسط للأطفال والمبتدئين بأساليب تعليمية ممتعة وجذابة.</p>
+                    <a href="#contact" class="btn" data-key="course-card4-btn">سجل لطفلك</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="certificates" class="certificates">
+            <div class="container section-header fade-in">
+                <h2 data-key="certificates-h2">معرض شهادات الإجازة</h2>
+            </div>
+            <div class="container certificates-grid fade-in">
+                <div class="certificate-item scale-in">
+                    <img src="https://placehold.co/400x250/1A3E63/D4AF37?text=Certificate+1" data-key="certificate1-img-alt" alt="شهادة إجازة 1">
+                    <div class="caption" data-key="certificate1-caption">إجازة في رواية حفص عن عاصم</div>
+                </div>
+                <div class="certificate-item scale-in" style="transition-delay: 0.1s;">
+                    <img src="https://placehold.co/400x250/1A3E63/D4AF37?text=Certificate+2" data-key="certificate2-img-alt" alt="شهادة إجازة 2">
+                    <div class="caption" data-key="certificate2-caption">شهادة إتمام برنامج التجويد</div>
+                </div>
+                <div class="certificate-item scale-in" style="transition-delay: 0.2s;">
+                    <img src="https://placehold.co/400x250/1A3E63/D4AF37?text=Certificate+3" data-key="certificate3-img-alt" alt="شهادة إجازة 3">
+                    <div class="caption" data-key="certificate3-caption">إجازة في العشر الصغرى</div>
+                </div>
+                <div class="certificate-item scale-in" style="transition-delay: 0.3s;">
+                    <img src="https://placehold.co/400x250/1A3E63/D4AF37?text=Certificate+4" data-key="certificate4-img-alt" alt="شهادة إجازة 4">
+                    <div class="caption" data-key="certificate4-caption">إجازة في القراءات السبع</div>
+                </div>
+                <div class="certificate-item scale-in" style="transition-delay: 0.4s;">
+                    <img src="https://placehold.co/400x250/1A3E63/D4AF37?text=Certificate+5" data-key="certificate5-img-alt" alt="شهادة إجازة 5">
+                    <div class="caption" data-key="certificate5-caption">شهادة حفظ القرآن كاملاً</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="journey" class="journey">
+            <div class="container section-header fade-in">
+                <h2 data-key="journey-h2">رحلة الطالب معنا</h2>
+            </div>
+            <div class="container journey-steps fade-in">
+                <div class="journey-step-card scale-in">
+                    <div class="step-number">1</div>
+                    <h3 data-key="journey-step1-h3">التسجيل والاستشارة</h3>
+                    <p data-key="journey-step1-p">ابدأ بملء نموذج التواصل لحجز جلستك التجريبية المجانية، وسنتواصل معك لتقييم مستواك وتحديد المسار الأنسب لك.</p>
+                </div>
+                <div class="journey-step-card scale-in" style="transition-delay: 0.1s;">
+                    <div class="step-number">2</div>
+                    <h3 data-key="journey-step2-h3">بداية الدراسة</h3>
+                    <p data-key="journey-step2-p">انطلق في دروسك المنتظمة مع الشيخ عبر الإنترنت، حيث يتم التركيز على التجويد، الحفظ، أو الإقراء حسب اختيارك.</p>
+                </div>
+                <div class="journey-step-card scale-in" style="transition-delay: 0.2s;">
+                    <div class="step-number">3</div>
+                    <h3 data-key="journey-step3-h3">التقييم والمراجعة</h3>
+                    <p data-key="journey-step3-p">تتم مراجعة تقدمك بانتظام، مع تقديم التوجيهات والتصحيحات اللازمة لضمان إتقانك وتثبيت حفظك.</p>
+                </div>
+                <div class="journey-step-card scale-in" style="transition-delay: 0.3s;">
+                    <div class="step-number">4</div>
+                    <h3 data-key="journey-step4-h3">الإجازة والتخرج</h3>
+                    <p data-key="journey-step4-p">عند إتمام المنهج وإتقان التلاوة، تحصل على إجازة بالسند المتصل، لتصبح من أهل القرآن المجازين.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="why-us" class="why-us">
+            <div class="container section-header fade-in">
+                <h2 data-key="why-us-h2">لماذا تختارنا لرحلتك القرآنية؟</h2>
+            </div>
+            <div class="container why-us-grid fade-in">
+                <div class="why-us-item scale-in">
+                    <i class="fas fa-handshake icon"></i>
+                    <h3 data-key="why-us-item1-h3">سند موثوق وعالٍ</h3>
+                    <p data-key="why-us-item1-p">تلقي القرآن بسندٍ متصل إلى رسول الله صلى الله عليه وسلم، يضمن لك أصالة التلقي ودقة الأداء.</p>
+                </div>
+                <div class="why-us-item scale-in" style="transition-delay: 0.1s;">
+                    <i class="fas fa-laptop-code icon"></i>
+                    <h3 data-key="why-us-item2-h3">مرونة التعليم عن بُعد</h3>
+                    <p data-key="why-us-item2-p">تعلم القرآن من أي مكان في العالم، وفي الأوقات التي تناسب جدولك اليومي.</p>
+                </div>
+                <div class="why-us-item scale-in" style="transition-delay: 0.2s;">
+                    <i class="fas fa-star icon"></i>
+                    <h3 data-key="why-us-item3-h3">منهجية تعليمية متطورة</h3>
+                    <p data-key="why-us-item3-p">نستخدم أساليب تعليمية حديثة ومبتكرة لضمان فهم عميق وإتقان سريع.</p>
+                </div>
+                <div class="why-us-item scale-in" style="transition-delay: 0.3s;">
+                    <i class="fas fa-compass icon"></i>
+                    <h3 data-key="why-us-item4-h3">إرشاد ودعم مستمر</h3>
+                    <p data-key="why-us-item4-p">نحن معك في كل خطوة من رحلتك القرآنية، نقدم الإرشاد والمتابعة لضمان نجاحك.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="testimonials">
+            <div class="container section-header fade-in">
+                <h2 data-key="testimonials-h2">ماذا يقول طلابنا عنا؟</h2>
+            </div>
+            <div class="container testimonials-slider fade-in">
+                <div class="testimonial-card scale-in">
+                    <i class="fas fa-quote-right quote-icon"></i>
+                    <p data-key="testimonial-card1-p">"تجربتي مع الشيخ عبد الرحمن كانت رائعة حقًا. منهجيته واضحة وصبره كبير، وقد ساعدني كثيرًا في تحسين تلاوتي وحفظي. أنصح به بشدة لكل من يرغب في إتقان القرآن."</p>
+                    <div class="student-info">
+                        <p class="student-name" data-key="testimonial-card1-name">أحمد سعيد</p>
+                        <p class="student-title" data-key="testimonial-card1-title">طالب إجازة بقراءة حفص</p>
+                    </div>
+                </div>
+                 <div class="testimonial-card scale-in" style="transition-delay: 0.2s;">
+                    <i class="fas fa-quote-right quote-icon"></i>
+                    <p data-key="testimonial-card2-p">"لم أكن أتخيل أنني سأصل لهذا المستوى من التجويد، لكن بفضل الله ثم توجيهات الشيخ الصبورة والمنهجية الفعالة، أصبحت قراءتي أفضل بكثير. جزاكم الله خيراً!"</p>
+                    <div class="student-info">
+                        <p class="student-name" data-key="testimonial-card2-name">فاطمة الزهراء</p>
+                        <p class="student-title" data-key="testimonial-card2-title">طالبة تحفيظ وتجويد</p>
+                    </div>
+                </div>
+                <div class="testimonial-card scale-in" style="transition-delay: 0.4s;">
+                    <i class="fas fa-quote-right quote-icon"></i>
+                    <p data-key="testimonial-card3-p">"أشعر براحة كبيرة في تعلم القرآن مع الشيخ عبد الرحمن. الشرح مبسط والأسلوب محفز، وهذا ما كنت أبحث عنه. أوصي به لكل الأعمار."</p>
+                    <div class="student-info">
+                        <p class="student-name" data-key="testimonial-card3-name">يوسف عبدالله</p>
+                        <p class="student-title" data-key="testimonial-card3-title">طالب مبتدئ</p>
+                    </div>
+                </div>
+                <div class="testimonial-card scale-in" style="transition-delay: 0.6s;">
+                    <i class="fas fa-quote-right quote-icon"></i>
+                    <p data-key="testimonial-card4-p">"الشيخ عبد الرحمن يتمتع بصبر وحكمة لا مثيل لهما. لقد ساعدني على تجاوز الصعوبات في التجويد وأصبحت قادراً على تلاوة القرآن بثقة أكبر. شكراً جزيلاً!"</p>
+                    <div class="student-info">
+                        <p class="student-name" data-key="testimonial-card4-name">مريم خالد</p>
+                        <p class="student-title" data-key="testimonial-card4-title">طالبة تجويد</p>
+                    </div>
+                </div>
+                <div class="testimonial-card scale-in" style="transition-delay: 0.8s;">
+                    <i class="fas fa-quote-right quote-icon"></i>
+                    <p data-key="testimonial-card5-p">"المنصة سهلة الاستخدام والدروس منظمة جداً. استطعت أن أتقدم في حفظي بشكل ملحوظ في وقت قصير. تجربة تعليمية ممتازة!"</p>
+                    <div class="student-info">
+                        <p class="student-name" data-key="testimonial-card5-name">علياء فهد</p>
+                        <p class="student-title" data-key="testimonial-card5-title">طالبة تحفيظ</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="blog" class="blog">
+            <div class="container section-header fade-in">
+                <h2 data-key="blog-h2">مقالات ومدونات قرآنية</h2>
+            </div>
+            <div class="container blog-grid fade-in">
+                <div class="blog-post-card scale-in">
+                    <img src="https://placehold.co/400x220/D4AF37/1A3E63?text=Article+1" data-key="blog-post1-img-alt" alt="صورة المقال 1">
+                    <div class="content">
+                        <h3 data-key="blog-post1-h3">فضل تلاوة القرآن الكريم وأثرها على النفس</h3>
+                        <div class="meta">
+                            <span data-key="blog-post1-meta-date"><i class="fas fa-calendar-alt"></i> 10 مايو 2024</span>
+                            <span data-key="blog-post1-meta-author"><i class="fas fa-user"></i> الشيخ عبدالرحمن</span>
+                        </div>
+                        <p data-key="blog-post1-p">تعتبر تلاوة القرآن الكريم من أعظم العبادات التي تقرب العبد إلى ربه، ولها فضائل جمة وآثار عظيمة على النفس والروح. في هذا المقال، نستعرض بعضاً من هذه الفضائل وكيف يمكن أن تحول حياتك...</p>
+                        <a href="#" class="read-more" data-key="blog-post1-read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
+                        <a href="#contact" class="blog-cta-btn" data-key="blog-post1-cta-btn">سجل في دورة التجويد</a>
+                    </div>
+                </div>
+                <div class="blog-post-card scale-in" style="transition-delay: 0.1s;">
+                    <img src="https://placehold.co/400x220/D4AF37/1A3E63?text=Article+2" data-key="blog-post2-img-alt" alt="صورة المقال 2">
+                    <div class="content">
+                        <h3 data-key="blog-post2-h3">أهمية التجويد في ترتيل القرآن الكريم</h3>
+                        <div class="meta">
+                            <span data-key="blog-post2-meta-date"><i class="fas fa-calendar-alt"></i> 22 أبريل 2024</span>
+                            <span data-key="blog-post2-meta-author"><i class="fas fa-user"></i> الشيخ عبدالرحمن</span>
+                        </div>
+                        <p data-key="blog-post2-p">التجويد ليس مجرد تحسين للصوت، بل هو علم جليل يحفظ اللسان من اللحن في كتاب الله، ويضمن أداء الحروف كما أنزلها الله على نبيه صلى الله عليه وسلم. تعرف على أهميته وفوائده...</p>
+                        <a href="#" class="read-more" data-key="blog-post2-read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
+                        <a href="#contact" class="blog-cta-btn" data-key="blog-post2-cta-btn">ابدأ حفظ القرآن</a>
+                    </div>
+                </div>
+                <div class="blog-post-card scale-in" style="transition-delay: 0.2s;">
+                    <img src="https://placehold.co/400x220/D4AF37/1A3E63?text=Article+3" data-key="blog-post3-img-alt" alt="صورة المقال 3">
+                    <div class="content">
+                        <h3 data-key="blog-post3-h3">كيف تبدأ رحلتك في حفظ القرآن الكريم؟</h3>
+                        <div class="meta">
+                            <span data-key="blog-post3-meta-date"><i class="fas fa-calendar-alt"></i> 15 مارس 2024</span>
+                            <span data-key="blog-post3-meta-author"><i class="fas fa-user"></i> الشيخ عبدالرحمن</span>
+                        </div>
+                        <p data-key="blog-post3-p">حفظ القرآن الكريم أمنية لكل مسلم، ولكن قد تبدو الرحلة شاقة في البداية. نقدم لك في هذا المقال دليلاً مبسطاً وخطوات عملية للبدء في حفظ كتاب الله، مع نصائح مجربة للتثبيت والمراجعة...</p>
+                        <a href="#" class="read-more" data-key="blog-post3-read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
+                        <a href="#contact" class="blog-cta-btn" data-key="blog-post3-cta-btn">احجز جلستك المجانية</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="newsletter" class="newsletter-section">
+            <div class="container section-header fade-in">
+                <h2 data-key="newsletter-h2">اشترك في نشرتنا البريدية</h2>
+            </div>
+            <div class="container fade-in">
+                <p data-key="newsletter-p">ابق على اطلاع بآخر أخبارنا، الدورات الجديدة، والمقالات القرآنية المفيدة مباشرة في بريدك الوارد.</p>
+                <form class="newsletter-form" id="newsletterForm">
+                    <input type="email" id="newsletterEmail" data-key="newsletter-email-placeholder" placeholder="أدخل بريدك الإلكتروني" required>
+                    <button type="submit" data-key="newsletter-subscribe-btn">اشترك الآن</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="faq" class="faq">
+            <div class="container section-header fade-in">
+                <h2 data-key="faq-h2">الأسئلة الشائعة</h2>
+            </div>
+            <div class="container faq-accordion fade-in">
+                <div class="faq-item scale-in">
+                    <div class="faq-question">
+                        <span data-key="faq-q1">ما هي شروط الحصول على الإجازة؟</span>
+                        <i class="fas fa-chevron-down icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-key="faq-a1">تتطلب الإجازة إتقان تلاوة القرآن الكريم كاملاً على الشيخ، مع تطبيق أحكام التجويد بشكل صحيح. سيتم تقييم أدائك بشكل دوري لضمان استيفاء المعايير المطلوبة للسند.</p>
+                    </div>
+                </div>
+                <div class="faq-item scale-in" style="transition-delay: 0.1s;">
+                    <div class="faq-question">
+                        <span data-key="faq-q2">هل الدروس متاحة للمبتدئين؟</span>
+                        <i class="fas fa-chevron-down icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-key="faq-a2">نعم، نقدم دروسًا مناسبة لجميع المستويات، من المبتدئين الذين لا يجيدون القراءة إلى المتقدمين الذين يسعون للحصول على الإجازة. يتم تصميم المنهج ليناسب كل طالب بشكل فردي.</p>
+                    </div>
+                </div>
+                <div class="faq-item scale-in" style="transition-delay: 0.2s;">
+                    <div class="faq-question">
+                        <span data-key="faq-q3">ما هي المنصات المستخدمة للتعليم عن بُعد؟</span>
+                        <i class="fas fa-chevron-down icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-key="faq-a3">نستخدم منصات تعليمية مرنة وموثوقة مثل Zoom أو Google Meet، مما يتيح تجربة تعليمية تفاعلية ومريحة من أي مكان في العالم.</p>
+                    </div>
+                </div>
+                <div class="faq-item scale-in" style="transition-delay: 0.3s;">
+                    <div class="faq-question">
+                        <span data-key="faq-q4">كيف يمكنني حجز جلسة تجريبية مجانية؟</span>
+                        <i class="fas fa-chevron-down icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-key="faq-a4">يمكنك حجز جلستك التجريبية المجانية مباشرة من خلال ملء نموذج "تواصل معنا" في أسفل الصفحة، وسنتواصل معك لتأكيد الموعد المناسب.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container section-header fade-in">
+                <h2 data-key="contact-h2">تواصل معنا واحجز جلستك المجانية</h2>
+            </div>
+            <div class="container contact-content fade-in">
+                <div class="contact-info scale-in">
+                    <h3 data-key="contact-info-h3">معلومات التواصل</h3>
+                    <p data-key="contact-info-email"><i class="fas fa-envelope"></i> البريد الإلكتروني: abdelrahmanhamada3342@gmail.com</p>
+                    <p data-key="contact-info-whatsapp"><i class="fab fa-whatsapp"></i> واتساب: +201001947998</p>
+                    <p data-key="contact-info-location"><i class="fas fa-map-marker-alt"></i> الموقع: العاشر من رمضان، الشرقية، مصر (خدمة عالمية)</p>
+                    <p data-key="contact-info-p-general">لا تتردد في الاتصال بنا. نحن هنا لخدمتك والإجابة على استفساراتك.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/shaykh.abdelrahman" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://instagram.com/shaykh.abdelrahman" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/shaykh.abdelrahman" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://tiktok.com/@shaykh.abdelrahman" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="booking-form-wrapper scale-in" style="transition-delay: 0.2s;">
+                    <h3 data-key="booking-form-h3">احجز جلستك التجريبية المجانية</h3>
+                    <form id="bookingForm">
+                        <label for="name" data-key="form-label-name">اسمك الكريم:</label>
+                        <input type="text" id="name" name="name" required>
+
+                        <label for="email" data-key="form-label-email">بريدك الإلكتروني:</label>
+                        <input type="email" id="email" name="email" required>
+
+                        <label for="phone" data-key="form-label-phone">رقم الواتساب (للتواصل):</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+2010XXXXXXXX" required>
+
+                        <label for="preferredDate" data-key="form-label-date">تاريخ الجلسة المفضل:</label>
+                        <input type="date" id="preferredDate" name="preferredDate" required>
+
+                        <label data-key="form-label-time">الوقت المفضل (بتوقيتك المحلي):</label>
+                        <div class="time-slots">
+                            <span class="time-slot" data-time="09:00 AM">09:00 صباحاً</span>
+                            <span class="time-slot" data-time="10:00 AM">10:00 صباحاً</span>
+                            <span class="time-slot" data-time="11:00 AM">11:00 صباحاً</span>
+                            <span class="time-slot" data-time="01:00 PM">01:00 ظهراً</span>
+                            <span class="time-slot" data-time="03:00 PM">03:00 عصراً</span>
+                            <span class="time-slot" data-time="05:00 PM">05:00 مساءً</span>
+                            <span class="time-slot" data-time="07:00 PM">07:00 مساءً</span>
+                            <span class="time-slot" data-time="09:00 PM">09:00 مساءً</span>
+                        </div>
+                        <p class="time-slot-error" id="timeSlotError" data-key="time-slot-error">يرجى اختيار وقت للجلسة.</p>
+                        <input type="hidden" id="selectedTime" name="selectedTime">
+
+                        <label for="notes" data-key="form-label-notes">ملاحظات إضافية (اختياري):</label>
+                        <textarea id="notes" name="notes" data-key="form-notes-placeholder" placeholder="مستواي في القراءة، أو أي تفضيلات أخرى..."></textarea>
+
+                        <button type="submit" id="submitButton" data-key="submit-button">
+                            إرسال طلب الحجز
+                            <span class="loader" id="submitLoader"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3 data-key="footer-col1-h3">عن الشيخ</h3>
+                    <p data-key="footer-col1-p">الشيخ عبد الرحمن حماده خليل، معلم ومجاز في القرآن الكريم بسند متصل، ملتزم بنشر علم كتاب الله وتقديم تعليم قرآني متميز للعالم أجمع.</p>
+                </div>
+                <div class="footer-col">
+                    <h3 data-key="footer-col2-h3">روابط سريعة</h3>
+                    <ul>
+                        <li><a href="#hero" data-key="nav-home-footer">الرئيسية</a></li>
+                        <li><a href="#about" data-key="nav-about-footer">عن الشيخ</a></li>
+                        <li><a href="#ijazat" data-key="nav-ijazat-footer">الإجازات</a></li>
+                        <li><a href="#courses" data-key="nav-courses-footer">الدورات</a></li>
+                        <li><a href="#certificates" data-key="nav-certificates-footer">الشهادات</a></li>
+                        <li><a href="#testimonials" data-key="nav-testimonials-footer">آراء طلابنا</a></li>
+                        <li><a href="#blog" data-key="nav-blog-footer">المدونة</a></li>
+                        <li><a href="#faq" data-key="nav-faq-footer">الأسئلة الشائعة</a></li>
+                        <li><a href="#contact" data-key="nav-contact-footer">تواصل معنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3 data-key="footer-col3-h3">ابق على تواصل</h3>
+                    <p data-key="footer-col3-email"><i class="fas fa-envelope"></i> abdelrahmanhamada3342@gmail.com</p>
+                    <p data-key="footer-col3-whatsapp"><i class="fab fa-whatsapp"></i> +201001947998</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/shaykh.abdelrahman" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://instagram.com/shaykh.abdelrahman" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/shaykh.abdelrahman" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://tiktok.com/@shaykh.abdelrahman" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright" data-key="copyright">
+                © <span id="current-year"></span> الشيخ عبد الرحمن حماده خليل. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/201001947998" class="whatsapp-button" target="_blank" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <a href="#hero" id="back-to-top" aria-label="Back to Top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h3 data-key="modal-h3">تم إرسال طلبك بنجاح!</h3>
+            <p data-key="modal-p">شكراً لك يا عبدالرحمن! لقد تم استلام طلب حجز جلستك التجريبية. سنتواصل معك قريباً جداً لتأكيد الموعد المناسب.</p>
+            <button class="close-button" id="closeModal" data-key="modal-close-btn">حسناً</button>
+        </div>
+    </div>
+
+    <script>
+        // Translations object
+        const translations = {
+            'ar': {
+                'page-title': 'الشيخ المجيز - نور الوحي لتعليم القرآن الكريم',
+                'logo-alt': 'شعار الشيخ عبد الرحمن حماده خليل',
+                'nav-home': 'الرئيسية',
+                'nav-about': 'عن الشيخ',
+                'nav-ijazat': 'الإجازات والمؤهلات',
+                'nav-courses': 'دوراتنا',
+                'nav-certificates': 'معرض الشهادات',
+                'nav-journey': 'رحلة الطالب',
+                'nav-why-us': 'لماذا تختارنا؟',
+                'nav-testimonials': 'آراء طلابنا',
+                'nav-blog': 'المدونة',
+                'nav-faq': 'الأسئلة الشائعة',
+                'nav-contact': 'تواصل معنا',
+                'current-lang-display': 'العربية',
+                'hero-h1': 'تعلم تلاوة القرءان الكريم بالتجويد واحصل على إجازة بالسند المتصل',
+                'hero-p': 'انطلق في رحلتك القرآنية معنا. نُقدم لك تعليماً مُيسراً، تجربة فريدة في تعلم كتاب الله.',
+                'hero-btn': 'ابدأ رحلتك القرآنية الآن',
+                'about-h2': 'عن الشيخ عبد الرحمن حماده خليل',
+                'about-img-alt': 'صورة الشيخ عبد الرحمن حماده خليل',
+                'about-h3': 'نبذة عن مسيرتي في خدمة القرآن',
+                'about-p1': 'الحمد لله رب العالمين، والصلاة والسلام على خاتم الأنبياء والمرسلين. أنا الشيخ عبد الرحمن حماده خليل، مُجاز ومعلم للقرآن الكريم. لقد كرست حياتي لخدمة كتاب الله العزيز، تلقيت العلم من شيوخ أجلاء وحصلت على الإجازات الشرعية التي تؤهلني لتعليم وإقراء كتاب الله بسندٍ متصل إلى نبينا الكريم محمد صلى الله عليه وسلم.',
+                'about-p2': 'أؤمن بأن تعلم القرآن هو رحلة نور وسكينة، وأن كل طالب يستحق أن يتلقى العلم بأفضل الطرق وأيسرها. لهذا، أقدم لكم عبر هذه المنصة منهجي التعليمي الذي يجمع بين أصالة التلقي ومتطلبات التعليم الحديث عن بُعد، لكي تتمكنوا من إتقان التلاوة، وتجويد الحروف، وتحقيق الإجازة، وأن تكونوا من أهل القرآن الذين هم أهل الله وخاصته.',
+                'about-p3': 'أسأل الله تعالى أن يتقبل منا ومنكم صالح الأعمال، وأن يجعلنا جميعاً خداماً لكتابه الكريم.',
+                'ijazat-h2': 'الإجازات والمؤهلات',
+                'ijaza-card1-h3': 'الإجازة في القرآن الكريم',
+                'ijaza-card1-p': 'أتشرف بحمل الإجازة في القرآن الكريم، وهي أعلى مراتب التلقي والإقراء، حيث تلقيت القرآن غضاً طرياً بالسند المتصل إلى رسول الله صلى الله عليه وسلم، مما يضمن دقة وصحة التلاوة التي سأنقلها إليكم.',
+                'ijaza-card1-li1': 'إجازة بالسند المتصل في تلاوة القرآن الكريم.',
+                'ijaza-card1-li2': 'تلقي القرآن عن شيوخ أجلاء مشهود لهم بالعلم والفضل.',
+                'ijaza-card1-li3': 'إتقان أحكام التجويد والرسم العثماني.',
+                'ijaza-card1-li4': 'التأهيل الكامل لإقراء الطلاب ومنحهم الإجازة.',
+                'ijaza-card2-h3': 'المؤهلات التعليمية والخبرات',
+                'ijaza-card2-p': 'بفضل الله، أمتلك إلى جانب الإجازات القرآنية، خبرة واسعة في تدريس القرآن الكريم وعلومه، ومهارات تعليمية تضمن تجربة فريدة ومثمرة لطلابنا الكرام من مختلف الأعمار والمستويات.',
+                'ijaza-card2-li1': 'خبرة طويلة في تدريس القرآن والتجويد عن بُعد.',
+                'ijaza-card2-li2': 'منهجية تعليمية مرنة ومخصصة تناسب احتياجات كل طالب.',
+                'ijaza-card2-li3': 'إعداد الطلاب للاختبارات والمنافسات القرآنية.',
+                'ijaza-card2-li4': 'مهارات تواصل ممتازة لضمان بيئة تعليمية محفزة.',
+                'courses-h2': 'دوراتنا وبرامجنا التعليمية',
+                'course-card1-h3': 'دورة التجويد الشاملة',
+                'course-card1-p': 'تعلم أحكام التجويد الأساسية والمتقدمة، من مخارج الحروف وصفاتها إلى أحكام المدود والإدغامات، مع التطبيق العملي المكثف.',
+                'course-card1-btn': 'تفاصيل الدورة',
+                'course-card2-h3': 'برنامج تحفيظ القرآن الكريم',
+                'course-card2-p': 'مسارات مخصصة لحفظ القرآن الكريم كاملاً أو أجزاء منه، مع المراجعة الدورية وتقنيات التثبيت لضمان حفظ متين.',
+                'course-card2-btn': 'انضم الآن',
+                'course-card3-h3': 'مسار الإجازة بالسند',
+                'course-card3-p': 'تأهيل الطلاب المجيدين للقراءة للحصول على إجازة بالسند المتصل إلى النبي صلى الله عليه وسلم، في الروايات المختلفة.',
+                'course-card3-btn': 'تعرف أكثر',
+                'course-card4-h3': 'دورات للأطفال والمبتدئين',
+                'course-card4-p': 'تعليم القراءة الصحيحة والتهجي والتجويد المبسط للأطفال والمبتدئين بأساليب تعليمية ممتعة وجذابة.',
+                'course-card4-btn': 'سجل لطفلك',
+                'certificates-h2': 'معرض شهادات الإجازة',
+                'certificate1-img-alt': 'شهادة إجازة 1',
+                'certificate1-caption': 'إجازة في رواية حفص عن عاصم',
+                'certificate2-img-alt': 'شهادة إجازة 2',
+                'certificate2-caption': 'شهادة إتمام برنامج التجويد',
+                'certificate3-img-alt': 'شهادة إجازة 3',
+                'certificate3-caption': 'إجازة في العشر الصغرى',
+                'certificate4-img-alt': 'شهادة إجازة 4',
+                'certificate4-caption': 'إجازة في القراءات السبع',
+                'certificate5-img-alt': 'شهادة إجازة 5',
+                'certificate5-caption': 'شهادة حفظ القرآن كاملاً',
+                'journey-h2': 'رحلة الطالب معنا',
+                'journey-step1-h3': 'التسجيل والاستشارة',
+                'journey-step1-p': 'ابدأ بملء نموذج التواصل لحجز جلستك التجريبية المجانية، وسنتواصل معك لتقييم مستواك وتحديد المسار الأنسب لك.',
+                'journey-step2-h3': 'بداية الدراسة',
+                'journey-step2-p': 'انطلق في دروسك المنتظمة مع الشيخ عبر الإنترنت، حيث يتم التركيز على التجويد، الحفظ، أو الإقراء حسب اختيارك.',
+                'journey-step3-h3': 'التقييم والمراجعة',
+                'journey-step3-p': 'تتم مراجعة تقدمك بانتظام، مع تقديم التوجيهات والتصحيحات اللازمة لضمان إتقانك وتثبيت حفظك.',
+                'journey-step4-h3': 'الإجازة والتخرج',
+                'journey-step4-p': 'عند إتمام المنهج وإتقان التلاوة، تحصل على إجازة بالسند المتصل، لتصبح من أهل القرآن المجازين.',
+                'why-us-h2': 'لماذا تختارنا لرحلتك القرآنية؟',
+                'why-us-item1-h3': 'سند موثوق وعالٍ',
+                'why-us-item1-p': 'تلقي القرآن بسندٍ متصل إلى رسول الله صلى الله عليه وسلم، يضمن لك أصالة التلقي ودقة الأداء.',
+                'why-us-item2-h3': 'مرونة التعليم عن بُعد',
+                'why-us-item2-p': 'تعلم القرآن من أي مكان في العالم، وفي الأوقات التي تناسب جدولك اليومي.',
+                'why-us-item3-h3': 'منهجية تعليمية متطورة',
+                'why-us-item3-p': 'نستخدم أساليب تعليمية حديثة ومبتكرة لضمان فهم عميق وإتقان سريع.',
+                'why-us-item4-h3': 'إرشاد ودعم مستمر',
+                'why-us-item4-p': 'نحن معك في كل خطوة من رحلتك القرآنية، نقدم الإرشاد والمتابعة لضمان نجاحك.',
+                'testimonials-h2': 'ماذا يقول طلابنا عنا؟',
+                'testimonial-card1-p': '"تجربتي مع الشيخ عبد الرحمن كانت رائعة حقًا. منهجيته واضحة وصبره كبير، وقد ساعدني كثيرًا في تحسين تلاوتي وحفظي. أنصح به بشدة لكل من يرغب في إتقان القرآن."',
+                'testimonial-card1-name': 'أحمد سعيد',
+                'testimonial-card1-title': 'طالب إجازة بقراءة حفص',
+                'testimonial-card2-p': '"لم أكن أتخيل أنني سأصل لهذا المستوى من التجويد، لكن بفضل الله ثم توجيهات الشيخ الصبورة والمنهجية الفعالة، أصبحت قراءتي أفضل بكثير. جزاكم الله خيراً!"',
+                'testimonial-card2-name': 'فاطمة الزهراء',
+                'testimonial-card2-title': 'طالبة تحفيظ وتجويد',
+                'testimonial-card3-p': '"أشعر براحة كبيرة في تعلم القرآن مع الشيخ عبد الرحمن. الشرح مبسط والأسلوب محفز، وهذا ما كنت أبحث عنه. أوصي به لكل الأعمار."',
+                'testimonial-card3-name': 'يوسف عبدالله',
+                'testimonial-card3-title': 'طالب مبتدئ',
+                'testimonial-card4-p': '"الشيخ عبد الرحمن يتمتع بصبر وحكمة لا مثيل لهما. لقد ساعدني على تجاوز الصعوبات في التجويد وأصبحت قادراً على تلاوة القرآن بثقة أكبر. شكراً جزيلاً!"',
+                'testimonial-card4-name': 'مريم خالد',
+                'testimonial-card4-title': 'طالبة تجويد',
+                'testimonial-card5-p': '"المنصة سهلة الاستخدام والدروس منظمة جداً. استطعت أن أتقدم في حفظي بشكل ملحوظ في وقت قصير. تجربة تعليمية ممتازة!"',
+                'testimonial-card5-name': 'علياء فهد',
+                'testimonial-card5-title': 'طالبة تحفيظ',
+                'blog-h2': 'مقالات ومدونات قرآنية',
+                'blog-post1-img-alt': 'صورة المقال 1',
+                'blog-post1-h3': 'فضل تلاوة القرآن الكريم وأثرها على النفس',
+                'blog-post1-meta-date': '<i class="fas fa-calendar-alt"></i> 10 مايو 2024',
+                'blog-post1-meta-author': '<i class="fas fa-user"></i> الشيخ عبدالرحمن',
+                'blog-post1-p': 'تعتبر تلاوة القرآن الكريم من أعظم العبادات التي تقرب العبد إلى ربه، ولها فضائل جمة وآثار عظيمة على النفس والروح. في هذا المقال، نستعرض بعضاً من هذه الفضائل وكيف يمكن أن تحول حياتك...',
+                'blog-post1-read-more': 'اقرأ المزيد <i class="fas fa-arrow-left"></i>',
+                'blog-post1-cta-btn': 'سجل في دورة التجويد',
+                'blog-post2-img-alt': 'صورة المقال 2',
+                'blog-post2-h3': 'أهمية التجويد في ترتيل القرآن الكريم',
+                'blog-post2-meta-date': '<i class="fas fa-calendar-alt"></i> 22 أبريل 2024',
+                'blog-post2-meta-author': '<i class="fas fa-user"></i> الشيخ عبدالرحمن',
+                'blog-post2-p': 'التجويد ليس مجرد تحسين للصوت، بل هو علم جليل يحفظ اللسان من اللحن في كتاب الله، ويضمن أداء الحروف كما أنزلها الله على نبيه صلى الله عليه وسلم. تعرف على أهميته وفوائده...',
+                'blog-post2-read-more': 'اقرأ المزيد <i class="fas fa-arrow-left"></i>',
+                'blog-post2-cta-btn': 'ابدأ حفظ القرآن',
+                'blog-post3-img-alt': 'صورة المقال 3',
+                'blog-post3-h3': 'كيف تبدأ رحلتك في حفظ القرآن الكريم؟',
+                'blog-post3-meta-date': '<i class="fas fa-calendar-alt"></i> 15 مارس 2024',
+                'blog-post3-meta-author': '<i class="fas fa-user"></i> الشيخ عبدالرحمن',
+                'blog-post3-p': 'حفظ القرآن الكريم أمنية لكل مسلم، ولكن قد تبدو الرحلة شاقة في البداية. نقدم لك في هذا المقال دليلاً مبسطاً وخطوات عملية للبدء في حفظ كتاب الله، مع نصائح مجربة للتثبيت والمراجعة...',
+                'blog-post3-read-more': 'اقرأ المزيد <i class="fas fa-arrow-left"></i>',
+                'blog-post3-cta-btn': 'احجز جلستك المجانية',
+                'newsletter-h2': 'اشترك في نشرتنا البريدية',
+                'newsletter-p': 'ابق على اطلاع بآخر أخبارنا، الدورات الجديدة، والمقالات القرآنية المفيدة مباشرة في بريدك الوارد.',
+                'newsletter-email-placeholder': 'أدخل بريدك الإلكتروني',
+                'newsletter-subscribe-btn': 'اشترك الآن',
+                'faq-h2': 'الأسئلة الشائعة',
+                'faq-q1': 'ما هي شروط الحصول على الإجازة؟',
+                'faq-a1': 'تتطلب الإجازة إتقان تلاوة القرآن الكريم كاملاً على الشيخ، مع تطبيق أحكام التجويد بشكل صحيح. سيتم تقييم أدائك بشكل دوري لضمان استيفاء المعايير المطلوبة للسند.',
+                'faq-q2': 'هل الدروس متاحة للمبتدئين؟',
+                'faq-a2': 'نعم، نقدم دروسًا مناسبة لجميع المستويات، من المبتدئين الذين لا يجيدون القراءة إلى المتقدمين الذين يسعون للحصول على الإجازة. يتم تصميم المنهج ليناسب كل طالب بشكل فردي.',
+                'faq-q3': 'ما هي المنصات المستخدمة للتعليم عن بُعد؟',
+                'faq-a3': 'نستخدم منصات تعليمية مرنة وموثوقة مثل Zoom أو Google Meet، مما يتيح تجربة تعليمية تفاعلية ومريحة من أي مكان في العالم.',
+                'faq-q4': 'كيف يمكنني حجز جلسة تجريبية مجانية؟',
+                'faq-a4': 'يمكنك حجز جلستك التجريبية المجانية مباشرة من خلال ملء نموذج "تواصل معنا" في أسفل الصفحة، وسنتواصل معك لتأكيد الموعد المناسب.',
+                'contact-h2': 'تواصل معنا واحجز جلستك المجانية',
+                'contact-info-h3': 'معلومات التواصل',
+                'contact-info-email': '<i class="fas fa-envelope"></i> البريد الإلكتروني: abdelrahmanhamada3342@gmail.com',
+                'contact-info-whatsapp': '<i class="fab fa-whatsapp"></i> +201001947998',
+                'contact-info-location': '<i class="fas fa-map-marker-alt"></i> الموقع: العاشر من رمضان، الشرقية، مصر (خدمة عالمية)',
+                'contact-info-p-general': 'لا تتردد في الاتصال بنا. نحن هنا لخدمتك والإجابة على استفساراتك.',
+                'booking-form-h3': 'احجز جلستك التجريبية المجانية',
+                'form-label-name': 'اسمك الكريم:',
+                'form-label-email': 'بريدك الإلكتروني:',
+                'form-label-phone': 'رقم الواتساب (للتواصل):',
+                'form-label-date': 'تاريخ الجلسة المفضل:',
+                'form-label-time': 'الوقت المفضل (بتوقيتك المحلي):',
+                'time-slot-error': 'يرجى اختيار وقت للجلسة.',
+                'form-label-notes': 'ملاحظات إضافية (اختياري):',
+                'form-notes-placeholder': 'مستواي في القراءة، أو أي تفضيلات أخرى...',
+                'submit-button': 'إرسال طلب الحجز',
+                'modal-h3': 'تم إرسال طلبك بنجاح!',
+                'modal-p': 'شكراً لك يا عبدالرحمن! لقد تم استلام طلب حجز جلستك التجريبية. سنتواصل معك قريباً جداً لتأكيد الموعد المناسب.',
+                'modal-close-btn': 'حسناً',
+                'footer-col1-h3': 'عن الشيخ',
+                'footer-col1-p': 'الشيخ عبد الرحمن حماده خليل، معلم ومجاز في القرآن الكريم بسند متصل، ملتزم بنشر علم كتاب الله وتقديم تعليم قرآني متميز للعالم أجمع.',
+                'footer-col2-h3': 'روابط سريعة',
+                'nav-home-footer': 'الرئيسية',
+                'nav-about-footer': 'عن الشيخ',
+                'nav-ijazat-footer': 'الإجازات',
+                'nav-courses-footer': 'الدورات',
+                'nav-certificates-footer': 'الشهادات',
+                'nav-testimonials-footer': 'آراء طلابنا',
+                'nav-blog-footer': 'المدونة',
+                'nav-faq-footer': 'الأسئلة الشائعة',
+                'nav-contact-footer': 'تواصل معنا',
+                'footer-col3-h3': 'ابق على تواصل',
+                'footer-col3-email': '<i class="fas fa-envelope"></i> abdelrahmanhamada3342@gmail.com',
+                'footer-col3-whatsapp': '<i class="fab fa-whatsapp"></i> +201001947998',
+                'copyright': '© <span id="current-year"></span> الشيخ عبد الرحمن حماده خليل. جميع الحقوق محفوظة.',
+                // Time slots
+                'time-0900': '09:00 صباحاً',
+                'time-1000': '10:00 صباحاً',
+                'time-1100': '11:00 صباحاً',
+                'time-1300': '01:00 ظهراً',
+                'time-1500': '03:00 عصراً',
+                'time-1700': '05:00 مساءً',
+                'time-1900': '07:00 مساءً',
+                'time-2100': '09:00 مساءً',
+            },
+            'en': {
+                'page-title': 'Shaykh Al-Mujiz - Noor Al-Wahy Quranic Institute',
+                'logo-alt': 'Shaykh Abdelrahman Hamada Khalil Logo',
+                'nav-home': 'Home',
+                'nav-about': 'About Shaykh',
+                'nav-ijazat': 'Certifications & Qualifications',
+                'nav-courses': 'Our Courses',
+                'nav-certificates': 'Certificates Gallery',
+                'nav-journey': 'Student Journey',
+                'nav-why-us': 'Why Choose Us?',
+                'nav-testimonials': 'Student Testimonials',
+                'nav-blog': 'Blog',
+                'nav-faq': 'FAQ',
+                'nav-contact': 'Contact Us',
+                'current-lang-display': 'English',
+                'hero-h1': 'Learn Quranic Recitation with Tajweed and Obtain an Ijazah with a Connected Sanad',
+                'hero-p': 'Embark on your Quranic journey with us. We offer accessible education and a unique experience in learning the Book of Allah.',
+                'hero-btn': 'Start Your Quranic Journey Now',
+                'about-h2': 'About Shaykh Abdelrahman Hamada Khalil',
+                'about-img-alt': 'Shaykh Abdelrahman Hamada Khalil',
+                'about-h3': 'My Journey in Serving the Quran',
+                'about-p1': 'All praise is due to Allah, Lord of the Worlds, and prayers and peace be upon the Seal of the Prophets and Messengers. I am Shaykh Abdelrahman Hamada Khalil, a certified and qualified teacher of the Holy Quran. I have dedicated my life to serving the Noble Book of Allah, having received knowledge from esteemed scholars and obtained religious certifications that qualify me to teach and recite the Book of Allah with a connected chain of narration (Sanad) back to our Noble Prophet Muhammad (peace be upon him).',
+                'about-p2': 'I believe that learning the Quran is a journey of light and tranquility, and that every student deserves to receive knowledge in the best and easiest ways. Therefore, through this platform, I offer my educational methodology that combines the authenticity of traditional reception with the requirements of modern distance learning, so that you can master recitation, perfect Tajweed, achieve certification (Ijazah), and become among the people of the Quran, who are the people of Allah and His chosen ones.',
+                'about-p3': 'I ask Allah Almighty to accept our good deeds and yours, and to make us all servants of His Noble Book.',
+                'ijazat-h2': 'Certifications & Qualifications',
+                'ijaza-card1-h3': 'Ijazah in the Holy Quran',
+                'ijaza-card1-p': 'I am honored to hold an Ijazah in the Holy Quran, which is the highest level of reception and recitation. I received the Quran freshly with a connected Sanad to the Messenger of Allah (peace be upon him), ensuring the accuracy and authenticity of the recitation I will convey to you.',
+                'ijaza-card1-li1': 'Ijazah with a connected Sanad in the recitation of the Holy Quran.',
+                'ijaza-card1-li2': 'Received the Quran from esteemed scholars known for their knowledge and virtue.',
+                'ijaza-card1-li3': 'Mastery of Tajweed rules and Uthmani script.',
+                'ijaza-card1-li4': 'Full qualification to teach students and grant them Ijazah.',
+                'ijaza-card2-h3': 'Educational Qualifications & Experience',
+                'ijaza-card2-p': 'By the grace of Allah, in addition to my Quranic certifications, I possess extensive experience in teaching the Holy Quran and its sciences, and educational skills that ensure a unique and fruitful experience for our esteemed students of all ages and levels.',
+                'ijaza-card2-li1': 'Long experience in teaching Quran and Tajweed remotely.',
+                'ijaza-card2-li2': 'Flexible and personalized teaching methodology to suit each student\'s needs.',
+                'ijaza-card2-li3': 'Preparing students for Quranic exams and competitions.',
+                'ijaza-card2-li4': 'Excellent communication skills to ensure a motivating learning environment.',
+                'courses-h2': 'Our Educational Courses & Programs',
+                'course-card1-h3': 'Comprehensive Tajweed Course',
+                'course-card1-p': 'Learn fundamental and advanced Tajweed rules, from articulation points and characteristics of letters to rules of Madd and Idgham, with extensive practical application.',
+                'course-card1-btn': 'Course Details',
+                'course-card2-h3': 'Quran Memorization Program',
+                'course-card2-p': 'Customized tracks for memorizing the entire Holy Quran or parts of it, with regular review and reinforcement techniques to ensure strong memorization.',
+                'course-card2-btn': 'Join Now',
+                'course-card3-h3': 'Ijazah with Sanad Track',
+                'course-card3-p': 'Qualifying proficient students for recitation to obtain an Ijazah with a connected Sanad to the Prophet (peace be upon him), in various narrations.',
+                'course-card3-btn': 'Learn More',
+                'course-card4-h3': 'Courses for Children & Beginners',
+                'course-card4-p': 'Teaching correct reading, spelling, and simplified Tajweed for children and beginners using fun and engaging educational methods.',
+                'course-card4-btn': 'Enroll Your Child',
+                'certificates-h2': 'Certificates Gallery',
+                'certificate1-img-alt': 'Ijazah Certificate 1',
+                'certificate1-caption': 'Ijazah in Hafs \'an Asim Narration',
+                'certificate2-img-alt': 'Tajweed Completion Certificate',
+                'certificate2-caption': 'Tajweed Program Completion Certificate',
+                'certificate3-img-alt': 'Ten Minor Readings Certificate',
+                'certificate3-caption': 'Ijazah in the Ten Minor Readings',
+                'certificate4-img-alt': 'Ijazah Certificate 4',
+                'certificate4-caption': 'Ijazah in the Seven Readings',
+                'certificate5-img-alt': 'Quran Memorization Certificate',
+                'certificate5-caption': 'Full Quran Memorization Certificate',
+                'journey-h2': 'Your Student Journey With Us',
+                'journey-step1-h3': 'Registration & Consultation',
+                'journey-step1-p': 'Start by filling out the contact form to book your free trial session. We will contact you to assess your level and determine the most suitable path for you.',
+                'journey-step2-h3': 'Beginning Your Study',
+                'journey-step2-p': 'Begin your regular online lessons with the Shaykh, focusing on Tajweed, memorization, or recitation as per your choice.',
+                'journey-step3-h3': 'Assessment & Review',
+                'journey-step3-p': 'Your progress is regularly reviewed, with necessary guidance and corrections provided to ensure your mastery and strong memorization.',
+                'journey-step4-h3': 'Ijazah & Graduation',
+                'journey-step4-p': 'Upon completing the curriculum and mastering recitation, you will receive an Ijazah with a connected Sanad, becoming one of the certified people of the Quran.',
+                'why-us-h2': 'Why Choose Us for Your Quranic Journey?',
+                'why-us-item1-h3': 'Authentic & High Sanad',
+                'why-us-item1-p': 'Receiving the Quran with a connected Sanad to the Messenger of Allah (peace be upon him) ensures the authenticity of reception and accuracy of performance.',
+                'why-us-item2-h3': 'Flexible Distance Learning',
+                'why-us-item2-p': 'Learn the Quran from anywhere in the world, at times that suit your daily schedule.',
+                'why-us-item3-h3': 'Advanced Teaching Methodology',
+                'why-us-item3-p': 'We use modern and innovative teaching methods to ensure deep understanding and quick mastery.',
+                'why-us-item4-h3': 'Continuous Guidance & Support',
+                'why-us-item4-p': 'We are with you every step of your Quranic journey, providing guidance and follow-up to ensure your success.',
+                'testimonials-h2': 'What Our Students Say About Us?',
+                'testimonial-card1-p': '"My experience with Shaykh Abdelrahman was truly wonderful. His methodology is clear and his patience is immense, and he helped me greatly in improving my recitation and memorization. I highly recommend him to anyone who wishes to master the Quran."',
+                'testimonial-card1-name': 'Ahmed Saeed',
+                'testimonial-card1-title': 'Hafs \'an Asim Ijazah Student',
+                'testimonial-card2-p': '"I never imagined I would reach this level of Tajweed, but thanks to Allah and then to the Shaykh\'s patient guidance and effective methodology, my recitation has become much better. May Allah reward you greatly!"',
+                'testimonial-card2-name': 'Fatima Al-Zahraa',
+                'testimonial-card2-title': 'Memorization & Tajweed Student',
+                'testimonial-card3-p': '"I feel great comfort in learning the Quran with Shaykh Abdelrahman. The explanation is simple and the style is motivating, and this is exactly what I was looking for. I recommend him for all ages."',
+                'testimonial-card3-name': 'Youssef Abdullah',
+                'testimonial-card3-title': 'Beginner Student',
+                'testimonial-card4-p': '"Shaykh Abdelrahman has unparalleled patience and wisdom. He helped me overcome difficulties in Tajweed and I am now able to recite the Quran with greater confidence. Thank you very much!"',
+                'testimonial-card4-name': 'Mariam Khalid',
+                'testimonial-card4-title': 'Tajweed Student',
+                'testimonial-card5-p': '"The platform is easy to use and the lessons are very well organized. I was able to make significant progress in my memorization in a short time. An excellent learning experience!"',
+                'testimonial-card5-name': 'Alia Fahad',
+                'testimonial-card5-title': 'Memorization Student',
+                'blog-h2': 'Quranic Articles & Blog',
+                'blog-post1-img-alt': 'Article Image 1',
+                'blog-post1-h3': 'The Virtue of Reciting the Holy Quran and Its Effect on the Soul',
+                'blog-post1-meta-date': '<i class="fas fa-calendar-alt"></i> May 10, 2024',
+                'blog-post1-meta-author': '<i class="fas fa-user"></i> Shaykh Abdelrahman',
+                'blog-post1-p': 'Reciting the Holy Quran is one of the greatest acts of worship that brings a servant closer to his Lord, and it has numerous virtues and profound effects on the soul and spirit. In this article, we explore some of these virtues and how they can transform your life...',
+                'blog-post1-read-more': 'Read More <i class="fas fa-arrow-right"></i>',
+                'blog-post1-cta-btn': 'Enroll in Tajweed Course',
+                'blog-post2-img-alt': 'Article Image 2',
+                'blog-post2-h3': 'The Importance of Tajweed in Reciting the Holy Quran',
+                'blog-post2-meta-date': '<i class="fas fa-calendar-alt"></i> April 22, 2024',
+                'blog-post2-meta-author': '<i class="fas fa-user"></i> Shaykh Abdelrahman',
+                'blog-post2-p': 'Tajweed is not merely about beautifying the voice; it is a noble science that protects the tongue from errors in Allah\'s Book, ensuring that letters are pronounced as Allah revealed them to His Prophet (peace be upon him). Learn about its importance and benefits...',
+                'blog-post2-read-more': 'Read More <i class="fas fa-arrow-right"></i>',
+                'blog-post2-cta-btn': 'Start Quran Memorization',
+                'blog-post3-img-alt': 'Article Image 3',
+                'blog-post3-h3': 'How to Start Your Journey in Memorizing the Holy Quran?',
+                'blog-post3-meta-date': '<i class="fas fa-calendar-alt"></i> March 15, 2024',
+                'blog-post3-meta-author': '<i class="fas fa-user"></i> Shaykh Abdelrahman',
+                'blog-post3-p': 'Memorizing the Holy Quran is an aspiration for every Muslim, but the journey might seem daunting at first. In this article, we provide a simple guide and practical steps to begin memorizing the Book of Allah, along with proven tips for retention and review...',
+                'blog-post3-read-more': 'Read More <i class="fas fa-arrow-right"></i>',
+                'blog-post3-cta-btn': 'Book Your Free Session',
+                'newsletter-h2': 'Subscribe to Our Newsletter',
+                'newsletter-p': 'Stay updated with our latest news, new courses, and beneficial Quranic articles directly in your inbox.',
+                'newsletter-email-placeholder': 'Enter your email address',
+                'newsletter-subscribe-btn': 'Subscribe Now',
+                'faq-h2': 'Frequently Asked Questions',
+                'faq-q1': 'What are the requirements to obtain an Ijazah?',
+                'faq-a1': 'Obtaining an Ijazah requires mastering the recitation of the entire Holy Quran under the Shaykh, with correct application of Tajweed rules. Your performance will be regularly assessed to ensure compliance with the required standards for the Sanad.',
+                'faq-q2': 'Are the lessons available for beginners?',
+                'faq-a2': 'Yes, we offer lessons suitable for all levels, from absolute beginners who cannot read to advanced students seeking to obtain an Ijazah. The curriculum is designed to suit each student individually.',
+                'faq-q3': 'What platforms are used for distance learning?',
+                'faq-a3': 'We use flexible and reliable learning platforms such as Zoom or Google Meet, allowing for an interactive and comfortable learning experience from any where in the world.',
+                'faq-q4': 'How can I book a free trial session?',
+                'faq-a4': 'You can book your free trial session directly by filling out the "Contact Us" form at the bottom of the page, and we will contact you to confirm a suitable appointment.',
+                'contact-h2': 'Contact Us and Book Your Free Session',
+                'contact-info-h3': 'Contact Information',
+                'contact-info-email': '<i class="fas fa-envelope"></i> Email: abdelrahmanhamada3342@gmail.com',
+                'contact-info-whatsapp': '<i class="fab fa-whatsapp"></i> WhatsApp: +201001947998',
+                'contact-info-location': '<i class="fas fa-map-marker-alt"></i> Location: 10th of Ramadan City, Sharqia, Egypt (Global Service)',
+                'contact-info-p-general': 'Do not hesitate to contact us. We are here to serve you and answer your inquiries.',
+                'booking-form-h3': 'Book Your Free Trial Session',
+                'form-label-name': 'Your Name:',
+                'form-label-email': 'Your Email:',
+                'form-label-phone': 'WhatsApp Number (for communication):',
+                'form-label-date': 'Preferred Session Date:',
+                'form-label-time': 'Preferred Time (Local Time):',
+                'time-slot-error': 'Please select a session time.',
+                'form-label-notes': 'Additional Notes (optional):',
+                'form-notes-placeholder': 'My reading level, or any other preferences...',
+                'submit-button': 'Submit Booking Request',
+                'modal-h3': 'Your Request Has Been Sent Successfully!',
+                'modal-p': 'Thank you, Abdelrahman! Your trial session booking request has been received. We will contact you very soon to confirm a suitable appointment.',
+                'modal-close-btn': 'Okay',
+                'footer-col1-h3': 'About Shaykh',
+                'footer-col1-p': 'Shaykh Abdelrahman Hamada Khalil, a certified and qualified teacher of the Holy Quran with a connected Sanad, is committed to spreading the knowledge of Allah\'s Book and providing distinguished Quranic education worldwide.',
+                'footer-col2-h3': 'Quick Links',
+                'nav-home-footer': 'Home',
+                'nav-about-footer': 'About Shaykh',
+                'nav-ijazat-footer': 'Certifications',
+                'nav-courses-footer': 'Courses',
+                'nav-certificates-footer': 'Certificates',
+                'nav-testimonials-footer': 'Testimonials',
+                'nav-blog-footer': 'Blog',
+                'nav-faq-footer': 'FAQ',
+                'nav-contact-footer': 'Contact Us',
+                'footer-col3-h3': 'Stay Connected',
+                'footer-col3-email': '<i class="fas fa-envelope"></i> abdelrahmanhamada3342@gmail.com',
+                'footer-col3-whatsapp': '<i class="fab fa-whatsapp"></i> +201001947998',
+                'copyright': '© <span id="current-year"></span> Shaykh Abdelrahman Hamada Khalil. All Rights Reserved.',
+                // Time slots
+                'time-0900': '09:00 AM',
+                'time-1000': '10:00 AM',
+                'time-1100': '11:00 AM',
+                'time-1300': '01:00 PM',
+                'time-1500': '03:00 PM',
+                'time-1700': '05:00 PM',
+                'time-1900': '07:00 PM',
+                'time-2100': '09:00 PM',
+            }
+        };
+
+        // Function to update content based on language
+        function updateContent(lang) {
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
+
+            // Update text content for elements with data-key
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.dataset.key;
+                if (translations[lang][key]) {
+                    if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
+                        element.placeholder = translations[lang][key];
+                    } else if (element.tagName === 'IMG' && element.hasAttribute('alt')) {
+                        element.alt = translations[lang][key];
+                    } else {
+                        element.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+
+            // Update time slots
+            document.querySelector('.time-slots').querySelectorAll('span').forEach(span => {
+                const timeKey = 'time-' + span.dataset.time.replace(':', '').replace(' ', ''); // e.g., 'time-0900AM'
+                if (translations[lang][timeKey]) {
+                    span.textContent = translations[lang][timeKey];
+                }
+            });
+
+            // Update testimonial quote icons based on direction
+            document.querySelectorAll('.testimonial-card::before').forEach(icon => {
+                if (lang === 'ar') {
+                    icon.style.content = '"\\f10e"'; // quote-right
+                } else {
+                    icon.style.content = '"\\f10d"'; // quote-left
+                }
+            });
+
+            // Update blog post read more arrows based on direction
+            document.querySelectorAll('.blog-post-card .read-more i').forEach(icon => {
+                if (lang === 'ar') {
+                    icon.classList.remove('fa-arrow-right');
+                    icon.classList.add('fa-arrow-left');
+                } else {
+                    icon.classList.remove('fa-arrow-left');
+                    icon.classList.add('fa-arrow-right');
+                }
+            });
+
+            // Update current language display in switcher
+            document.querySelector('[data-key="current-lang-display"]').textContent = translations[lang]['current-lang-display'];
+
+            // Adjust logo margin based on direction
+            const logoImg = document.querySelector('.logo img');
+            if (logoImg) {
+                if (lang === 'ar') {
+                    logoImg.style.marginInlineEnd = '15px'; // Margin to the left of the image in RTL
+                    logoImg.style.marginInlineStart = '0';
+                } else {
+                    logoImg.style.marginInlineStart = '15px'; // Margin to the right of the image in LTR
+                    logoImg.style.marginInlineEnd = '0';
+                }
+            }
+
+
+            // Store language preference
+            localStorage.setItem('selectedLang', lang);
+        }
+
+        // Initialize content on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('selectedLang') || 'ar'; // Default to Arabic
+            updateContent(savedLang);
+
+            // Smooth scrolling for navigation links and back-to-top button
+            document.querySelectorAll('nav a[href^="#"], #back-to-top').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    if (window.innerWidth <= 768 && document.querySelector('.nav-links').classList.contains('active')) {
+                        document.querySelector('.nav-links').classList.remove('active');
+                    }
+                });
+            });
+
+            // Mobile menu toggle functionality
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!navLinks.contains(event.target) && !menuToggle.contains(event.target) && navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                }
+            });
+
+            // Language switcher functionality
+            const languageSwitcher = document.querySelector('.language-switcher');
+            if (languageSwitcher) {
+                languageSwitcher.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent document click from closing immediately
+                    languageSwitcher.classList.toggle('active');
+                });
+                document.querySelectorAll('.language-switcher .dropdown-content a').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation(); // Prevent click from bubbling to document and re-opening/interfering
+                        const newLang = e.target.dataset.lang;
+                        updateContent(newLang);
+                        languageSwitcher.classList.remove('active'); // Close dropdown after selection
+                    });
+                });
+                document.addEventListener('click', function(event) {
+                    if (!languageSwitcher.contains(event.target) && languageSwitcher.classList.contains('active')) {
+                        languageSwitcher.classList.remove('active');
+                    }
+                });
+            }
+
+            // Intersection Observer for scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                }
+            );
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in, .scale-in, .section-header').forEach(element => {
+                observer.observe(element);
+            });
+
+            // Time slot selection logic
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.addEventListener('click', function() {
+                    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                    this.classList.add('selected');
+                    document.getElementById('selectedTime').value = this.dataset.time;
+                    document.getElementById('timeSlotError').style.display = 'none';
+                });
+            });
+
+            // Handle booking form submission
+            const bookingForm = document.getElementById('bookingForm');
+            const submitButton = document.getElementById('submitButton');
+            const submitLoader = document.getElementById('submitLoader');
+            const timeSlotError = document.getElementById('timeSlotError');
+            const successModal = document.getElementById('successModal');
+            const closeModalButton = document.getElementById('closeModal');
+
+            bookingForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const selectedTime = document.getElementById('selectedTime').value;
+                if (!selectedTime) {
+                    timeSlotError.style.display = 'block';
+                    return;
+                } else {
+                    timeSlotError.style.display = 'none';
+                }
+
+                submitButton.disabled = true;
+                submitLoader.style.display = 'inline-block';
+                submitButton.innerHTML = translations[document.documentElement.lang]['submit-button'] + ' <span class="loader" id="submitLoader"></span>'; // Update button text with loader
+
+                const formData = new FormData(this);
+                const bookingData = {};
+                
+                for (let [key, value] of formData.entries()) {
+                    bookingData[key] = value;
+                }
+                
+                console.log('Booking Data:', bookingData);
+
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                successModal.classList.add('show');
+
+                this.reset();
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                document.getElementById('selectedTime').value = '';
+                submitButton.disabled = false;
+                submitLoader.style.display = 'none';
+                submitButton.innerHTML = translations[document.documentElement.lang]['submit-button']; // Reset button text
+            });
+
+            // Close modal functionality
+            closeModalButton.addEventListener('click', () => {
+                successModal.classList.remove('show');
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target == successModal) {
+                    successModal.classList.remove('show');
+                }
+            });
+
+            // Handle newsletter form submission
+            const newsletterForm = document.getElementById('newsletterForm');
+            if (newsletterForm) {
+                newsletterForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const emailInput = document.getElementById('newsletterEmail');
+                    const email = emailInput.value;
+                    console.log('Newsletter Subscription Email:', email);
+                    
+                    // Simulate API call
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    // Using a custom modal message instead of alert()
+                    const newsletterModal = document.getElementById('successModal'); // Reusing the success modal for newsletter
+                    const modalH3 = newsletterModal.querySelector('h3');
+                    const modalP = newsletterModal.querySelector('p');
+
+                    modalH3.textContent = 'شكراً لاشتراكك في النشرة البريدية!';
+                    modalP.textContent = 'لقد تم تسجيل بريدك الإلكتروني بنجاح. ستصلك آخر أخبارنا ودوراتنا قريباً.';
+                    newsletterModal.classList.add('show');
+
+                    emailInput.value = ''; // Clear input
+                });
+            }
+
+
+            // Set minimum date for preferredDate input to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('preferredDate').min = today;
+
+            // Set current year in footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // FAQ Accordion functionality
+            document.querySelectorAll('.faq-question').forEach(item => {
+                item.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const icon = this.querySelector('.icon');
+
+                    document.querySelectorAll('.faq-answer').forEach(openAnswer => {
+                        if (openAnswer !== answer) {
+                            openAnswer.style.maxHeight = '0px';
+                            openAnswer.previousElementSibling.classList.remove('active');
+                            openAnswer.previousElementSibling.querySelector('.icon').style.transform = 'rotate(0deg)';
+                            openAnswer.style.padding = '0 35px';
+                        }
+                    });
+
+                    if (answer.style.maxHeight && answer.style.maxHeight !== '0px') {
+                        answer.style.maxHeight = '0px';
+                        answer.style.padding = '0 35px';
+                        this.classList.remove('active');
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                        answer.style.padding = '25px 35px 30px 35px';
+                        this.classList.add('active');
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            // Show/hide Back to Top button on scroll
+            const backToTopButton = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.add('show');
+                } else {
+                    backToTopButton.classList.remove('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
