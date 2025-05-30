@@ -6,6 +6,7 @@
     <title data-key="page-title">موقع الشيخ عبدالرحمن حماده خليل</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="google-site-verification" content="google4b4c57330220d69f.html" />
     <style>
         /* CSS Variables for consistent styling */
         :root {
@@ -597,115 +598,6 @@
             border-color: var(--bright-gold);
         }
 
-        /* Certificates Section */
-        .certificates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            margin-top: 70px;
-            justify-content: center;
-        }
-        .certificate-item {
-            background-color: var(--off-white);
-            border-radius: var(--border-radius-main);
-            box-shadow: 0 12px 35px var(--shadow-subtle);
-            overflow: hidden;
-            transition: all var(--transition-speed) ease;
-        }
-        .certificate-item:hover {
-            transform: translateY(-12px) scale(1.03);
-            box-shadow: 0 20px 45px var(--shadow-medium);
-        }
-        .certificate-item img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            display: block;
-        }
-        .certificate-item .caption {
-            padding: 20px;
-            color: var(--primary-dark-blue);
-            font-weight: 600;
-            font-size: 1.1em;
-            text-align: center;
-        }
-
-        /* Student Journey Section */
-        .journey-steps {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 70px;
-            position: relative;
-        }
-        .journey-steps::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            height: 5px;
-            background-color: var(--primary-dark-blue);
-            z-index: 0;
-            display: none; /* Hidden on small screens, shown on larger ones */
-        }
-        @media (min-width: 768px) {
-            .journey-steps::before {
-                display: block;
-            }
-        }
-        .journey-step-card {
-            background-color: var(--off-white);
-            border-radius: var(--border-radius-main);
-            padding: 35px;
-            box-shadow: 0 12px 35px var(--shadow-subtle);
-            text-align: center;
-            flex: 1;
-            min-width: 280px;
-            max-width: 350px;
-            position: relative;
-            z-index: 1;
-            transition: all var(--transition-speed) ease;
-            border-bottom: 5px solid var(--bright-gold);
-        }
-        .journey-step-card:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 20px 45px var(--shadow-medium);
-        }
-        .journey-step-card .step-number {
-            background-color: var(--primary-dark-blue);
-            color: var(--off-white);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.2em;
-            font-weight: 700;
-            margin: -65px auto 25px auto;
-            border: 4px solid var(--bright-gold);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        }
-        .journey-step-card:hover .step-number {
-            background-color: var(--bright-gold);
-            color: var(--primary-dark-blue);
-            transform: scale(1.1);
-        }
-        .journey-step-card h3 {
-            font-size: 2em;
-            color: var(--primary-dark-blue);
-            margin-bottom: 15px;
-        }
-        .journey-step-card p {
-            font-size: 1.1em;
-            color: var(--dark-brown);
-            line-height: 1.7;
-        }
-
         /* Why Us Section */
         .why-us-grid {
             display: grid;
@@ -746,206 +638,6 @@
         .why-us-item p {
             color: var(--dark-brown);
             line-height: 1.8;
-        }
-
-        /* Testimonials Section */
-        .testimonials-slider {
-            margin-top: 70px;
-            padding: 30px 0;
-            position: relative;
-            display: flex;
-            gap: 40px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .testimonial-card {
-            background-color: var(--off-white);
-            border-radius: var(--border-radius-main);
-            padding: 45px;
-            box-shadow: 0 12px 35px var(--shadow-subtle);
-            text-align: center;
-            max-width: 550px;
-            width: 100%;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden;
-            transition: all var(--transition-speed) ease;
-        }
-        html[dir="rtl"] .testimonial-card {
-            direction: rtl;
-            border-right: 8px solid var(--bright-gold);
-            border-left: unset;
-        }
-        html[dir="ltr"] .testimonial-card {
-            direction: ltr;
-            border-left: 8px solid var(--bright-gold);
-            border-right: unset;
-        }
-        .testimonial-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 20px 45px var(--shadow-medium);
-        }
-        .testimonial-card::before {
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            position: absolute;
-            top: 25px;
-            font-size: 7em;
-            color: rgba(26, 62, 99, 0.05);
-            z-index: 0;
-        }
-        html[dir="rtl"] .testimonial-card::before {
-            content: '\f10e'; /* quote-right */
-            left: 25px;
-            right: unset;
-        }
-        html[dir="ltr"] .testimonial-card::before {
-            content: '\f10d'; /* quote-left */
-            right: 25px;
-            left: unset;
-        }
-        .testimonial-card .quote-icon {
-            font-size: 4em;
-            color: var(--bright-gold);
-            margin-bottom: 25px;
-            position: relative;
-            z-index: 1;
-        }
-        .testimonial-card p {
-            font-size: 1.3em;
-            line-height: 1.9;
-            margin-bottom: 30px;
-            font-style: italic;
-            color: var(--dark-brown);
-            position: relative;
-            z-index: 1;
-        }
-        .testimonial-card .student-name {
-            font-weight: 700;
-            color: var(--primary-dark-blue);
-            font-size: 1.4em;
-        }
-        .testimonial-card .student-title {
-            font-size: 1.1em;
-            color: #777;
-            margin-top: 10px;
-        }
-
-        /* Blog Section */
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
-            margin-top: 70px;
-        }
-        .blog-post-card {
-            background-color: var(--off-white);
-            border-radius: var(--border-radius-main);
-            box-shadow: 0 12px 35px var(--shadow-subtle);
-            overflow: hidden;
-            transition: all var(--transition-speed) ease;
-            display: flex;
-            flex-direction: column;
-        }
-        html[dir="rtl"] .blog-post-card {
-            text-align: right;
-        }
-        html[dir="ltr"] .blog-post-card {
-            text-align: left;
-        }
-        .blog-post-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 45px var(--shadow-medium);
-            border-color: var(--bright-gold);
-        }
-        .blog-post-card img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-        }
-        .blog-post-card .content {
-            padding: 25px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .blog-post-card h3 {
-            color: var(--primary-dark-blue);
-            font-size: 1.8em;
-            margin-bottom: 15px;
-        }
-        html[dir="rtl"] .blog-post-card h3 {
-            text-align: right;
-        }
-        html[dir="ltr"] .blog-post-card h3 {
-            text-align: left;
-        }
-        .blog-post-card .meta {
-            font-size: 0.9em;
-            color: #777;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        html[dir="rtl"] .blog-post-card .meta {
-            justify-content: flex-end;
-        }
-        html[dir="ltr"] .blog-post-card .meta {
-            justify-content: flex-start;
-        }
-        .blog-post-card .meta i {
-            color: var(--bright-gold);
-        }
-        .blog-post-card p {
-            color: var(--dark-brown);
-            line-height: 1.7;
-            font-size: 1em;
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
-        .blog-post-card .read-more {
-            display: inline-block;
-            color: var(--bright-gold);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-        html[dir="rtl"] .blog-post-card .read-more {
-            text-align: left;
-            align-self: flex-end;
-        }
-        html[dir="ltr"] .blog-post-card .read-more {
-            text-align: right;
-            align-self: flex-start;
-        }
-        html[dir="rtl"] .blog-post-card .read-more i {
-            transform: rotate(0deg); /* Default arrow direction for RTL */
-        }
-        html[dir="ltr"] .blog-post-card .read-more i {
-            transform: rotate(180deg); /* Flip arrow for LTR */
-        }
-        .blog-post-card .read-more:hover {
-            color: var(--primary-dark-blue);
-        }
-        .blog-post-card .blog-cta-btn {
-            display: inline-block;
-            background-color: var(--primary-dark-blue);
-            color: var(--off-white);
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-size: 0.95em;
-            font-weight: 600;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-            border: 2px solid var(--primary-dark-blue);
-            align-self: center;
-        }
-        .blog-post-card .blog-cta-btn:hover {
-            background-color: transparent;
-            color: var(--primary-dark-blue);
-            border-color: var(--bright-gold);
         }
 
         /* Newsletter Section */
@@ -1065,7 +757,7 @@
             padding: 0 35px;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), padding 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: max-height 0.7s ease-in-out, padding 0.7s ease-in-out; /* Adjusted transition for smoothness */
             color: var(--dark-brown);
             line-height: 1.8;
             font-size: 1.1em;
@@ -1075,6 +767,11 @@
         }
         html[dir="ltr"] .faq-answer {
             text-align: left;
+        }
+        /* New CSS for active FAQ answer to allow smooth expansion */
+        .faq-question.active + .faq-answer {
+            max-height: 1000px; /* A sufficiently large value to accommodate content */
+            padding: 25px 35px 30px 35px;
         }
 
         /* Contact Section */
@@ -1183,143 +880,6 @@
         .contact-info .social-links a:hover {
             color: var(--bright-gold);
             transform: translateY(-12px) rotate(8deg);
-        }
-
-        .booking-form-wrapper form {
-            display: flex;
-            flex-direction: column;
-            gap: 35px;
-        }
-        .booking-form-wrapper label {
-            display: block;
-            margin-bottom: 12px;
-            color: var(--primary-dark-blue);
-            font-weight: 700;
-            font-size: 1.2em;
-        }
-        .booking-form-wrapper input[type="text"],
-        .booking-form-wrapper input[type="email"],
-        .booking-form-wrapper input[type="tel"],
-        .booking-form-wrapper input[type="date"],
-        .booking-form-wrapper textarea {
-            width: 100%;
-            padding: 18px;
-            border: 1px solid #e0e0e0;
-            border-radius: 14px;
-            font-size: 1.15em;
-            color: var(--dark-brown);
-            background-color: var(--warm-sandy-beige);
-            transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-        }
-        html[dir="rtl"] .booking-form-wrapper input, html[dir="rtl"] .booking-form-wrapper textarea {
-            text-align: right;
-        }
-        html[dir="ltr"] .booking-form-wrapper input, html[dir="ltr"] .booking-form-wrapper textarea {
-            text-align: left;
-        }
-        .booking-form-wrapper input[type="text"]:focus,
-        .booking-form-wrapper input[type="email"]:focus,
-        .booking-form-wrapper input[type="tel"]:focus,
-        .booking-form-wrapper input[type="date"]:focus,
-        .booking-form-wrapper textarea:focus {
-            border-color: var(--bright-gold);
-            box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.3);
-            outline: none;
-        }
-        .booking-form-wrapper textarea {
-            resize: vertical;
-            min-height: 160px;
-        }
-        .time-slots {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 18px;
-            margin-top: 20px;
-        }
-        html[dir="rtl"] .time-slots {
-            justify-content: flex-end;
-        }
-        html[dir="ltr"] .time-slots {
-            justify-content: flex-start;
-        }
-        .time-slot {
-            padding: 16px 25px;
-            border: 2px solid var(--primary-dark-blue);
-            border-radius: 35px;
-            cursor: pointer;
-            background-color: var(--off-white);
-            color: var(--primary-dark-blue);
-            font-weight: 600;
-            transition: all var(--transition-speed) ease;
-        }
-        .time-slot:hover {
-            background-color: var(--primary-dark-blue);
-            color: var(--off-white);
-            border-color: var(--primary-dark-blue);
-            transform: translateY(-5px);
-        }
-        .time-slot.selected {
-            background-color: var(--bright-gold);
-            color: var(--primary-dark-blue);
-            border-color: var(--bright-gold);
-            box-shadow: 0 5px 18px var(--shadow-medium);
-        }
-        .time-slot-error {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 10px;
-            display: none;
-        }
-        html[dir="rtl"] .time-slot-error {
-            text-align: right;
-        }
-        html[dir="ltr"] .time-slot-error {
-            text-align: left;
-        }
-        .booking-form-wrapper button[type="submit"] {
-            background-color: var(--primary-dark-blue);
-            color: var(--off-white);
-            padding: 22px 45px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.5em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-            box-shadow: 0 10px 30px var(--shadow-subtle);
-            margin-top: 40px;
-            border: 2px solid var(--primary-dark-blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .booking-form-wrapper button[type="submit"]:hover {
-            background-color: transparent;
-            color: var(--primary-dark-blue);
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 40px var(--shadow-medium);
-        }
-        .booking-form-wrapper button[type="submit"]:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-            color: #666666;
-        }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--bright-gold);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            display: none;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         /* Footer */
@@ -1502,7 +1062,7 @@
             transform: translateY(-15px) scale(1.08);
         }
 
-        /* Custom Modal for Booking Confirmation */
+        /* Custom Modal for Booking Confirmation (kept for newsletter, removed for booking form) */
         .modal {
             display: none;
             position: fixed;
@@ -1586,9 +1146,6 @@
             }
             h2 {
                 font-size: 2.8em;
-            }
-            .testimonial-card {
-                padding: 35px;
             }
             .faq-question {
                 padding: 20px 30px;
@@ -1723,9 +1280,6 @@
             .course-card h3, .why-us-item h3 {
                 font-size: 2em;
             }
-            .testimonials-slider {
-                flex-direction: column;
-            }
 
             .contact-content {
                 flex-direction: column;
@@ -1747,13 +1301,6 @@
             }
             .contact-info .social-links, footer .social-links {
                 justify-content: center;
-            }
-            .booking-form-wrapper input, .booking-form-wrapper textarea, .booking-form-wrapper button {
-                font-size: 1.1em;
-                padding: 16px;
-            }
-            .booking-form-wrapper button[type="submit"] {
-                padding: 20px 35px;
             }
 
             footer {
@@ -1814,21 +1361,18 @@
                 font-size: 2em;
                 margin-bottom: 40px;
             }
-            .ijazat-grid, .courses-grid, .certificates-grid, .blog-grid, .why-us-grid, .journey-steps {
+            .ijazat-grid, .courses-grid, .why-us-grid {
                 grid-template-columns: 1fr;
                 gap: 30px; /* Reduced gap */
             }
-            .journey-steps::before {
-                display: none; /* Hide line on very small screens */
-            }
-            .ijaza-card, .course-card, .why-us-item, .testimonial-card, .blog-post-card, .faq-item, .contact-info, .booking-form-wrapper {
+            .ijaza-card, .course-card, .why-us-item, .faq-item, .contact-info, .booking-form-wrapper {
                 padding: 30px; /* Reduced card padding */
             }
             .ijaza-card h3, .course-card h3, .why-us-item h3, .contact-info h3, .booking-form-wrapper h3 {
                 font-size: 1.8em; /* Reduced heading sizes in cards */
                 margin-bottom: 20px;
             }
-            .ijaza-card p, .course-card p, .why-us-item p, .testimonial-card p, .faq-answer p, .contact-info p {
+            .ijaza-card p, .course-card p, .why-us-item p, .faq-answer p, .contact-info p {
                 font-size: 0.95em; /* Adjusted paragraph font size */
             }
             .ijaza-card ul li {
@@ -1847,25 +1391,6 @@
             }
             .faq-answer {
                 padding: 0 25px 15px 25px;
-            }
-            .booking-form-wrapper label {
-                font-size: 1.1em;
-                margin-bottom: 8px;
-            }
-            .booking-form-wrapper input, .booking-form-wrapper textarea {
-                padding: 14px;
-                font-size: 1em;
-            }
-            .time-slots {
-                gap: 10px; /* Reduced gap for time slots */
-            }
-            .time-slot {
-                padding: 12px 20px;
-                font-size: 0.95em;
-            }
-            .booking-form-wrapper button[type="submit"] {
-                padding: 18px 30px;
-                font-size: 1.3em;
             }
             footer .footer-col {
                 min-width: unset; /* Allow cols to shrink further */
@@ -1906,11 +1431,7 @@
                 <li><a href="#about" data-key="nav-about">عن الشيخ</a></li>
                 <li><a href="#ijazat" data-key="nav-ijazat">الإجازات والمؤهلات</a></li>
                 <li><a href="#courses" data-key="nav-courses">دوراتنا</a></li>
-                <li><a href="#certificates" data-key="nav-certificates">معرض الشهادات</a></li>
-                <li><a href="#journey" data-key="nav-journey">رحلة الطالب</a></li>
                 <li><a href="#why-us" data-key="nav-why-us">لماذا تختارنا؟</a></li>
-                <li><a href="#testimonials" data-key="nav-testimonials">آراء طلابنا</a></li>
-                <li><a href="#blog" data-key="nav-blog">المدونة</a></li>
                 <li><a href="#faq" data-key="nav-faq">الأسئلة الشائعة</a></li>
                 <li><a href="#contact" data-key="nav-contact">تواصل معنا</a></li>
             </ul>
@@ -2015,62 +1536,6 @@
             </div>
         </section>
 
-        <section id="certificates" class="certificates">
-            <div class="container section-header fade-in">
-                <h2 data-key="certificates-h2">معرض شهادات الإجازة</h2>
-            </div>
-            <div class="container certificates-grid fade-in">
-                <div class="certificate-item scale-in">
-                    <img src="https://placehold.co/400x250/1A3E63/D4AF37?text=Certificate+1" data-key="certificate1-img-alt" alt="شهادة إجازة 1">
-                    <div class="caption" data-key="certificate1-caption">إجازة في رواية حفص عن عاصم</div>
-                </div>
-                <div class="certificate-item scale-in" style="transition-delay: 0.1s;">
-                    <img src="https://placehold.co/400x250/1A3E63/D4AF37?text=Certificate+2" data-key="certificate2-img-alt" alt="شهادة إجازة 2">
-                    <div class="caption" data-key="certificate2-caption">شهادة إتمام برنامج التجويد</div>
-                </div>
-                <div class="certificate-item scale-in" style="transition-delay: 0.2s;">
-                    <img src="https://placehold.co/400x250/1A3E63/D4AF37?text=Certificate+3" data-key="certificate3-img-alt" alt="شهادة إجازة 3">
-                    <div class="caption" data-key="certificate3-caption">إجازة في العشر الصغرى</div>
-                </div>
-                <div class="certificate-item scale-in" style="transition-delay: 0.3s;">
-                    <img src="https://placehold.co/400x250/1A3E63/D4AF37?text=Certificate+4" data-key="certificate4-img-alt" alt="شهادة إجازة 4">
-                    <div class="caption" data-key="certificate4-caption">إجازة في القراءات السبع</div>
-                </div>
-                <div class="certificate-item scale-in" style="transition-delay: 0.4s;">
-                    <img src="https://placehold.co/400x250/1A3E63/D4AF37?text=Certificate+5" data-key="certificate5-img-alt" alt="شهادة إجازة 5">
-                    <div class="caption" data-key="certificate5-caption">شهادة حفظ القرآن كاملاً</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="journey" class="journey">
-            <div class="container section-header fade-in">
-                <h2 data-key="journey-h2">رحلة الطالب معنا</h2>
-            </div>
-            <div class="container journey-steps fade-in">
-                <div class="journey-step-card scale-in">
-                    <div class="step-number">1</div>
-                    <h3 data-key="journey-step1-h3">التسجيل والاستشارة</h3>
-                    <p data-key="journey-step1-p">ابدأ بملء نموذج التواصل لحجز جلستك التجريبية المجانية، وسنتواصل معك لتقييم مستواك وتحديد المسار الأنسب لك.</p>
-                </div>
-                <div class="journey-step-card scale-in" style="transition-delay: 0.1s;">
-                    <div class="step-number">2</div>
-                    <h3 data-key="journey-step2-h3">بداية الدراسة</h3>
-                    <p data-key="journey-step2-p">انطلق في دروسك المنتظمة مع الشيخ عبر الإنترنت، حيث يتم التركيز على التجويد، الحفظ، أو الإقراء حسب اختيارك.</p>
-                </div>
-                <div class="journey-step-card scale-in" style="transition-delay: 0.2s;">
-                    <div class="step-number">3</div>
-                    <h3 data-key="journey-step3-h3">التقييم والمراجعة</h3>
-                    <p data-key="journey-step3-p">تتم مراجعة تقدمك بانتظام، مع تقديم التوجيهات والتصحيحات اللازمة لضمان إتقانك وتثبيت حفظك.</p>
-                </div>
-                <div class="journey-step-card scale-in" style="transition-delay: 0.3s;">
-                    <div class="step-number">4</div>
-                    <h3 data-key="journey-step4-h3">الإجازة والتخرج</h3>
-                    <p data-key="journey-step4-p">عند إتمام المنهج وإتقان التلاوة، تحصل على إجازة بالسند المتصل، لتصبح من أهل القرآن المجازين.</p>
-                </div>
-            </div>
-        </section>
-
         <section id="why-us" class="why-us">
             <div class="container section-header fade-in">
                 <h2 data-key="why-us-h2">لماذا تختارنا لرحلتك القرآنية؟</h2>
@@ -2095,101 +1560,6 @@
                     <i class="fas fa-compass icon"></i>
                     <h3 data-key="why-us-item4-h3">إرشاد ودعم مستمر</h3>
                     <p data-key="why-us-item4-p">نحن معك في كل خطوة من رحلتك القرآنية، نقدم الإرشاد والمتابعة لضمان نجاحك.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="testimonials" class="testimonials">
-            <div class="container section-header fade-in">
-                <h2 data-key="testimonials-h2">ماذا يقول طلابنا عنا؟</h2>
-            </div>
-            <div class="container testimonials-slider fade-in">
-                <div class="testimonial-card scale-in">
-                    <i class="fas fa-quote-right quote-icon"></i>
-                    <p data-key="testimonial-card1-p">"تجربتي مع الشيخ عبد الرحمن كانت رائعة حقًا. منهجيته واضحة وصبره كبير، وقد ساعدني كثيرًا في تحسين تلاوتي وحفظي. أنصح به بشدة لكل من يرغب في إتقان القرآن."</p>
-                    <div class="student-info">
-                        <p class="student-name" data-key="testimonial-card1-name">أحمد سعيد</p>
-                        <p class="student-title" data-key="testimonial-card1-title">طالب إجازة بقراءة حفص</p>
-                    </div>
-                </div>
-                 <div class="testimonial-card scale-in" style="transition-delay: 0.2s;">
-                    <i class="fas fa-quote-right quote-icon"></i>
-                    <p data-key="testimonial-card2-p">"لم أكن أتخيل أنني سأصل لهذا المستوى من التجويد، لكن بفضل الله ثم توجيهات الشيخ الصبورة والمنهجية الفعالة، أصبحت قراءتي أفضل بكثير. جزاكم الله خيراً!"</p>
-                    <div class="student-info">
-                        <p class="student-name" data-key="testimonial-card2-name">فاطمة الزهراء</p>
-                        <p class="student-title" data-key="testimonial-card2-title">طالبة تحفيظ وتجويد</p>
-                    </div>
-                </div>
-                <div class="testimonial-card scale-in" style="transition-delay: 0.4s;">
-                    <i class="fas fa-quote-right quote-icon"></i>
-                    <p data-key="testimonial-card3-p">"أشعر براحة كبيرة في تعلم القرآن مع الشيخ عبد الرحمن. الشرح مبسط والأسلوب محفز، وهذا ما كنت أبحث عنه. أوصي به لكل الأعمار."</p>
-                    <div class="student-info">
-                        <p class="student-name" data-key="testimonial-card3-name">يوسف عبدالله</p>
-                        <p class="student-title" data-key="testimonial-card3-title">طالب مبتدئ</p>
-                    </div>
-                </div>
-                <div class="testimonial-card scale-in" style="transition-delay: 0.6s;">
-                    <i class="fas fa-quote-right quote-icon"></i>
-                    <p data-key="testimonial-card4-p">"الشيخ عبد الرحمن يتمتع بصبر وحكمة لا مثيل لهما. لقد ساعدني على تجاوز الصعوبات في التجويد وأصبحت قادراً على تلاوة القرآن بثقة أكبر. شكراً جزيلاً!"</p>
-                    <div class="student-info">
-                        <p class="student-name" data-key="testimonial-card4-name">مريم خالد</p>
-                        <p class="student-title" data-key="testimonial-card4-title">طالبة تجويد</p>
-                    </div>
-                </div>
-                <div class="testimonial-card scale-in" style="transition-delay: 0.8s;">
-                    <i class="fas fa-quote-right quote-icon"></i>
-                    <p data-key="testimonial-card5-p">"المنصة سهلة الاستخدام والدروس منظمة جداً. استطعت أن أتقدم في حفظي بشكل ملحوظ في وقت قصير. تجربة تعليمية ممتازة!"</p>
-                    <div class="student-info">
-                        <p class="student-name" data-key="testimonial-card5-name">علياء فهد</p>
-                        <p class="student-title" data-key="testimonial-card5-title">طالبة تحفيظ</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="blog" class="blog">
-            <div class="container section-header fade-in">
-                <h2 data-key="blog-h2">مقالات ومدونات قرآنية</h2>
-            </div>
-            <div class="container blog-grid fade-in">
-                <div class="blog-post-card scale-in">
-                    <img src="https://placehold.co/400x220/D4AF37/1A3E63?text=Article+1" data-key="blog-post1-img-alt" alt="صورة المقال 1">
-                    <div class="content">
-                        <h3 data-key="blog-post1-h3">فضل تلاوة القرآن الكريم وأثرها على النفس</h3>
-                        <div class="meta">
-                            <span data-key="blog-post1-meta-date"><i class="fas fa-calendar-alt"></i> 10 مايو 2024</span>
-                            <span data-key="blog-post1-meta-author"><i class="fas fa-user"></i> الشيخ عبدالرحمن</span>
-                        </div>
-                        <p data-key="blog-post1-p">تعتبر تلاوة القرآن الكريم من أعظم العبادات التي تقرب العبد إلى ربه، ولها فضائل جمة وآثار عظيمة على النفس والروح. في هذا المقال، نستعرض بعضاً من هذه الفضائل وكيف يمكن أن تحول حياتك...</p>
-                        <a href="#" class="read-more" data-key="blog-post1-read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
-                        <a href="#contact" class="blog-cta-btn" data-key="blog-post1-cta-btn">سجل في دورة التجويد</a>
-                    </div>
-                </div>
-                <div class="blog-post-card scale-in" style="transition-delay: 0.1s;">
-                    <img src="https://placehold.co/400x220/D4AF37/1A3E63?text=Article+2" data-key="blog-post2-img-alt" alt="صورة المقال 2">
-                    <div class="content">
-                        <h3 data-key="blog-post2-h3">أهمية التجويد في ترتيل القرآن الكريم</h3>
-                        <div class="meta">
-                            <span data-key="blog-post2-meta-date"><i class="fas fa-calendar-alt"></i> 22 أبريل 2024</span>
-                            <span data-key="blog-post2-meta-author"><i class="fas fa-user"></i> الشيخ عبدالرحمن</span>
-                        </div>
-                        <p data-key="blog-post2-p">التجويد ليس مجرد تحسين للصوت، بل هو علم جليل يحفظ اللسان من اللحن في كتاب الله، ويضمن أداء الحروف كما أنزلها الله على نبيه صلى الله عليه وسلم. تعرف على أهميته وفوائده...</p>
-                        <a href="#" class="read-more" data-key="blog-post2-read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
-                        <a href="#contact" class="blog-cta-btn" data-key="blog-post2-cta-btn">ابدأ حفظ القرآن</a>
-                    </div>
-                </div>
-                <div class="blog-post-card scale-in" style="transition-delay: 0.2s;">
-                    <img src="https://placehold.co/400x220/D4AF37/1A3E63?text=Article+3" data-key="blog-post3-img-alt" alt="صورة المقال 3">
-                    <div class="content">
-                        <h3 data-key="blog-post3-h3">كيف تبدأ رحلتك في حفظ القرآن الكريم؟</h3>
-                        <div class="meta">
-                            <span data-key="blog-post3-meta-date"><i class="fas fa-calendar-alt"></i> 15 مارس 2024</span>
-                            <span data-key="blog-post3-meta-author"><i class="fas fa-user"></i> الشيخ عبدالرحمن</span>
-                        </div>
-                        <p data-key="blog-post3-p">حفظ القرآن الكريم أمنية لكل مسلم، ولكن قد تبدو الرحلة شاقة في البداية. نقدم لك في هذا المقال دليلاً مبسطاً وخطوات عملية للبدء في حفظ كتاب الله، مع نصائح مجربة للتثبيت والمراجعة...</p>
-                        <a href="#" class="read-more" data-key="blog-post3-read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
-                        <a href="#contact" class="blog-cta-btn" data-key="blog-post3-cta-btn">احجز جلستك المجانية</a>
-                    </div>
                 </div>
             </div>
         </section>
@@ -2271,42 +1641,9 @@
                 </div>
                 <div class="booking-form-wrapper scale-in" style="transition-delay: 0.2s;">
                     <h3 data-key="booking-form-h3">احجز جلستك التجريبية المجانية</h3>
-                    <form id="bookingForm">
-                        <label for="name" data-key="form-label-name">اسمك الكريم:</label>
-                        <input type="text" id="name" name="name" required>
-
-                        <label for="email" data-key="form-label-email">بريدك الإلكتروني:</label>
-                        <input type="email" id="email" name="email" required>
-
-                        <label for="phone" data-key="form-label-phone">رقم الواتساب (للتواصل):</label>
-                        <input type="tel" id="phone" name="phone" placeholder="+2010XXXXXXXX" required>
-
-                        <label for="preferredDate" data-key="form-label-date">تاريخ الجلسة المفضل:</label>
-                        <input type="date" id="preferredDate" name="preferredDate" required>
-
-                        <label data-key="form-label-time">الوقت المفضل (بتوقيتك المحلي):</label>
-                        <div class="time-slots">
-                            <span class="time-slot" data-time="09:00 AM">09:00 صباحاً</span>
-                            <span class="time-slot" data-time="10:00 AM">10:00 صباحاً</span>
-                            <span class="time-slot" data-time="11:00 AM">11:00 صباحاً</span>
-                            <span class="time-slot" data-time="01:00 PM">01:00 ظهراً</span>
-                            <span class="time-slot" data-time="03:00 PM">03:00 عصراً</span>
-                            <span class="time-slot" data-time="05:00 PM">05:00 مساءً</span>
-                            <span class="time-slot" data-time="07:00 PM">07:00 مساءً</span>
-                            <span class="time-slot" data-time="09:00 PM">09:00 مساءً</span>
-                        </div>
-                        <p class="time-slot-error" id="timeSlotError" data-key="time-slot-error">يرجى اختيار وقت للجلسة.</p>
-                        <input type="hidden" id="selectedTime" name="selectedTime">
-
-                        <label for="notes" data-key="form-label-notes">ملاحظات إضافية (اختياري):</label>
-                        <textarea id="notes" name="notes" data-key="form-notes-placeholder" placeholder="مستواي في القراءة، أو أي تفضيلات أخرى..."></textarea>
-
-                        <button type="submit" id="submitButton" data-key="submit-button">
-                            إرسال طلب الحجز
-                            <span class="loader" id="submitLoader"></span>
-                        </button>
-                    </form>
-                </div>
+                    <div class="calendly-inline-widget" data-url="https://calendly.com/abdelrahmanhamada3342/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=204f87&text_color=af9218&primary_color=345e9b" style="min-width:320px;height:700px;"></div>
+                    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+                    </div>
             </div>
         </section>
     </main>
@@ -2325,10 +1662,7 @@
                         <li><a href="#about" data-key="nav-about-footer">عن الشيخ</a></li>
                         <li><a href="#ijazat" data-key="nav-ijazat-footer">الإجازات</a></li>
                         <li><a href="#courses" data-key="nav-courses-footer">الدورات</a></li>
-                        <li><a href="#certificates" data-key="nav-certificates-footer">الشهادات</a></li>
-                        <li><a href="#testimonials" data-key="nav-testimonials-footer">آراء طلابنا</a></li>
-                        <li><a href="#blog" data-key="nav-blog-footer">المدونة</a></li>
-                        <li><a href="#faq" data-key="nav-faq-footer">الأسئلة الشائعة</a></li>
+                        <li><a href="#faq-footer" data-key="nav-faq-footer">الأسئلة الشائعة</a></li>
                         <li><a href="#contact" data-key="nav-contact-footer">تواصل معنا</a></li>
                     </ul>
                 </div>
@@ -2376,11 +1710,7 @@
                 'nav-about': 'عن الشيخ',
                 'nav-ijazat': 'الإجازات والمؤهلات',
                 'nav-courses': 'دوراتنا',
-                'nav-certificates': 'معرض الشهادات',
-                'nav-journey': 'رحلة الطالب',
                 'nav-why-us': 'لماذا تختارنا؟',
-                'nav-testimonials': 'آراء طلابنا',
-                'nav-blog': 'المدونة',
                 'nav-faq': 'الأسئلة الشائعة',
                 'nav-contact': 'تواصل معنا',
                 'current-lang-display': 'العربية',
@@ -2419,26 +1749,6 @@
                 'course-card4-h3': 'دورات للأطفال والمبتدئين',
                 'course-card4-p': 'تعليم القراءة الصحيحة والتهجي والتجويد المبسط للأطفال والمبتدئين بأساليب تعليمية ممتعة وجذابة.',
                 'course-card4-btn': 'سجل لطفلك',
-                'certificates-h2': 'معرض شهادات الإجازة',
-                'certificate1-img-alt': 'شهادة إجازة 1',
-                'certificate1-caption': 'إجازة في رواية حفص عن عاصم',
-                'certificate2-img-alt': 'شهادة إجازة 2',
-                'certificate2-caption': 'شهادة إتمام برنامج التجويد',
-                'certificate3-img-alt': 'شهادة إجازة 3',
-                'certificate3-caption': 'إجازة في العشر الصغرى',
-                'certificate4-img-alt': 'شهادة إجازة 4',
-                'certificate4-caption': 'إجازة في القراءات السبع',
-                'certificate5-img-alt': 'شهادة إجازة 5',
-                'certificate5-caption': 'شهادة حفظ القرآن كاملاً',
-                'journey-h2': 'رحلة الطالب معنا',
-                'journey-step1-h3': 'التسجيل والاستشارة',
-                'journey-step1-p': 'ابدأ بملء نموذج التواصل لحجز جلستك التجريبية المجانية، وسنتواصل معك لتقييم مستواك وتحديد المسار الأنسب لك.',
-                'journey-step2-h3': 'بداية الدراسة',
-                'journey-step2-p': 'انطلق في دروسك المنتظمة مع الشيخ عبر الإنترنت، حيث يتم التركيز على التجويد، الحفظ، أو الإقراء حسب اختيارك.',
-                'journey-step3-h3': 'التقييم والمراجعة',
-                'journey-step3-p': 'تتم مراجعة تقدمك بانتظام، مع تقديم التوجيهات والتصحيحات اللازمة لضمان إتقانك وتثبيت حفظك.',
-                'journey-step4-h3': 'الإجازة والتخرج',
-                'journey-step4-p': 'عند إتمام المنهج وإتقان التلاوة، تحصل على إجازة بالسند المتصل، لتصبح من أهل القرآن المجازين.',
                 'why-us-h2': 'لماذا تختارنا لرحلتك القرآنية؟',
                 'why-us-item1-h3': 'سند موثوق وعالٍ',
                 'why-us-item1-p': 'تلقي القرآن بسندٍ متصل إلى رسول الله صلى الله عليه وسلم، يضمن لك أصالة التلقي ودقة الأداء.',
@@ -2448,44 +1758,6 @@
                 'why-us-item3-p': 'نستخدم أساليب تعليمية حديثة ومبتكرة لضمان فهم عميق وإتقان سريع.',
                 'why-us-item4-h3': 'إرشاد ودعم مستمر',
                 'why-us-item4-p': 'نحن معك في كل خطوة من رحلتك القرآنية، نقدم الإرشاد والمتابعة لضمان نجاحك.',
-                'testimonials-h2': 'ماذا يقول طلابنا عنا؟',
-                'testimonial-card1-p': '"تجربتي مع الشيخ عبد الرحمن كانت رائعة حقًا. منهجيته واضحة وصبره كبير، وقد ساعدني كثيرًا في تحسين تلاوتي وحفظي. أنصح به بشدة لكل من يرغب في إتقان القرآن."',
-                'testimonial-card1-name': 'أحمد سعيد',
-                'testimonial-card1-title': 'طالب إجازة بقراءة حفص',
-                'testimonial-card2-p': '"لم أكن أتخيل أنني سأصل لهذا المستوى من التجويد، لكن بفضل الله ثم توجيهات الشيخ الصبورة والمنهجية الفعالة، أصبحت قراءتي أفضل بكثير. جزاكم الله خيراً!"',
-                'testimonial-card2-name': 'فاطمة الزهراء',
-                'testimonial-card2-title': 'طالبة تحفيظ وتجويد',
-                'testimonial-card3-p': '"أشعر براحة كبيرة في تعلم القرآن مع الشيخ عبد الرحمن. الشرح مبسط والأسلوب محفز، وهذا ما كنت أبحث عنه. أوصي به لكل الأعمار."',
-                'testimonial-card3-name': 'يوسف عبدالله',
-                'testimonial-card3-title': 'طالب مبتدئ',
-                'testimonial-card4-p': '"الشيخ عبد الرحمن يتمتع بصبر وحكمة لا مثيل لهما. لقد ساعدني على تجاوز الصعوبات في التجويد وأصبحت قادراً على تلاوة القرآن بثقة أكبر. شكراً جزيلاً!"',
-                'testimonial-card4-name': 'مريم خالد',
-                'testimonial-card4-title': 'طالبة تجويد',
-                'testimonial-card5-p': '"المنصة سهلة الاستخدام والدروس منظمة جداً. استطعت أن أتقدم في حفظي بشكل ملحوظ في وقت قصير. تجربة تعليمية ممتازة!"',
-                'testimonial-card5-name': 'علياء فهد',
-                'testimonial-card5-title': 'طالبة تحفيظ',
-                'blog-h2': 'مقالات ومدونات قرآنية',
-                'blog-post1-img-alt': 'صورة المقال 1',
-                'blog-post1-h3': 'فضل تلاوة القرآن الكريم وأثرها على النفس',
-                'blog-post1-meta-date': '<i class="fas fa-calendar-alt"></i> 10 مايو 2024',
-                'blog-post1-meta-author': '<i class="fas fa-user"></i> الشيخ عبدالرحمن',
-                'blog-post1-p': 'تعتبر تلاوة القرآن الكريم من أعظم العبادات التي تقرب العبد إلى ربه، ولها فضائل جمة وآثار عظيمة على النفس والروح. في هذا المقال، نستعرض بعضاً من هذه الفضائل وكيف يمكن أن تحول حياتك...',
-                'blog-post1-read-more': 'اقرأ المزيد <i class="fas fa-arrow-left"></i>',
-                'blog-post1-cta-btn': 'سجل في دورة التجويد',
-                'blog-post2-img-alt': 'صورة المقال 2',
-                'blog-post2-h3': 'أهمية التجويد في ترتيل القرآن الكريم',
-                'blog-post2-meta-date': '<i class="fas fa-calendar-alt"></i> 22 أبريل 2024',
-                'blog-post2-meta-author': '<i class="fas fa-user"></i> الشيخ عبدالرحمن',
-                'blog-post2-p': 'التجويد ليس مجرد تحسين للصوت، بل هو علم جليل يحفظ اللسان من اللحن في كتاب الله، ويضمن أداء الحروف كما أنزلها الله على نبيه صلى الله عليه وسلم. تعرف على أهميته وفوائده...',
-                'blog-post2-read-more': 'اقرأ المزيد <i class="fas fa-arrow-left"></i>',
-                'blog-post2-cta-btn': 'ابدأ حفظ القرآن',
-                'blog-post3-img-alt': 'صورة المقال 3',
-                'blog-post3-h3': 'كيف تبدأ رحلتك في حفظ القرآن الكريم؟',
-                'blog-post3-meta-date': '<i class="fas fa-calendar-alt"></i> 15 مارس 2024',
-                'blog-post3-meta-author': '<i class="fas fa-user"></i> الشيخ عبدالرحمن',
-                'blog-post3-p': 'حفظ القرآن الكريم أمنية لكل مسلم، ولكن قد تبدو الرحلة شاقة في البداية. نقدم لك في هذا المقال دليلاً مبسطاً وخطوات عملية للبدء في حفظ كتاب الله، مع نصائح مجربة للتثبيت والمراجعة...',
-                'blog-post3-read-more': 'اقرأ المزيد <i class="fas fa-arrow-left"></i>',
-                'blog-post3-cta-btn': 'احجز جلستك المجانية',
                 'newsletter-h2': 'اشترك في نشرتنا البريدية',
                 'newsletter-p': 'ابق على اطلاع بآخر أخبارنا، الدورات الجديدة، والمقالات القرآنية المفيدة مباشرة في بريدك الوارد.',
                 'newsletter-email-placeholder': 'أدخل بريدك الإلكتروني',
@@ -2506,15 +1778,6 @@
                 'contact-info-location': '<i class="fas fa-map-marker-alt"></i> الموقع: العاشر من رمضان، الشرقية، مصر (خدمة عالمية)',
                 'contact-info-p-general': 'لا تتردد في الاتصال بنا. نحن هنا لخدمتك والإجابة على استفساراتك.',
                 'booking-form-h3': 'احجز جلستك التجريبية المجانية',
-                'form-label-name': 'اسمك الكريم:',
-                'form-label-email': 'بريدك الإلكتروني:',
-                'form-label-phone': 'رقم الواتساب (للتواصل):',
-                'form-label-date': 'تاريخ الجلسة المفضل:',
-                'form-label-time': 'الوقت المفضل (بتوقيتك المحلي):',
-                'time-slot-error': 'يرجى اختيار وقت للجلسة.',
-                'form-label-notes': 'ملاحظات إضافية (اختياري):',
-                'form-notes-placeholder': 'مستواي في القراءة، أو أي تفضيلات أخرى...',
-                'submit-button': 'إرسال طلب الحجز',
                 'modal-h3': 'تم إرسال طلبك بنجاح!',
                 'modal-p': 'شكراً لك يا عبدالرحمن! لقد تم استلام طلب حجز جلستك التجريبية. سنتواصل معك قريباً جداً لتأكيد الموعد المناسب.',
                 'modal-close-btn': 'حسناً',
@@ -2525,24 +1788,12 @@
                 'nav-about-footer': 'عن الشيخ',
                 'nav-ijazat-footer': 'الإجازات',
                 'nav-courses-footer': 'الدورات',
-                'nav-certificates-footer': 'الشهادات',
-                'nav-testimonials-footer': 'آراء طلابنا',
-                'nav-blog-footer': 'المدونة',
                 'nav-faq-footer': 'الأسئلة الشائعة',
                 'nav-contact-footer': 'تواصل معنا',
                 'footer-col3-h3': 'ابق على تواصل',
                 'footer-col3-email': '<i class="fas fa-envelope"></i> abdelrahmanhamada3342@gmail.com',
                 'footer-col3-whatsapp': '<i class="fab fa-whatsapp"></i> +201001947998',
                 'copyright': '© <span id="current-year"></span> الشيخ عبد الرحمن حماده خليل. جميع الحقوق محفوظة.',
-                // Time slots
-                'time-0900': '09:00 صباحاً',
-                'time-1000': '10:00 صباحاً',
-                'time-1100': '11:00 صباحاً',
-                'time-1300': '01:00 ظهراً',
-                'time-1500': '03:00 عصراً',
-                'time-1700': '05:00 مساءً',
-                'time-1900': '07:00 مساءً',
-                'time-2100': '09:00 مساءً',
             },
             'en': {
                 'page-title': 'Shaykh Abdelrahman Hamada Khalil Website', // Updated title
@@ -2551,11 +1802,7 @@
                 'nav-about': 'About Shaykh',
                 'nav-ijazat': 'Certifications & Qualifications',
                 'nav-courses': 'Our Courses',
-                'nav-certificates': 'Certificates Gallery',
-                'nav-journey': 'Student Journey',
                 'nav-why-us': 'Why Choose Us?',
-                'nav-testimonials': 'Student Testimonials',
-                'nav-blog': 'Blog',
                 'nav-faq': 'FAQ',
                 'nav-contact': 'Contact Us',
                 'current-lang-display': 'English',
@@ -2576,7 +1823,7 @@
                 'ijaza-card1-li3': 'Mastery of Tajweed rules and Uthmani script.',
                 'ijaza-card1-li4': 'Full qualification to teach students and grant them Ijazah.',
                 'ijaza-card2-h3': 'Educational Qualifications & Experience',
-                'ijaza-card2-p': 'By the grace of Allah, in addition to my Quranic certifications, I possess extensive experience in teaching the Holy Quran and its sciences, and educational skills that ensure a unique and fruitful experience for our esteemed students of all ages and levels.',
+                'ijaza-card2-p': 'By the grace of Allah, I possess extensive experience in teaching the Holy Quran and its sciences, and educational skills that ensure a unique and fruitful experience for our esteemed students of all ages and levels.',
                 'ijaza-card2-li1': 'Long experience in teaching Quran and Tajweed remotely.',
                 'ijaza-card2-li2': 'Flexible and personalized teaching methodology to suit each student\'s needs.',
                 'ijaza-card2-li3': 'Preparing students for Quranic exams and competitions.',
@@ -2594,26 +1841,6 @@
                 'course-card4-h3': 'Courses for Children & Beginners',
                 'course-card4-p': 'Teaching correct reading, spelling, and simplified Tajweed for children and beginners using fun and engaging educational methods.',
                 'course-card4-btn': 'Enroll Your Child',
-                'certificates-h2': 'Certificates Gallery',
-                'certificate1-img-alt': 'Ijazah Certificate 1',
-                'certificate1-caption': 'Ijazah in Hafs \'an Asim Narration',
-                'certificate2-img-alt': 'Tajweed Completion Certificate',
-                'certificate2-caption': 'Tajweed Program Completion Certificate',
-                'certificate3-img-alt': 'Ten Minor Readings Certificate',
-                'certificate3-caption': 'Ijazah in the Ten Minor Readings',
-                'certificate4-img-alt': 'Ijazah Certificate 4',
-                'certificate4-caption': 'Ijazah in the Seven Readings',
-                'certificate5-img-alt': 'Quran Memorization Certificate',
-                'certificate5-caption': 'Full Quran Memorization Certificate',
-                'journey-h2': 'Your Student Journey With Us',
-                'journey-step1-h3': 'Registration & Consultation',
-                'journey-step1-p': 'Start by filling out the contact form to book your free trial session. We will contact you to assess your level and determine the most suitable path for you.',
-                'journey-step2-h3': 'Beginning Your Study',
-                'journey-step2-p': 'Begin your regular online lessons with the Shaykh, focusing on Tajweed, memorization, or recitation as per your choice.',
-                'journey-step3-h3': 'Assessment & Review',
-                'journey-step3-p': 'Your progress is regularly reviewed, with necessary guidance and corrections provided to ensure your mastery and strong memorization.',
-                'journey-step4-h3': 'Ijazah & Graduation',
-                'journey-step4-p': 'Upon completing the curriculum and mastering recitation, you will receive an Ijazah with a connected Sanad, becoming one of the certified people of the Quran.',
                 'why-us-h2': 'Why Choose Us for Your Quranic Journey?',
                 'why-us-item1-h3': 'Authentic & High Sanad',
                 'why-us-item1-p': 'Receiving the Quran with a connected Sanad to the Messenger of Allah (peace be upon him) ensures the authenticity of reception and accuracy of performance.',
@@ -2623,44 +1850,6 @@
                 'why-us-item3-p': 'We use modern and innovative teaching methods to ensure deep understanding and quick mastery.',
                 'why-us-item4-h3': 'Continuous Guidance & Support',
                 'why-us-item4-p': 'We are with you every step of your Quranic journey, providing guidance and follow-up to ensure your success.',
-                'testimonials-h2': 'What Our Students Say About Us?',
-                'testimonial-card1-p': '"My experience with Shaykh Abdelrahman was truly wonderful. His methodology is clear and his patience is immense, and he helped me greatly in improving my recitation and memorization. I highly recommend him to anyone who wishes to master the Quran."',
-                'testimonial-card1-name': 'Ahmed Saeed',
-                'testimonial-card1-title': 'Hafs \'an Asim Ijazah Student',
-                'testimonial-card2-p': '"I never imagined I would reach this level of Tajweed, but thanks to Allah and then to the Shaykh\'s patient guidance and effective methodology, my recitation has become much better. May Allah reward you greatly!"',
-                'testimonial-card2-name': 'Fatima Al-Zahraa',
-                'testimonial-card2-title': 'Memorization & Tajweed Student',
-                'testimonial-card3-p': '"I feel great comfort in learning the Quran with Shaykh Abdelrahman. The explanation is simple and the style is motivating, and this is what I was looking for. I recommend him for all ages."',
-                'testimonial-card3-name': 'Youssef Abdullah',
-                'testimonial-card3-title': 'Beginner Student',
-                'testimonial-card4-p': '"Shaykh Abdelrahman has unparalleled patience and wisdom. He helped me overcome difficulties in Tajweed and I am now able to recite the Quran with greater confidence. Thank you very much!"',
-                'testimonial-card4-name': 'Mariam Khalid',
-                'testimonial-card4-title': 'Tajweed Student',
-                'testimonial-card5-p': '"The platform is easy to use and the lessons are very well organized. I was able to make significant progress in my memorization in a short time. An excellent learning experience!"',
-                'testimonial-card5-name': 'Alia Fahad',
-                'testimonial-card5-title': 'Memorization Student',
-                'blog-h2': 'Quranic Articles & Blog',
-                'blog-post1-img-alt': 'Article Image 1',
-                'blog-post1-h3': 'The Virtue of Reciting the Holy Quran and Its Effect on the Soul',
-                'blog-post1-meta-date': '<i class="fas fa-calendar-alt"></i> May 10, 2024',
-                'blog-post1-meta-author': '<i class="fas fa-user"></i> Shaykh Abdelrahman',
-                'blog-post1-p': 'Reciting the Holy Quran is one of the greatest acts of worship that brings a servant closer to his Lord, and it has numerous virtues and profound effects on the soul and spirit. In this article, we explore some of these virtues and how they can transform your life...',
-                'blog-post1-read-more': 'Read More <i class="fas fa-arrow-right"></i>',
-                'blog-post1-cta-btn': 'Enroll in Tajweed Course',
-                'blog-post2-img-alt': 'Article Image 2',
-                'blog-post2-h3': 'The Importance of Tajweed in Reciting the Holy Quran',
-                'blog-post2-meta-date': '<i class="fas fa-calendar-alt"></i> April 22, 2024',
-                'blog-post2-meta-author': '<i class="fas fa-user"></i> Shaykh Abdelrahman',
-                'blog-post2-p': 'Tajweed is not merely about beautifying the voice; it is a noble science that protects the tongue from errors in Allah\'s Book, ensuring that letters are pronounced as Allah revealed them to His Prophet (peace be upon him). Learn about its importance and benefits...',
-                'blog-post2-read-more': 'Read More <i class="fas fa-arrow-right"></i>',
-                'blog-post2-cta-btn': 'Start Quran Memorization',
-                'blog-post3-img-alt': 'Article Image 3',
-                'blog-post3-h3': 'How to Start Your Journey in Memorizing the Holy Quran?',
-                'blog-post3-meta-date': '<i class="fas fa-calendar-alt"></i> March 15, 2024',
-                'blog-post3-meta-author': '<i class="fas fa-user"></i> Shaykh Abdelrahman',
-                'blog-post3-p': 'Memorizing the Holy Quran is an aspiration for every Muslim, but the journey might seem daunting at first. In this article, we provide a simple guide and practical steps to begin memorizing the Book of Allah, along with proven tips for retention and review...',
-                'blog-post3-read-more': 'Read More <i class="fas fa-arrow-right"></i>',
-                'blog-post3-cta-btn': 'Book Your Free Session',
                 'newsletter-h2': 'Subscribe to Our Newsletter',
                 'newsletter-p': 'Stay updated with our latest news, new courses, and beneficial Quranic articles directly in your inbox.',
                 'newsletter-email-placeholder': 'Enter your email address',
@@ -2681,15 +1870,6 @@
                 'contact-info-location': '<i class="fas fa-map-marker-alt"></i> Location: 10th of Ramadan City, Sharqia, Egypt (Global Service)',
                 'contact-info-p-general': 'Do not hesitate to contact us. We are here to serve you and answer your inquiries.',
                 'booking-form-h3': 'Book Your Free Trial Session',
-                'form-label-name': 'Your Name:',
-                'form-label-email': 'Your Email:',
-                'form-label-phone': 'WhatsApp Number (for communication):',
-                'form-label-date': 'Preferred Session Date:',
-                'form-label-time': 'Preferred Time (Local Time):',
-                'time-slot-error': 'Please select a session time.',
-                'form-label-notes': 'Additional Notes (optional):',
-                'form-notes-placeholder': 'My reading level, or any other preferences...',
-                'submit-button': 'Submit Booking Request',
                 'modal-h3': 'Your Request Has Been Sent Successfully!',
                 'modal-p': 'Thank you, Abdelrahman! Your trial session booking request has been received. We will contact you very soon to confirm a suitable appointment.',
                 'modal-close-btn': 'Okay',
@@ -2700,24 +1880,12 @@
                 'nav-about-footer': 'About Shaykh',
                 'nav-ijazat-footer': 'Certifications',
                 'nav-courses-footer': 'Courses',
-                'nav-certificates-footer': 'Certificates',
-                'nav-testimonials-footer': 'Testimonials',
-                'nav-blog-footer': 'Blog',
                 'nav-faq-footer': 'FAQ',
                 'nav-contact-footer': 'Contact Us',
                 'footer-col3-h3': 'Stay Connected',
                 'footer-col3-email': '<i class="fas fa-envelope"></i> abdelrahmanhamada3342@gmail.com',
                 'footer-col3-whatsapp': '<i class="fab fa-whatsapp"></i> +201001947998',
                 'copyright': '© <span id="current-year"></span> Shaykh Abdelrahman Hamada Khalil. All Rights Reserved.',
-                // Time slots
-                'time-0900': '09:00 AM',
-                'time-1000': '10:00 AM',
-                'time-1100': '11:00 AM',
-                'time-1300': '01:00 PM',
-                'time-1500': '03:00 PM',
-                'time-1700': '05:00 PM',
-                'time-1900': '07:00 PM',
-                'time-2100': '09:00 PM',
             }
         };
 
@@ -2740,34 +1908,6 @@
                 }
             });
 
-            // Update time slots
-            document.querySelector('.time-slots').querySelectorAll('span').forEach(span => {
-                const timeKey = 'time-' + span.dataset.time.replace(':', '').replace(' ', ''); // e.g., 'time-0900AM'
-                if (translations[lang][timeKey]) {
-                    span.textContent = translations[lang][timeKey];
-                }
-            });
-
-            // Update testimonial quote icons based on direction
-            document.querySelectorAll('.testimonial-card::before').forEach(icon => {
-                if (lang === 'ar') {
-                    icon.style.content = '"\\f10e"'; // quote-right
-                } else {
-                    icon.style.content = '"\\f10d"'; // quote-left
-                }
-            });
-
-            // Update blog post read more arrows based on direction
-            document.querySelectorAll('.blog-post-card .read-more i').forEach(icon => {
-                if (lang === 'ar') {
-                    icon.classList.remove('fa-arrow-right');
-                    icon.classList.add('fa-arrow-left');
-                } else {
-                    icon.classList.remove('fa-arrow-left');
-                    icon.classList.add('fa-arrow-right');
-                }
-            });
-
             // Update current language display in switcher
             document.querySelector('[data-key="current-lang-display"]').textContent = translations[lang]['current-lang-display'];
 
@@ -2782,7 +1922,6 @@
                     logoImg.style.marginInlineEnd = '0';
                 }
             }
-
 
             // Store language preference
             localStorage.setItem('selectedLang', lang);
@@ -2857,61 +1996,45 @@
                 observer.observe(element);
             });
 
-            // Time slot selection logic
-            document.querySelectorAll('.time-slot').forEach(slot => {
-                slot.addEventListener('click', function() {
-                    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-                    this.classList.add('selected');
-                    document.getElementById('selectedTime').value = this.dataset.time;
-                    document.getElementById('timeSlotError').style.display = 'none';
+            // Set current year in footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // FAQ Accordion functionality - Simplified for smoother animation
+            document.querySelectorAll('.faq-question').forEach(item => {
+                item.addEventListener('click', function() {
+                    // Close any other open answers first
+                    document.querySelectorAll('.faq-question.active').forEach(openQuestion => {
+                        if (openQuestion !== this) { // 'this' refers to the clicked faq-question
+                            openQuestion.classList.remove('active');
+                            openQuestion.querySelector('.icon').style.transform = 'rotate(0deg)';
+                        }
+                    });
+
+                    // Toggle the current clicked question
+                    this.classList.toggle('active');
+                    const icon = this.querySelector('.icon');
+                    if (this.classList.contains('active')) {
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
                 });
             });
 
-            // Handle booking form submission
-            const bookingForm = document.getElementById('bookingForm');
-            const submitButton = document.getElementById('submitButton');
-            const submitLoader = document.getElementById('submitLoader');
-            const timeSlotError = document.getElementById('timeSlotError');
+            // Show/hide Back to Top button on scroll
+            const backToTopButton = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.add('show');
+                } else {
+                    backToTopButton.classList.remove('show');
+                }
+            });
+
+            // The success modal is now only used for the newsletter, so its logic remains.
             const successModal = document.getElementById('successModal');
             const closeModalButton = document.getElementById('closeModal');
 
-            bookingForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                const selectedTime = document.getElementById('selectedTime').value;
-                if (!selectedTime) {
-                    timeSlotError.style.display = 'block';
-                    return;
-                } else {
-                    timeSlotError.style.display = 'none';
-                }
-
-                submitButton.disabled = true;
-                submitLoader.style.display = 'inline-block';
-                submitButton.innerHTML = translations[document.documentElement.lang]['submit-button'] + ' <span class="loader" id="submitLoader"></span>'; // Update button text with loader
-
-                const formData = new FormData(this);
-                const bookingData = {};
-                
-                for (let [key, value] of formData.entries()) {
-                    bookingData[key] = value;
-                }
-                
-                console.log('Booking Data:', bookingData);
-
-                await new Promise(resolve => setTimeout(resolve, 1500));
-
-                successModal.classList.add('show');
-
-                this.reset();
-                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-                document.getElementById('selectedTime').value = '';
-                submitButton.disabled = false;
-                submitLoader.style.display = 'none';
-                submitButton.innerHTML = translations[document.documentElement.lang]['submit-button']; // Reset button text
-            });
-
-            // Close modal functionality
             closeModalButton.addEventListener('click', () => {
                 successModal.classList.remove('show');
             });
@@ -2938,60 +2061,13 @@
                     const modalH3 = newsletterModal.querySelector('h3');
                     const modalP = newsletterModal.querySelector('p');
 
-                    modalH3.textContent = 'شكراً لاشتراكك في النشرة البريدية!';
-                    modalP.textContent = 'لقد تم تسجيل بريدك الإلكتروني بنجاح. ستصلك آخر أخبارنا ودوراتنا قريباً.';
+                    modalH3.textContent = translations[localStorage.getItem('selectedLang') || 'ar']['modal-h3']; // Use translated text
+                    modalP.textContent = translations[localStorage.getItem('selectedLang') || 'ar']['modal-p']; // Use translated text
                     newsletterModal.classList.add('show');
 
                     emailInput.value = ''; // Clear input
                 });
             }
-
-
-            // Set minimum date for preferredDate input to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('preferredDate').min = today;
-
-            // Set current year in footer
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            // FAQ Accordion functionality
-            document.querySelectorAll('.faq-question').forEach(item => {
-                item.addEventListener('click', function() {
-                    const answer = this.nextElementSibling;
-                    const icon = this.querySelector('.icon');
-
-                    document.querySelectorAll('.faq-answer').forEach(openAnswer => {
-                        if (openAnswer !== answer) {
-                            openAnswer.style.maxHeight = '0px';
-                            openAnswer.previousElementSibling.classList.remove('active');
-                            openAnswer.previousElementSibling.querySelector('.icon').style.transform = 'rotate(0deg)';
-                            openAnswer.style.padding = '0 35px';
-                        }
-                    });
-
-                    if (answer.style.maxHeight && answer.style.maxHeight !== '0px') {
-                        answer.style.maxHeight = '0px';
-                        answer.style.padding = '0 35px';
-                        this.classList.remove('active');
-                        icon.style.transform = 'rotate(0deg)';
-                    } else {
-                        answer.style.maxHeight = answer.scrollHeight + 'px';
-                        answer.style.padding = '25px 35px 30px 35px';
-                        this.classList.add('active');
-                        icon.style.transform = 'rotate(180deg)';
-                    }
-                });
-            });
-
-            // Show/hide Back to Top button on scroll
-            const backToTopButton = document.getElementById('back-to-top');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 300) {
-                    backToTopButton.classList.add('show');
-                } else {
-                    backToTopButton.classList.remove('show');
-                }
-            });
         });
     </script>
 </body>
