@@ -199,6 +199,9 @@
             font-weight: 600;
             cursor: pointer;
             font-size: 1.15em;
+            display: flex; /* Ensure flex for alignment */
+            align-items: center; /* Vertically align items */
+            gap: 8px; /* Space between text and icon */
         }
         /* RTL specific styles for language switcher */
         html[dir="rtl"] .language-switcher {
@@ -207,6 +210,15 @@
         html[dir="ltr"] .language-switcher {
             margin-left: 20px;
         }
+        /* Adjust icon size within language switcher */
+        .language-switcher .fas.fa-chevron-down {
+            font-size: 0.8em; /* Smaller icon size */
+            transition: transform 0.3s ease;
+        }
+        .language-switcher.active .fas.fa-chevron-down {
+            transform: rotate(180deg);
+        }
+
 
         .language-switcher .dropdown-content {
             display: none;
@@ -217,6 +229,8 @@
             z-index: 1;
             border-radius: var(--border-radius-main);
             overflow: hidden;
+            top: 100%; /* Position below the switcher text */
+            margin-top: 10px; /* Space below the switcher */
         }
         html[dir="rtl"] .language-switcher .dropdown-content {
             right: 0; /* Align to the right for RTL */
@@ -1217,6 +1231,10 @@
                 padding: 8px 16px;
                 font-size: 1em;
             }
+            /* Adjust language switcher icon for mobile */
+            .language-switcher .fas.fa-chevron-down {
+                font-size: 0.7em; /* Even smaller on mobile */
+            }
             .hero h1 {
                 font-size: 2.5em;
             }
@@ -1477,8 +1495,8 @@
                 </div>
                 <div class="about-text fade-in">
                     <h3 data-key="about-h3">نبذة عن مسيرتي في خدمة القرآن</h3>
-                    <p data-key="about-p1">الحمد لله رب العالمين، والصلاة والسلام على خاتم الأنبياء والمرسلين. أنا الشيخ عبد الرحمن حماده خليل، مُجاز ومعلم للقرآن الكريم. لقد كرست حياتي لخدمة كتاب الله العزيز، تلقيت العلم من شيوخ أجلاء وحصلت على الإجازات الشرعية التي تؤهلني لتعليم وإقراء كتاب الله بسندٍ متصل إلى نبينا الكريم محمد صلى الله عليه وسلم.</p>
-                    <p data-key="about-p2">أؤمن بأن تعلم القرآن هو رحلة نور وسكينة، وأن كل طالب يستحق أن يتلقى العلم بأفضل الطرق وأيسرها. لهذا، أقدم لكم عبر هذه المنصة منهجي التعليمي الذي يجمع بين أصالة التلقي ومتطلبات التعليم الحديث عن بُعد، لكي تتمكنوا من إتقان التلاوة، وتجويد الحروف، وتحقيق الإجازة، وأن تكونوا من أهل القرآن الذين هم أهل الله وخاصته.</p>
+                    <p data-key="about-p1">الحمد لله رب العالمين، والصلاة والسلام على خاتم الأنبياء والمرسلين. أنا الشيخ عبد الرحمن حماده خليل، طالب بكلية اللغات والترجمة بقسم الأدب الصيني بجامعة الأزهر، ومعلم ومجاز في القرآن الكريم. لقد كرست حياتي لخدمة كتاب الله العزيز، وتلقيت العلم من شيوخ أجلاء وحصلت على الإجازات الشرعية التي تؤهلني لتعليم وإقراء كتاب الله بسندٍ متصل إلى نبينا الكريم محمد صلى الله عليه وسلم.</p>
+                    <p data-key="about-p2">أؤمن بأن تعلم القرآن هو رحلة نور وسكينة، وأن كل طالب يستحق أن يتلقى العلم بأفضل الطرق وأيسرها. لهذا، أقدم لكم عبر هذه المنصة منهجي التعليمي الذي يجمع بين أصالة التلقي ومتطلبات التعليم الحديث عن بُعد، لكي تتمكنوا من إتقان التلاوة، وتجويد الحروف، وتحقيق الإجازة، وأن تكونوا من أهل القرآن الذين هم أهل الله وخاصته. لدي خبرة كمعلم قرآن أونلاين في أكاديمية رفرف (يوليو 2024 - الوقت الحاضر) ومعلم قرآن أونلاين (عمل حر) منذ يوليو 2021، ومعلم قرآن أوفلاين (عمل حر) منذ نوفمبر 2024.</p>
                     <p data-key="about-p3">أسأل الله تعالى أن يتقبل منا ومنكم صالح الأعمال، وأن يجعلنا جميعاً خداماً لكتابه الكريم.</p>
                 </div>
             </div>
@@ -1490,22 +1508,22 @@
             </div>
             <div class="container ijazat-grid fade-in">
                 <div class="ijaza-card scale-in">
-                    <h3 data-key="ijaza-card1-h3">الإجازة في القرآن الكريم</h3>
-                    <p data-key="ijaza-card1-p">أتشرف بحمل الإجازة في القرآن الكريم، وهي أعلى مراتب التلقي والإقراء، حيث تلقيت القرآن غضاً طرياً بالسند المتصل إلى رسول الله صلى الله عليه وسلم، مما يضمن دقة وصحة التلاوة التي سأنقلها إليكم.</p>
+                    <h3 data-key="ijaza-card1-h3">الإجازات القرآنية</h3>
+                    <p data-key="ijaza-card1-p">أتشرف بحمل عدة إجازات قرآنية بالسند المتصل إلى رسول الله صلى الله عليه وسلم، مما يضمن دقة وصحة التلاوة التي سأنقلها إليكم.</p>
                     <ul>
-                        <li data-key="ijaza-card1-li1"><i class="fas fa-check-circle"></i> إجازة بالسند المتصل في تلاوة القرآن الكريم.</li>
-                        <li data-key="ijaza-card1-li2"><i class="fas fa-check-circle"></i> تلقي القرآن عن شيوخ أجلاء مشهود لهم بالعلم والفضل.</li>
-                        <li data-key="ijaza-card1-li3"><i class="fas fa-check-circle"></i> إتقان أحكام التجويد والرسم العثماني.</li>
-                        <li data-key="ijaza-card1-li4"><i class="fas fa-check-circle"></i> التأهيل الكامل لإقراء الطلاب ومنحهم الإجازة.</li>
+                        <li data-key="ijaza-card1-li1"><i class="fas fa-check-circle"></i> إجازة برواية حفص عن عاصم من طريق الشاطبية (من فضيلة الشيخ عزب محمود).</li>
+                        <li data-key="ijaza-card1-li2"><i class="fas fa-check-circle"></i> إجازة بقراءة الإمام عاصم بروايتي حفص وشعبة من طريق الشاطبية (من فضيلة الشيخة حنان محمد عبد العزيز).</li>
+                        <li data-key="ijaza-card1-li3"><i class="fas fa-check-circle"></i> إجازة بقراءة الإمام حمزة بروايتي خلف وخلاد من طريق الشاطبية (من فضيلة الشيخ هاني منصور الشرقاوي).</li>
+                        <li data-key="ijaza-card1-li4"><i class="fas fa-check-circle"></i> تلقي القرآن عن شيوخ أجلاء مشهود لهم بالعلم والفضل.</li>
                     </ul>
                 </div>
                 <div class="ijaza-card scale-in" style="transition-delay: 0.2s;">
                     <h3 data-key="ijaza-card2-h3">المؤهلات التعليمية والخبرات</h3>
-                    <p data-key="ijaza-card2-p">بفضل الله، أمتلك إلى جانب الإجازات القرآنية، خبرة واسعة في تدريس القرآن الكريم وعلومه، ومهارات تعليمية تضمن تجربة فريدة ومثمرة لطلابنا الكرام من مختلف الأعمار والمستويات.</p>
+                    <p data-key="ijaza-card2-p">إلى جانب الإجازات القرآنية، أمتلك مؤهلات تعليمية وخبرة عملية واسعة في تدريس القرآن الكريم وعلومه.</p>
                     <ul>
-                        <li data-key="ijaza-card2-li1"><i class="fas fa-check-circle"></i> خبرة طويلة في تدريس القرآن والتجويد عن بُعد.</li>
-                        <li data-key="ijaza-card2-li2"><i class="fas fa-check-circle"></i> منهجية تعليمية مرنة ومخصصة تناسب احتياجات كل طالب.</li>
-                        <li data-key="ijaza-card2-li3"><i class="fas fa-check-circle"></i> إعداد الطلاب للاختبارات والمنافسات القرآنية.</li>
+                        <li data-key="ijaza-card2-li1"><i class="fas fa-check-circle"></i> طالب بكلية اللغات والترجمة، قسم الأدب الصيني، جامعة الأزهر.</li>
+                        <li data-key="ijaza-card2-li2"><i class="fas fa-check-circle"></i> خبرة كمعلم قرآن أونلاين (أكاديمية رفرف وعمل حر) ومعلم قرآن أوفلاين.</li>
+                        <li data-key="ijaza-card2-li3"><i class="fas fa-check-circle"></i> منهجية تعليمية مرنة ومخصصة تناسب احتياجات كل طالب.</li>
                         <li data-key="ijaza-card2-li4"><i class="fas fa-check-circle"></i> مهارات تواصل ممتازة لضمان بيئة تعليمية محفزة.</li>
                     </ul>
                 </div>
@@ -1592,23 +1610,32 @@
             <div class="container faq-accordion fade-in">
                 <div class="faq-item scale-in">
                     <div class="faq-question">
+                        <span data-key="faq-q0">ما هي الإجازة؟</span>
+                        <i class="fas fa-chevron-down icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-key="faq-a0">هي رخصة وشهادة من شيخ مجاز له سند متصل بالنبي صلى الله عليه وسلم، وهي شهادة من الشيخ أنك قرأت القرآن الكريم كاملاً بأحكام التجويد والتلاوة الصحيحة غيباً عن ظهر قلب، ورخصة قراءة وإقراء، أي أن تعلم من بعدك من طلبة العلم.</p>
+                    </div>
+                </div>
+                <div class="faq-item scale-in" style="transition-delay: 0.1s;">
+                    <div class="faq-question">
                         <span data-key="faq-q1">ما هي شروط الحصول على الإجازة؟</span>
                         <i class="fas fa-chevron-down icon"></i>
                     </div>
                     <div class="faq-answer">
-                        <p data-key="faq-a1">تتطلب الإجازة إتقان تلاوة القرآن الكريم كاملاً على الشيخ، مع تطبيق أحكام التجويد بشكل صحيح. سيتم تقييم أدائك بشكل دوري لضمان استيفاء المعايير المطلوبة للسند.</p>
+                        <p data-key="faq-a1">الشرط الأساسي عند كل المشايخ والمقرئين هو قراءة القرآن الكريم كاملاً قراءة صحيحة بأحكام التجويد غيباً عن ظهر قلب. وقد يزيد كل شيخ من الشروط حسب طريقته وأسلوبه كأن يكون هناك اختبار بعد إنهاء الختمة مثلاً.</p>
                     </div>
                 </div>
-                <div class="faq-item scale-in" style="transition-delay: 0.1s;">
+                <div class="faq-item scale-in" style="transition-delay: 0.2s;">
                     <div class="faq-question">
                         <span data-key="faq-q2">هل الدروس متاحة للمبتدئين؟</span>
                         <i class="fas fa-chevron-down icon"></i>
                     </div>
                     <div class="faq-answer">
-                        <p data-key="faq-a2">نعم، نقدم دروسًا مناسبة لجميع المستويات، من المبتدئين الذين لا يجيدون القراءة إلى المتقدمين الذين يسعون للحصول على الإجازة. يتم تصميم المنهج ليناسب كل طالب بشكل فردي.</p>
+                        <p data-key="faq-a2">نعم، إذا كنت تجيد قراءة اللغة العربية فيمكنك البدء معنا من الصفر لتعلم تلاوة القرآن الكريم وتجويده وحتى الحصول على إجازة بالسند المتصل إلى رسول الله صلى الله عليه وسلم.</p>
                     </div>
                 </div>
-                <div class="faq-item scale-in" style="transition-delay: 0.2s;">
+                <div class="faq-item scale-in" style="transition-delay: 0.3s;">
                     <div class="faq-question">
                         <span data-key="faq-q3">ما هي المنصات المستخدمة للتعليم عن بُعد؟</span>
                         <i class="fas fa-chevron-down icon"></i>
@@ -1617,13 +1644,13 @@
                         <p data-key="faq-a3">نستخدم منصات تعليمية مرنة وموثوقة مثل Zoom أو Google Meet، مما يتيح تجربة تعليمية تفاعلية ومريحة من أي مكان في العالم.</p>
                     </div>
                 </div>
-                <div class="faq-item scale-in" style="transition-delay: 0.3s;">
+                <div class="faq-item scale-in" style="transition-delay: 0.4s;">
                     <div class="faq-question">
                         <span data-key="faq-q4">كيف يمكنني حجز جلسة تجريبية مجانية؟</span>
                         <i class="fas fa-chevron-down icon"></i>
                     </div>
                     <div class="faq-answer">
-                        <p data-key="faq-a4">يمكنك حجز جلستك التجريبية المجانية مباشرة من خلال ملء نموذج "تواصل معنا" في أسفل الصفحة، وسنتواصل معك لتأكيد الموعد المناسب.</p>
+                        <p data-key="faq-a4">يمكنك حجز جلسة تجريبية مجانية مباشرة من خلال هذه الصفحة، أو يمكنك التواصل معنا وحجز جلستك التجريبية من خلال واتساب.</p>
                     </div>
                 </div>
             </div>
@@ -1649,7 +1676,7 @@
                 </div>
                 <div class="booking-form-wrapper scale-in" style="transition-delay: 0.2s;">
                     <h3 data-key="booking-form-h3">احجز جلستك التجريبية المجانية</h3>
-                    <div class="calendly-inline-widget" data-url="https://calendly.com/abdelrahmanhamada3342/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=2f41a3&text_color=b3ab2f&primary_color=c4b410" style="min-width:320px;height:700px;"></div>
+                    <div class="calendly-inline-widget" data-url="https://calendly.com/abdelrahmanhamada3342/30min?hide_event_type_details=1&hide_gdpr_banner=1&text_color=132982&primary_color=184f9d" style="min-width:320px;height:700px;"></div>
                     <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
                     </div>
             </div>
@@ -1712,7 +1739,7 @@
         // Translations object
         const translations = {
             'ar': {
-                'page-title': 'موقع الشيخ عبدالرحمن حماده خليل', // Updated title
+                'page-title': 'موقع الشيخ عبدالرحمن حماده خليل',
                 'logo-alt': 'شعار الشيخ عبد الرحمن حماده خليل',
                 'nav-home': 'الرئيسية',
                 'nav-about': 'عن الشيخ',
@@ -1728,21 +1755,21 @@
                 'about-h2': 'عن الشيخ عبد الرحمن حماده خليل',
                 'about-img-alt': 'صورة الشيخ عبد الرحمن حماده خليل',
                 'about-h3': 'نبذة عن مسيرتي في خدمة القرآن',
-                'about-p1': 'الحمد لله رب العالمين، والصلاة والسلام على خاتم الأنبياء والمرسلين. أنا الشيخ عبد الرحمن حماده خليل، مُجاز ومعلم للقرآن الكريم. لقد كرست حياتي لخدمة كتاب الله العزيز، تلقيت العلم من شيوخ أجلاء وحصلت على الإجازات الشرعية التي تؤهلني لتعليم وإقراء كتاب الله بسندٍ متصل إلى نبينا الكريم محمد صلى الله عليه وسلم.',
-                'about-p2': 'أؤمن بأن تعلم القرآن هو رحلة نور وسكينة، وأن كل طالب يستحق أن يتلقى العلم بأفضل الطرق وأيسرها. لهذا، أقدم لكم عبر هذه المنصة منهجي التعليمي الذي يجمع بين أصالة التلقي ومتطلبات التعليم الحديث عن بُعد، لكي تتمكنوا من إتقان التلاوة، وتجويد الحروف، وتحقيق الإجازة، وأن تكونوا من أهل القرآن الذين هم أهل الله وخاصته.',
+                'about-p1': 'الحمد لله رب العالمين، والصلاة والسلام على خاتم الأنبياء والمرسلين. أنا الشيخ عبد الرحمن حماده خليل، طالب بكلية اللغات والترجمة بقسم الأدب الصيني بجامعة الأزهر، ومعلم ومجاز في القرآن الكريم. لقد كرست حياتي لخدمة كتاب الله العزيز، وتلقيت العلم من شيوخ أجلاء وحصلت على الإجازات الشرعية التي تؤهلني لتعليم وإقراء كتاب الله بسندٍ متصل إلى نبينا الكريم محمد صلى الله عليه وسلم.',
+                'about-p2': 'أؤمن بأن تعلم القرآن هو رحلة نور وسكينة، وأن كل طالب يستحق أن يتلقى العلم بأفضل الطرق وأيسرها. لهذا، أقدم لكم عبر هذه المنصة منهجي التعليمي الذي يجمع بين أصالة التلقي ومتطلبات التعليم الحديث عن بُعد، لكي تتمكنوا من إتقان التلاوة، وتجويد الحروف، وتحقيق الإجازة، وأن تكونوا من أهل القرآن الذين هم أهل الله وخاصته. لدي خبرة كمعلم قرآن أونلاين في أكاديمية رفرف (يوليو 2024 - الوقت الحاضر) ومعلم قرآن أونلاين (عمل حر) منذ يوليو 2021، ومعلم قرآن أوفلاين (عمل حر) منذ نوفمبر 2024.',
                 'about-p3': 'أسأل الله تعالى أن يتقبل منا ومنكم صالح الأعمال، وأن يجعلنا جميعاً خداماً لكتابه الكريم.',
                 'ijazat-h2': 'الإجازات والمؤهلات',
-                'ijaza-card1-h3': 'الإجازة في القرآن الكريم',
-                'ijaza-card1-p': 'أتشرف بحمل الإجازة في القرآن الكريم، وهي أعلى مراتب التلقي والإقراء، حيث تلقيت القرآن غضاً طرياً بالسند المتصل إلى رسول الله صلى الله عليه وسلم، مما يضمن دقة وصحة التلاوة التي سأنقلها إليكم.',
-                'ijaza-card1-li1': 'إجازة بالسند المتصل في تلاوة القرآن الكريم.',
-                'ijaza-card1-li2': 'تلقي القرآن عن شيوخ أجلاء مشهود لهم بالعلم والفضل.',
-                'ijaza-card1-li3': 'إتقان أحكام التجويد والرسم العثماني.',
-                'ijaza-card1-li4': 'التأهيل الكامل لإقراء الطلاب ومنحهم الإجازة.',
+                'ijaza-card1-h3': 'الإجازات القرآنية',
+                'ijaza-card1-p': 'أتشرف بحمل عدة إجازات قرآنية بالسند المتصل إلى رسول الله صلى الله عليه وسلم، مما يضمن دقة وصحة التلاوة التي سأنقلها إليكم.',
+                'ijaza-card1-li1': 'إجازة برواية حفص عن عاصم من طريق الشاطبية (من فضيلة الشيخ عزب محمود).',
+                'ijaza-card1-li2': 'إجازة بقراءة الإمام عاصم بروايتي حفص وشعبة من طريق الشاطبية (من فضيلة الشيخة حنان محمد عبد العزيز).',
+                'ijaza-card1-li3': 'إجازة بقراءة الإمام حمزة بروايتي خلف وخلاد من طريق الشاطبية (من فضيلة الشيخ هاني منصور الشرقاوي).',
+                'ijaza-card1-li4': 'تلقي القرآن عن شيوخ أجلاء مشهود لهم بالعلم والفضل.',
                 'ijaza-card2-h3': 'المؤهلات التعليمية والخبرات',
-                'ijaza-card2-p': 'بفضل الله، أمتلك إلى جانب الإجازات القرآنية، خبرة واسعة في تدريس القرآن الكريم وعلومه، ومهارات تعليمية تضمن تجربة فريدة ومثمرة لطلابنا الكرام من مختلف الأعمار والمستويات.',
-                'ijaza-card2-li1': 'خبرة طويلة في تدريس القرآن والتجويد عن بُعد.',
-                'ijaza-card2-li2': 'منهجية تعليمية مرنة ومخصصة تناسب احتياجات كل طالب.',
-                'ijaza-card2-li3': 'إعداد الطلاب للاختبارات والمنافسات القرآنية.',
+                'ijaza-card2-p': 'إلى جانب الإجازات القرآنية، أمتلك مؤهلات تعليمية وخبرة عملية واسعة في تدريس القرآن الكريم وعلومه.',
+                'ijaza-card2-li1': 'طالب بكلية اللغات والترجمة، قسم الأدب الصيني، جامعة الأزهر.',
+                'ijaza-card2-li2': 'خبرة كمعلم قرآن أونلاين (أكاديمية رفرف وعمل حر) ومعلم قرآن أوفلاين.',
+                'ijaza-card2-li3': 'منهجية تعليمية مرنة ومخصصة تناسب احتياجات كل طالب.',
                 'ijaza-card2-li4': 'مهارات تواصل ممتازة لضمان بيئة تعليمية محفزة.',
                 'courses-h2': 'دوراتنا وبرامجنا التعليمية',
                 'course-card1-h3': 'دورة التجويد الشاملة',
@@ -1771,14 +1798,16 @@
                 'newsletter-email-placeholder': 'أدخل بريدك الإلكتروني',
                 'newsletter-subscribe-btn': 'اشترك الآن',
                 'faq-h2': 'الأسئلة الشائعة',
+                'faq-q0': 'ما هي الإجازة؟',
+                'faq-a0': 'هي رخصة وشهادة من شيخ مجاز له سند متصل بالنبي صلى الله عليه وسلم، وهي شهادة من الشيخ أنك قرأت القرآن الكريم كاملاً بأحكام التجويد والتلاوة الصحيحة غيباً عن ظهر قلب، ورخصة قراءة وإقراء، أي أن تعلم من بعدك من طلبة العلم.',
                 'faq-q1': 'ما هي شروط الحصول على الإجازة؟',
-                'faq-a1': 'تتطلب الإجازة إتقان تلاوة القرآن الكريم كاملاً على الشيخ، مع تطبيق أحكام التجويد بشكل صحيح. سيتم تقييم أدائك بشكل دوري لضمان استيفاء المعايير المطلوبة للسند.',
+                'faq-a1': 'الشرط الأساسي عند كل المشايخ والمقرئين هو قراءة القرآن الكريم كاملاً قراءة صحيحة بأحكام التجويد غيباً عن ظهر قلب. وقد يزيد كل شيخ من الشروط حسب طريقته وأسلوبه كأن يكون هناك اختبار بعد إنهاء الختمة مثلاً.',
                 'faq-q2': 'هل الدروس متاحة للمبتدئين؟',
-                'faq-a2': 'نعم، نقدم دروسًا مناسبة لجميع المستويات، من المبتدئين الذين لا يجيدون القراءة إلى المتقدمين الذين يسعون للحصول على الإجازة. يتم تصميم المنهج ليناسب كل طالب بشكل فردي.',
+                'faq-a2': 'نعم، إذا كنت تجيد قراءة اللغة العربية فيمكنك البدء معنا من الصفر لتعلم تلاوة القرآن الكريم وتجويده وحتى الحصول على إجازة بالسند المتصل إلى رسول الله صلى الله عليه وسلم.',
                 'faq-q3': 'ما هي المنصات المستخدمة للتعليم عن بُعد؟',
                 'faq-a3': 'نستخدم منصات تعليمية مرنة وموثوقة مثل Zoom أو Google Meet، مما يتيح تجربة تعليمية تفاعلية ومريحة من أي مكان في العالم.',
                 'faq-q4': 'كيف يمكنني حجز جلسة تجريبية مجانية؟',
-                'faq-a4': 'يمكنك حجز جلستك التجريبية المجانية مباشرة من خلال ملء نموذج "تواصل معنا" في أسفل الصفحة، وسنتواصل معك لتأكيد الموعد المناسب.',
+                'faq-a4': 'يمكنك حجز جلسة تجريبية مجانية مباشرة من خلال هذه الصفحة، أو يمكنك التواصل معنا وحجز جلستك التجريبية من خلال واتساب.',
                 'contact-h2': 'تواصل معنا واحجز جلستك المجانية',
                 'contact-info-h3': 'معلومات التواصل',
                 'contact-info-email': '<i class="fas fa-envelope"></i> البريد الإلكتروني: abdelrahmanhamada3342@gmail.com',
@@ -1804,7 +1833,7 @@
                 'copyright': '© <span id="current-year"></span> الشيخ عبد الرحمن حماده خليل. جميع الحقوق محفوظة.',
             },
             'en': {
-                'page-title': 'Shaykh Abdelrahman Hamada Khalil Website', // Updated title
+                'page-title': 'Shaykh Abdelrahman Hamada Khalil Website',
                 'logo-alt': 'Shaykh Abdelrahman Hamada Khalil Logo',
                 'nav-home': 'Home',
                 'nav-about': 'About Shaykh',
@@ -1820,21 +1849,21 @@
                 'about-h2': 'About Shaykh Abdelrahman Hamada Khalil',
                 'about-img-alt': 'Shaykh Abdelrahman Hamada Khalil',
                 'about-h3': 'My Journey in Serving the Quran',
-                'about-p1': 'All praise is due to Allah, Lord of the Worlds, and prayers and peace be upon the Seal of the Prophets and Messengers. I am Shaykh Abdelrahman Hamada Khalil, a certified and qualified teacher of the Holy Quran. I have dedicated my life to serving the Noble Book of Allah, having received knowledge from esteemed scholars and obtained religious certifications that qualify me to teach and recite the Book of Allah with a connected chain of narration (Sanad) back to our Noble Prophet Muhammad (peace be upon him).',
-                'about-p2': 'I believe that learning the Quran is a journey of light and tranquility, and that every student deserves to receive knowledge in the best and easiest ways. Therefore, through this platform, I offer my educational methodology that combines the authenticity of traditional reception with the requirements of modern distance learning, so that you can master recitation, perfect Tajweed, achieve certification (Ijazah), and become among the people of the Quran, who are the people of Allah and His chosen ones.',
+                'about-p1': 'All praise is due to Allah, Lord of the Worlds, and prayers and peace be upon the Seal of the Prophets and Messengers. I am Shaykh Abdelrahman Hamada Khalil, a student at Al-Azhar University, Faculty of Languages and Translation, Chinese Literature Department, and a certified and qualified teacher of the Holy Quran. I have dedicated my life to serving the Noble Book of Allah, having received knowledge from esteemed scholars and obtained religious certifications that qualify me to teach and recite the Book of Allah with a connected chain of narration (Sanad) back to our Noble Prophet Muhammad (peace be upon him).',
+                'about-p2': 'I believe that learning the Quran is a journey of light and tranquility, and that every student deserves to receive knowledge in the best and easiest ways. Therefore, through this platform, I offer my educational methodology that combines the authenticity of traditional reception with the requirements of modern distance learning, so that you can master recitation, perfect Tajweed, achieve certification (Ijazah), and become among the people of the Quran, who are the people of Allah and His chosen ones. I have experience as an online Quran teacher at Rafraf Academy (July 2024 - Present), a freelance online Quran teacher since July 2021, and a freelance offline Quran teacher since November 2024.',
                 'about-p3': 'I ask Allah Almighty to accept our good deeds and yours, and to make us all servants of His Noble Book.',
                 'ijazat-h2': 'Certifications & Qualifications',
-                'ijaza-card1-h3': 'Ijazah in the Holy Quran',
-                'ijaza-card1-p': 'I am honored to hold an Ijazah in the Holy Quran, which is the highest level of reception and recitation. I received the Quran freshly with a connected Sanad to the Messenger of Allah (peace be upon him), ensuring the accuracy and authenticity of the recitation I will convey to you.',
-                'ijaza-card1-li1': 'Ijazah with a connected Sanad in the recitation of the Holy Quran.',
-                'ijaza-card1-li2': 'Received the Quran from esteemed scholars known for their knowledge and virtue.',
-                'ijaza-card1-li3': 'Mastery of Tajweed rules and Uthmani script.',
-                'ijaza-card1-li4': 'Full qualification to teach students and grant them Ijazah.',
+                'ijaza-card1-h3': 'Quranic Certifications (Ijazat)',
+                'ijaza-card1-p': 'I am honored to hold several Quranic certifications with a connected Sanad to the Messenger of Allah (peace be upon him), ensuring the accuracy and authenticity of the recitation I will convey to you.',
+                'ijaza-card1-li1': 'Ijazah in Hafs from Asim narration via Al-Shatibiyyah (from Shaykh Azab Mahmoud).',
+                'ijaza-card1-li2': 'Ijazah in Imam Asim\'s recitation with Hafs and Shu\'bah narrations via Al-Shatibiyyah (from Shaykhah Hanan Mohamed Abdel Aziz).',
+                'ijaza-card1-li3': 'Ijazah in Imam Hamza\'s recitation with Khalaf and Khallad narrations via Al-Shatibiyyah (from Shaykh Hany Mansour El-Sharqawy).',
+                'ijaza-card1-li4': 'Received the Quran from esteemed scholars known for their knowledge and virtue.',
                 'ijaza-card2-h3': 'Educational Qualifications & Experience',
-                'ijaza-card2-p': 'By the grace of Allah, I possess extensive experience in teaching the Holy Quran and its sciences, and educational skills that ensure a unique and fruitful experience for our esteemed students of all ages and levels.',
-                'ijaza-card2-li1': 'Long experience in teaching Quran and Tajweed remotely.',
-                'ijaza-card2-li2': 'Flexible and personalized teaching methodology to suit each student\'s needs.',
-                'ijaza-card2-li3': 'Preparing students for Quranic exams and competitions.',
+                'ijaza-card2-p': 'In addition to Quranic certifications, I possess educational qualifications and extensive practical experience in teaching the Holy Quran and its sciences.',
+                'ijaza-card2-li1': 'Student at Al-Azhar University, Faculty of Languages and Translation, Chinese Literature Department.',
+                'ijaza-card2-li2': 'Experience as an online Quran teacher (Rafraf Academy and freelance) and an offline Quran teacher.',
+                'ijaza-card2-li3': 'Flexible and personalized teaching methodology to suit each student\'s needs.',
                 'ijaza-card2-li4': 'Excellent communication skills to ensure a motivating learning environment.',
                 'courses-h2': 'Our Educational Courses & Programs',
                 'course-card1-h3': 'Comprehensive Tajweed Course',
@@ -1847,8 +1876,8 @@
                 'course-card3-p': 'Qualifying proficient students for recitation to obtain an Ijazah with a connected Sanad to the Prophet (peace be upon him), in various narrations.',
                 'course-card3-btn': 'Learn More',
                 'course-card4-h3': 'Courses for Children & Beginners',
-                'course-card4-p': 'Teaching correct reading, spelling, and simplified Tajweed for children and beginners بأساليب تعليمية ممتعة وجذابة.',
-                'course-card4-btn': 'سجل لطفلك',
+                'course-card4-p': 'Teaching correct reading, spelling, and simplified Tajweed for children and beginners using fun and engaging educational methods.',
+                'course-card4-btn': 'Enroll Your Child',
                 'why-us-h2': 'Why Choose Us for Your Quranic Journey?',
                 'why-us-item1-h3': 'Authentic & High Sanad',
                 'why-us-item1-p': 'Receiving the Quran with a connected Sanad to the Messenger of Allah (peace be upon him) ensures the authenticity of reception and accuracy of performance.',
@@ -1863,14 +1892,16 @@
                 'newsletter-email-placeholder': 'Enter your email address',
                 'newsletter-subscribe-btn': 'Subscribe Now',
                 'faq-h2': 'Frequently Asked Questions',
+                'faq-q0': 'What is an Ijazah?',
+                'faq-a0': 'It is a license and certificate from a certified Shaykh with a connected Sanad to the Prophet (peace be upon him). It is a certificate from the Shaykh that you have recited the entire Holy Quran correctly with Tajweed rules by heart, and a license to recite and teach, meaning you can teach subsequent students of knowledge.',
                 'faq-q1': 'What are the requirements to obtain an Ijazah?',
-                'faq-a1': 'Obtaining an Ijazah requires mastering the recitation of the entire Holy Quran under the Shaykh, with correct application of Tajweed rules. Your performance will be regularly assessed to ensure compliance with the required standards for the Sanad.',
+                'faq-a1': 'The primary condition for all Shaykhs and reciters is to recite the entire Holy Quran correctly with Tajweed rules by heart. Each Shaykh may add additional conditions based on their method and style, such as an exam after completing the recitation.',
                 'faq-q2': 'Are the lessons available for beginners?',
-                'faq-a2': 'Yes, we offer lessons suitable for all levels, from absolute beginners who cannot read to advanced students seeking to obtain an Ijazah. The curriculum is designed to suit each student individually.',
+                'faq-a2': 'Yes, if you can read Arabic, you can start with us from scratch to learn Quranic recitation and Tajweed, and even obtain an Ijazah with a connected Sanad to the Messenger of Allah (peace be upon him).',
                 'faq-q3': 'What platforms are used for distance learning?',
-                'faq-a3': 'We use flexible and reliable learning platforms such as Zoom or Google Meet, allowing for an interactive and comfortable learning experience from any where in the world.',
+                'faq-a3': 'We use flexible and reliable learning platforms such as Zoom or Google Meet, which provide an interactive and comfortable learning experience from anywhere in the world.',
                 'faq-q4': 'How can I book a free trial session?',
-                'faq-a4': 'You can book your free trial session directly by filling out the "Contact Us" form at the bottom of the page, and we will contact you to confirm a suitable appointment.',
+                'faq-a4': 'You can book a free trial session directly through this page, or you can contact us and book your trial session via WhatsApp.',
                 'contact-h2': 'Contact Us and Book Your Free Session',
                 'contact-info-h3': 'Contact Information',
                 'contact-info-email': '<i class="fas fa-envelope"></i> Email: abdelrahmanhamada3342@gmail.com',
@@ -1944,9 +1975,25 @@
             document.querySelectorAll('nav a[href^="#"], #back-to-top').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
+                    const targetId = this.getAttribute('href');
+                    // Only scroll if the href is not just '#' or empty
+                    if (targetId && targetId !== '#') {
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                        } else {
+                            console.warn(`Element with ID ${targetId} not found for scrolling.`);
+                        }
+                    } else {
+                        // For href="#", scroll to top of the page
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }
+
                     if (window.innerWidth <= 768 && document.querySelector('.nav-links').classList.contains('active')) {
                         document.querySelector('.nav-links').classList.remove('active');
                     }
