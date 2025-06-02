@@ -14,8 +14,6 @@
 
       gtag('config', 'G-DCH1HF858D');
     </script>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <style>
         /* CSS Variables for consistent styling */
         :root {
@@ -138,14 +136,14 @@
             color: var(--bright-gold);
         }
         .logo img {
-            height: 70px; /* Adjusted height for better balance */
+            height: 70px; 
             width: auto;
             box-shadow: 0 4px 12px var(--shadow-medium);
             object-fit: contain;
             border: 3px solid var(--bright-gold);
             border-radius: 8px;
-            vertical-align: middle; /* Ensures proper vertical alignment with text */
-            margin-inline-end: 15px; /* Default margin for RTL */
+            vertical-align: middle; 
+            margin-inline-end: 15px; 
         }
 
         .nav-links {
@@ -201,20 +199,20 @@
             font-weight: 600;
             cursor: pointer;
             font-size: 1.15em;
-            display: flex; /* Ensure flex for alignment */
-            align-items: center; /* Vertically align items */
-            gap: 8px; /* Space between text and icon */
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
         }
-        /* RTL specific styles for language switcher */
+        
         html[dir="rtl"] .language-switcher {
             margin-right: 20px;
         }
         html[dir="ltr"] .language-switcher {
             margin-left: 20px;
         }
-        /* Adjust icon size within language switcher */
+        
         .language-switcher .fas.fa-chevron-down {
-            font-size: 0.8em; /* Smaller icon size */
+            font-size: 0.8em; 
             transition: transform 0.3s ease;
         }
         .language-switcher.active .fas.fa-chevron-down {
@@ -231,15 +229,15 @@
             z-index: 1;
             border-radius: var(--border-radius-main);
             overflow: hidden;
-            top: 100%; /* Position below the switcher text */
-            margin-top: 10px; /* Space below the switcher */
+            top: 100%; 
+            margin-top: 10px; 
         }
         html[dir="rtl"] .language-switcher .dropdown-content {
-            right: 0; /* Align to the right for RTL */
+            right: 0; 
             left: unset;
         }
         html[dir="ltr"] .language-switcher .dropdown-content {
-            left: 0; /* Align to the left for LTR */
+            left: 0; 
             right: unset;
         }
 
@@ -251,10 +249,10 @@
             transition: background-color 0.3s ease;
         }
         html[dir="rtl"] .language-switcher .dropdown-content a {
-            text-align: right; /* Adjusted text-align for RTL */
+            text-align: right; 
         }
         html[dir="ltr"] .language-switcher .dropdown-content a {
-            text-align: left; /* Adjusted text-align for LTR */
+            text-align: left; 
         }
         .language-switcher .dropdown-content a:hover {
             background-color: var(--warm-sandy-beige);
@@ -558,69 +556,6 @@
             right: unset;
         }
 
-        /* Courses Section */
-        .courses-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 50px;
-            margin-top: 70px;
-        }
-        .course-card {
-            background-color: var(--off-white);
-            border-radius: var(--border-radius-main);
-            padding: 45px;
-            box-shadow: 0 12px 35px var(--shadow-subtle);
-            transition: all var(--transition-speed) ease-out;
-            text-align: center;
-            border-top: 8px solid var(--primary-dark-blue);
-            position: relative;
-            overflow: hidden;
-        }
-        .course-card:hover {
-            transform: translateY(-18px) rotate(1deg);
-            box-shadow: 0 22px 50px var(--shadow-medium);
-            border-color: var(--bright-gold);
-        }
-        .course-card .icon {
-            font-size: 5em;
-            color: var(--bright-gold);
-            margin-bottom: 35px;
-            animation: bounceIn 1s ease-out;
-        }
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.2); opacity: 1; }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); }
-        }
-        .course-card h3 {
-            color: var(--primary-dark-blue);
-            font-size: 2.4em;
-            margin-bottom: 22px;
-        }
-        .course-card p {
-            color: var(--dark-brown);
-            line-height: 1.8;
-        }
-        .course-card .btn {
-            display: inline-block;
-            background-color: var(--primary-dark-blue);
-            color: var(--off-white);
-            padding: 12px 25px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 1em;
-            font-weight: 600;
-            margin-top: 25px;
-            transition: all 0.3s ease;
-            border: 2px solid var(--primary-dark-blue);
-        }
-        .course-card .btn:hover {
-            background-color: transparent;
-            color: var(--primary-dark-blue);
-            border-color: var(--bright-gold);
-        }
-
         /* Why Us Section */
         .why-us-grid {
             display: grid;
@@ -662,6 +597,176 @@
             color: var(--dark-brown);
             line-height: 1.8;
         }
+
+        /* Packages Section */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 50px;
+            margin-top: 70px;
+        }
+        .package-card {
+            background-color: var(--off-white);
+            border-radius: var(--border-radius-main);
+            padding: 45px;
+            box-shadow: 0 12px 35px var(--shadow-subtle);
+            transition: all var(--transition-speed) ease-out;
+            text-align: center;
+            border-top: 8px solid var(--primary-dark-blue);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .package-card:hover {
+            transform: translateY(-18px) rotate(1deg);
+            box-shadow: 0 22px 50px var(--shadow-medium);
+            border-color: var(--bright-gold);
+        }
+        .package-card .icon {
+            font-size: 5em;
+            color: var(--bright-gold);
+            margin-bottom: 35px;
+        }
+        .package-card h3 {
+            color: var(--primary-dark-blue);
+            font-size: 2.4em;
+            margin-bottom: 22px;
+        }
+        .package-card p {
+            color: var(--dark-brown);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        .package-card .package-details {
+            flex-grow: 1; 
+            margin-bottom: 30px;
+        }
+        .package-card .package-details .price-options {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .package-card .package-details .price-options li {
+            font-size: 1.1em;
+            color: var(--dark-brown);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .package-card .package-details .price-large {
+            font-size: 2.5em;
+            color: var(--bright-gold);
+            font-weight: 700;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .package-card .btn {
+            display: inline-block;
+            background-color: var(--primary-dark-blue);
+            color: var(--off-white);
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-dark-blue);
+        }
+        .package-card .btn:hover {
+            background-color: transparent;
+            color: var(--primary-dark-blue);
+            border-color: var(--bright-gold);
+        }
+
+        /* Dynamic Pricing Selects */
+        .package-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .package-options label {
+            font-size: 1em;
+            color: var(--primary-dark-blue);
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .package-options select {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            color: var(--dark-brown);
+            background-color: var(--warm-sandy-beige);
+            appearance: none; 
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%231A3E63%22%20d%3D%22M287%2C197.399L146.2%2C56.601L5.4%2C197.399h281.6z%22%2F%3E%3C%2Fsvg%3E'); 
+            background-repeat: no-repeat;
+            background-position: left 15px top 50%; 
+            background-size: 12px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+        html[dir="ltr"] .package-options select {
+            background-position: right 15px top 50%; 
+            transform: rotate(180deg); 
+        }
+        .package-options select:focus {
+            outline: none;
+            border-color: var(--bright-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+        }
+        .package-total-price {
+            font-size: 1.6em;
+            color: var(--primary-dark-blue);
+            font-weight: 700;
+            margin-top: 20px;
+        }
+        .package-total-price span { /* This is the price value span */
+            color: var(--bright-gold);
+            font-size: 1.2em;
+        }
+
+        /* New: Styling for package features list */
+        .package-features-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 25px;
+            text-align: right; /* Default for RTL */
+            font-size: 1.05em;
+            color: var(--dark-brown);
+        }
+        html[dir="ltr"] .package-features-list {
+            text-align: left; /* For LTR */
+        }
+        .package-features-list li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-right: 25px; /* For RTL */
+            line-height: 1.6;
+        }
+        html[dir="ltr"] .package-features-list li {
+            padding-left: 25px; /* For LTR */
+            padding-right: 0;
+        }
+        .package-features-list li i {
+            color: var(--bright-gold);
+            position: absolute;
+            top: 5px;
+            font-size: 1.1em;
+        }
+        html[dir="rtl"] .package-features-list li i {
+            right: 0;
+        }
+        html[dir="ltr"] .package-features-list li i {
+            left: 0;
+        }
+
 
         /* Newsletter Section */
         .newsletter-section {
@@ -780,7 +885,6 @@
             padding: 0 35px;
             max-height: 0;
             overflow: hidden;
-            /* Increased max-height for better content accommodation and slightly adjusted transition duration */
             transition: max-height 0.6s ease-in-out, padding 0.6s ease-in-out;
             color: var(--dark-brown);
             line-height: 1.8;
@@ -792,9 +896,9 @@
         html[dir="ltr"] .faq-answer {
             text-align: left;
         }
-        /* New CSS for active FAQ answer to allow smooth expansion */
+        
         .faq-question.active + .faq-answer {
-            max-height: 2000px; /* A sufficiently large value to accommodate content */
+            max-height: 2000px; 
             padding: 25px 35px 30px 35px;
         }
 
@@ -1007,7 +1111,7 @@
         footer .copyright {
             margin-top: 60px;
             padding-top: 35px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid var(--bright-gold); 
             font-size: 1.05em;
         }
 
@@ -1162,288 +1266,77 @@
 
         /* Responsive Adjustments */
         @media (max-width: 992px) {
-            .hero h1 {
-                font-size: 3.2em;
-            }
-            .hero p {
-                font-size: 1.6em;
-            }
-            h2 {
-                font-size: 2.8em;
-            }
-            .faq-question {
-                padding: 20px 30px;
-                font-size: 1.2em;
-            }
-            .faq-answer {
-                padding: 0 30px 20px 30px;
-            }
+            .hero h1 { font-size: 3.2em; }
+            .hero p { font-size: 1.6em; }
+            h2 { font-size: 2.8em; }
+            .faq-question { padding: 20px 30px; font-size: 1.2em; }
+            .faq-answer { padding: 0 30px 20px 30px; }
         }
         @media (max-width: 768px) {
-            nav {
-                padding: 18px 20px;
-                flex-wrap: wrap;
-            }
-            .logo {
-                font-size: 1.8em;
-            }
-            .logo img {
-                height: 80px;
-                width: auto;
-            }
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                width: 100%;
-                text-align: center;
-                background: rgba(255, 255, 255, 0.98);
-                position: absolute;
-                top: 86px;
-                left: 0;
-                padding: 25px 0;
-                box-shadow: 0 6px 20px var(--shadow-subtle);
-                z-index: 999;
-            }
-            .nav-links.active {
-                display: flex;
-            }
-            .nav-links li {
-                margin: 15px 0;
-            }
-            .menu-toggle {
-                display: flex;
-            }
-            .language-switcher {
-                order: -1;
-                width: 100%;
-                text-align: center;
-                margin-bottom: 15px;
-                padding: 10px 0;
-                background-color: var(--warm-sandy-beige);
-                border-radius: var(--border-radius-main);
-                box-shadow: 0 2px 5px var(--shadow-subtle);
-            }
-            .language-switcher .dropdown-content {
-                position: static;
-                box-shadow: none;
-                background-color: transparent;
-                min-width: unset;
-            }
-            .language-switcher .dropdown-content a {
-                padding: 8px 16px;
-                font-size: 1em;
-            }
-            /* Adjust language switcher icon for mobile */
-            .language-switcher .fas.fa-chevron-down {
-                font-size: 0.7em; /* Even smaller on mobile */
-            }
-            .hero h1 {
-                font-size: 2.5em;
-            }
-            .hero p {
-                font-size: 1.3em;
-            }
-            .hero .btn {
-                padding: 18px 38px;
-                font-size: 1.3em;
-            }
-
-            section {
-                padding: 80px 0;
-            }
-            h2 {
-                font-size: 2.5em;
-                margin-bottom: 50px;
-            }
-            h2::after {
-                width: 80px;
-                height: 4px;
-            }
-            .section-header.animate h2::after {
-                width: 120px;
-            }
-
-            .about-content {
-                flex-direction: column;
-                text-align: center;
-                /* Removed 'direction: ltr;' to keep RTL for Arabic content */
-                gap: 50px;
-            }
-            .about-image {
-                max-width: 320px;
-            }
-            .about-text {
-                text-align: center;
-                font-size: 1.15em;
-            }
-            .about-text h3 {
-                text-align: center;
-                padding-left: 0;
-                padding-right: 0;
-                font-size: 2.2em;
-            }
-            .about-text h3::before {
-                display: none;
-            }
-            .ijaza-card h3, .ijaza-card ul, .ijaza-card p {
-                text-align: center;
-            }
-            .ijaza-card ul {
-                padding-left: 0;
-                padding-right: 0;
-            }
-            .ijaza-card ul li {
-                padding-left: 0;
-                padding-right: 0;
-            }
-            .ijaza-card ul li::before {
-                position: static;
-                margin-right: 8px;
-                margin-left: 0;
-            }
-
-            .course-card .icon, .why-us-item .icon {
-                font-size: 4em;
-            }
-            .course-card h3, .why-us-item h3 {
-                font-size: 2em;
-            }
-
-            .contact-content {
-                flex-direction: column;
-                gap: 50px;
-            }
-            .contact-info, .booking-form-wrapper {
-                min-width: unset;
-                width: 100%;
-                padding: 40px;
-            }
-            .contact-info h3, .booking-form-wrapper h3 {
-                text-align: center;
-                padding-left: 0;
-                padding-right: 0;
-                font-size: 2.2em;
-            }
-            .contact-info h3::before, .booking-form-wrapper h3::before {
-                display: none;
-            }
-            .contact-info .social-links, footer .social-links {
-                justify-content: center;
-            }
-
-            footer {
-                padding: 50px 0;
-            }
-            footer .footer-content {
-                flex-direction: column;
-                gap: 40px;
-            }
-            footer .footer-col h3 {
-                text-align: center;
-                padding-left: 0;
-                padding-right: 0;
-                font-size: 1.8em;
-            }
-            footer .footer-col h3::before {
-                display: none;
-            }
-            footer .footer-col p, footer .footer-col ul {
-                font-size: 1em;
-            }
-            .whatsapp-button {
-                width: 65px;
-                height: 65px;
-                font-size: 3em;
-                bottom: 30px;
-                right: 30px;
-            }
-            #back-to-top {
-                width: 55px;
-                height: 55px;
-                font-size: 2em;
-                bottom: 30px;
-                left: 30px;
-            }
+            nav { padding: 18px 20px; flex-wrap: wrap; }
+            .logo { font-size: 1.8em; }
+            .logo img { height: 80px; width: auto; }
+            .nav-links { display: none; flex-direction: column; width: 100%; text-align: center; background: rgba(255, 255, 255, 0.98); position: absolute; top: 86px; left: 0; padding: 25px 0; box-shadow: 0 6px 20px var(--shadow-subtle); z-index: 999; }
+            .nav-links.active { display: flex; }
+            .nav-links li { margin: 15px 0; }
+            .menu-toggle { display: flex; }
+            .language-switcher { order: -1; width: 100%; text-align: center; margin-bottom: 15px; padding: 10px 0; background-color: var(--warm-sandy-beige); border-radius: var(--border-radius-main); box-shadow: 0 2px 5px var(--shadow-subtle); }
+            .language-switcher .dropdown-content { position: static; box-shadow: none; background-color: transparent; min-width: unset; }
+            .language-switcher .dropdown-content a { padding: 8px 16px; font-size: 1em; }
+            .language-switcher .fas.fa-chevron-down { font-size: 0.7em; }
+            .hero h1 { font-size: 2.5em; }
+            .hero p { font-size: 1.3em; }
+            .hero .btn { padding: 18px 38px; font-size: 1.3em; }
+            section { padding: 80px 0; }
+            h2 { font-size: 2.5em; margin-bottom: 50px; }
+            h2::after { width: 80px; height: 4px; }
+            .section-header.animate h2::after { width: 120px; }
+            .about-content { flex-direction: column; text-align: center; gap: 50px; }
+            .about-image { max-width: 320px; }
+            .about-text { text-align: center; font-size: 1.15em; }
+            .about-text h3 { text-align: center; padding-left: 0; padding-right: 0; font-size: 2.2em; }
+            .about-text h3::before { display: none; }
+            .ijaza-card h3, .ijaza-card ul, .ijaza-card p { text-align: center; }
+            .ijaza-card ul { padding-left: 0; padding-right: 0; }
+            .ijaza-card ul li { padding-left: 0; padding-right: 0; }
+            .ijaza-card ul li::before { position: static; margin-right: 8px; margin-left: 0; }
+            .course-card .icon, .why-us-item .icon, .package-card .icon { font-size: 4em; }
+            .course-card h3, .why-us-item h3, .package-card h3 { font-size: 2em; }
+            .package-card .package-details .price-large { font-size: 2em; }
+            .contact-content { flex-direction: column; gap: 50px; }
+            .contact-info, .booking-form-wrapper { min-width: unset; width: 100%; padding: 40px; }
+            .contact-info h3, .booking-form-wrapper h3 { text-align: center; padding-left: 0; padding-right: 0; font-size: 2.2em; }
+            .contact-info h3::before, .booking-form-wrapper h3::before { display: none; }
+            .contact-info .social-links, footer .social-links { justify-content: center; }
+            footer { padding: 50px 0; }
+            footer .footer-content { flex-direction: column; gap: 40px; }
+            footer .footer-col h3 { font-size: 1.8em; text-align: center; padding-left: 0; padding-right: 0; }
+            footer .footer-col h3::before { display: none; }
+            footer .footer-col p, footer .footer-col ul { font-size: 1em; }
+            .whatsapp-button { width: 65px; height: 65px; font-size: 3em; bottom: 30px; right: 30px; }
+            #back-to-top { width: 55px; height: 55px; font-size: 2em; bottom: 30px; left: 30px; }
         }
-        /* New breakpoint for very small mobile screens */
         @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 1.8em; /* Further reduced for very small screens */
-                margin-bottom: 20px;
-            }
-            .hero p {
-                font-size: 0.9em; /* Further reduced for very small screens */
-                margin-bottom: 40px;
-            }
-            .hero .btn {
-                padding: 12px 25px;
-                font-size: 1em;
-            }
-            section {
-                padding: 60px 0; /* Reduced vertical padding */
-            }
-            .container {
-                padding: 0 15px; /* Added horizontal padding for smaller screens */
-            }
-            h2 {
-                font-size: 2em;
-                margin-bottom: 40px;
-            }
-            .ijazat-grid, .courses-grid, .why-us-grid {
-                grid-template-columns: 1fr;
-                gap: 30px; /* Reduced gap */
-            }
-            .ijaza-card, .course-card, .why-us-item, .faq-item, .contact-info, .booking-form-wrapper {
-                padding: 30px; /* Reduced card padding */
-            }
-            .ijaza-card h3, .course-card h3, .why-us-item h3, .contact-info h3, .booking-form-wrapper h3 {
-                font-size: 1.8em; /* Reduced heading sizes in cards */
-                margin-bottom: 20px;
-            }
-            .ijaza-card p, .course-card p, .why-us-item p, .faq-answer p, .contact-info p {
-                font-size: 0.95em; /* Adjusted paragraph font size */
-            }
-            .ijaza-card ul li {
-                font-size: 1em; /* Adjusted list item font size */
-            }
-            .newsletter-form {
-                flex-direction: column; /* Stack input and button vertically */
-                gap: 15px;
-            }
-            .newsletter-form input[type="email"], .newsletter-form button {
-                width: 100%; /* Full width for form elements */
-            }
-            .faq-question {
-                font-size: 1.1em; /* Adjusted FAQ question font size */
-                padding: 18px 25px;
-            }
-            .faq-answer {
-                padding: 0 25px 15px 25px;
-            }
-            footer .footer-col {
-                min-width: unset; /* Allow cols to shrink further */
-                padding: 10px;
-            }
-            footer .footer-col h3 {
-                font-size: 1.6em;
-            }
-            footer .footer-col p, footer .footer-col ul {
-                font-size: 0.9em;
-            }
-            .whatsapp-button {
-                width: 60px;
-                height: 60px;
-                font-size: 2.8em;
-                bottom: 20px;
-                right: 20px;
-            }
-            #back-to-top {
-                width: 50px;
-                height: 50px;
-                font-size: 1.8em;
-                bottom: 20px;
-                left: 20px;
-            }
+            .hero h1 { font-size: 1.8em; margin-bottom: 20px; }
+            .hero p { font-size: 0.9em; margin-bottom: 40px; }
+            .hero .btn { padding: 12px 25px; font-size: 1em; }
+            section { padding: 60px 0; }
+            .container { padding: 0 15px; }
+            h2 { font-size: 2em; margin-bottom: 40px; }
+            .ijazat-grid, .courses-grid, .why-us-grid, .packages-grid { grid-template-columns: 1fr; gap: 30px; }
+            .ijaza-card, .course-card, .why-us-item, .package-card, .faq-item, .contact-info, .booking-form-wrapper { padding: 30px; }
+            .ijaza-card h3, .course-card h3, .why-us-item h3, .package-card h3, .contact-info h3, .booking-form-wrapper h3 { font-size: 1.8em; margin-bottom: 20px; }
+            .ijaza-card p, .course-card p, .why-us-item p, .package-card p, .faq-answer p, .contact-info p { font-size: 0.95em; }
+            .ijaza-card ul li, .package-card .package-details .price-options li { font-size: 1em; }
+            .newsletter-form { flex-direction: column; gap: 15px; }
+            .newsletter-form input[type="email"], .newsletter-form button { width: 100%; }
+            .faq-question { font-size: 1.1em; padding: 18px 25px; }
+            .faq-answer { padding: 0 25px 15px 25px; }
+            footer .footer-col { min-width: unset; padding: 10px; }
+            footer .footer-col h3 { font-size: 1.6em; }
+            footer .footer-col p, footer .footer-col ul { font-size: 0.9em; }
+            .whatsapp-button { width: 60px; height: 60px; font-size: 2.8em; bottom: 20px; right: 20px; }
+            #back-to-top { width: 50px; height: 50px; font-size: 1.8em; bottom: 20px; left: 20px; }
         }
     </style>
 </head>
@@ -1458,8 +1351,7 @@
                 <li><a href="#hero" data-key="nav-home">الرئيسية</a></li>
                 <li><a href="#about" data-key="nav-about">عن الشيخ</a></li>
                 <li><a href="#ijazat" data-key="nav-ijazat">الإجازات والمؤهلات</a></li>
-                <li><a href="#courses" data-key="nav-courses">دوراتنا</a></li>
-                <li><a href="#why-us" data-key="nav-why-us">لماذا تختارنا؟</a></li>
+                <li><a href="#packages" data-key="nav-packages">باقاتنا</a></li> <li><a href="#why-us" data-key="nav-why-us">لماذا تختارنا؟</a></li>
                 <li><a href="#faq" data-key="nav-faq">الأسئلة الشائعة</a></li>
                 <li><a href="#contact" data-key="nav-contact">تواصل معنا</a></li>
             </ul>
@@ -1532,34 +1424,168 @@
             </div>
         </section>
 
-        <section id="courses" class="courses">
+        <section id="packages" class="packages">
             <div class="container section-header fade-in">
-                <h2 data-key="courses-h2">دوراتنا وبرامجنا التعليمية</h2>
+                <h2 data-key="packages-h2">باقاتنا التعليمية</h2>
             </div>
-            <div class="container courses-grid fade-in">
-                <div class="course-card scale-in">
-                    <i class="fas fa-book-open icon"></i>
-                    <h3 data-key="course-card1-h3">دورة التجويد الشاملة</h3>
-                    <p data-key="course-card1-p">تعلم أحكام التجويد الأساسية والمتقدمة، من مخارج الحروف وصفاتها إلى أحكام المدود والإدغامات، مع التطبيق العملي المكثف.</p>
-                    <a href="#contact" class="btn" data-key="course-card1-btn">تفاصيل الدورة</a>
+            <div class="container packages-grid fade-in">
+                <div class="package-card scale-in">
+                    <i class="fas fa-users icon"></i>
+                    <h3 data-key="package1-h3">الباقة الجماعية للأطفال</h3>
+                    <p data-key="package1-desc">دروس جماعية ممتعة ومحفزة للأطفال (5 طلاب)، ساعة كاملة للحصة.</p>
+                    <div class="package-details">
+                        <div class="package-options">
+                            <label for="group-kids-frequency" data-key="select-frequency-label">عدد الحصص أسبوعياً:</label>
+                            <select id="group-kids-frequency" onchange="calculatePackagePrice('group-kids')">
+                                <option value="1" data-key="frequency-1" selected>1 يوم</option>
+                                <option value="2" data-key="frequency-2">2 أيام</option>
+                                <option value="3" data-key="frequency-3">3 أيام</option>
+                                <option value="4" data-key="frequency-4">4 أيام</option>
+                                <option value="5" data-key="frequency-5">5 أيام</option>
+                                <option value="6" data-key="frequency-6">6 أيام</option>
+                            </select>
+                        </div>
+                        <p class="package-total-price">
+                            <span data-key="total-monthly-price-label">الإجمالي الشهري:</span> 
+                            <span id="group-kids-total-price">0</span> ج.م
+                        </p>
+                        <p data-key="package1-availability">متاحة كل يوم ما عدا الجمعة.</p>
+                    </div>
+                    <a href="#contact" class="btn" data-key="package-btn">احجز الآن</a>
                 </div>
-                <div class="course-card scale-in" style="transition-delay: 0.1s;">
-                    <i class="fas fa-quran icon"></i>
-                    <h3 data-key="course-card2-h3">برنامج تحفيظ القرآن الكريم</h3>
-                    <p data-key="course-card2-p">مسارات مخصصة لحفظ القرآن الكريم كاملاً أو أجزاء منه، مع المراجعة الدورية وتقنيات التثبيت لضمان حفظ متين.</p>
-                    <a href="#contact" class="btn" data-key="course-card2-btn">انضم الآن</a>
+
+                <div class="package-card scale-in" style="transition-delay: 0.1s;">
+                    <i class="fas fa-user-friends icon"></i>
+                    <h3 data-key="package2-h3">الباقة الجماعية للبالغين</h3>
+                    <p data-key="package2-desc">دروس جماعية مركزة للبالغين (3 طلاب)، ساعة كاملة للحصة.</p>
+                    <div class="package-details">
+                        <div class="package-options">
+                            <label for="group-adults-frequency" data-key="select-frequency-label">عدد الحصص أسبوعياً:</label>
+                            <select id="group-adults-frequency" onchange="calculatePackagePrice('group-adults')">
+                                <option value="1" data-key="frequency-1" selected>1 يوم</option>
+                                <option value="2" data-key="frequency-2">2 أيام</option>
+                                <option value="3" data-key="frequency-3">3 أيام</option>
+                                <option value="4" data-key="frequency-4">4 أيام</option>
+                                <option value="5" data-key="frequency-5">5 أيام</option>
+                                <option value="6" data-key="frequency-6">6 أيام</option>
+                            </select>
+                        </div>
+                        <p class="package-total-price">
+                            <span data-key="total-monthly-price-label">الإجمالي الشهري:</span> 
+                            <span id="group-adults-total-price">0</span> ج.م
+                        </p>
+                        <p data-key="package2-availability"></p> 
+                    </div>
+                    <a href="#contact" class="btn" data-key="package-btn">احجز الآن</a>
                 </div>
-                <div class="course-card scale-in" style="transition-delay: 0.2s;">
-                    <i class="fas fa-hands-helping icon"></i>
-                    <h3 data-key="course-card3-h3">مسار الإجازة بالسند</h3>
-                    <p data-key="course-card3-p">تأهيل الطلاب المجيدين للقراءة للحصول على إجازة بالسند المتصل إلى النبي صلى الله عليه وسلم، في الروايات المختلفة.</p>
-                    <a href="#contact" class="btn" data-key="course-card3-btn">تعرف أكثر</a>
+
+                <div class="package-card scale-in" style="transition-delay: 0.2s;">
+                    <i class="fas fa-child-reaching icon"></i> 
+                    <h3 data-key="package3-h3">الباقة الفردية للأطفال</h3>
+                    <p data-key="package3-desc">اهتمام شخصي وتركيز كامل على طفلك.</p>
+                    <div class="package-details">
+                        <div class="package-options">
+                            <label for="kids-duration" data-key="select-duration-label">مدة الحصة:</label>
+                            <select id="kids-duration" onchange="calculatePackagePrice('kids')">
+                                <option value="20" data-key="duration-20min" selected>20 دقيقة</option>
+                                <option value="30" data-key="duration-30min">30 دقيقة</option>
+                                <option value="40" data-key="duration-40min">40 دقيقة</option>
+                                <option value="60" data-key="duration-60min">60 دقيقة</option>
+                            </select>
+                            <label for="kids-frequency" data-key="select-frequency-label">عدد الحصص أسبوعياً:</label>
+                            <select id="kids-frequency" onchange="calculatePackagePrice('kids')">
+                                <option value="1" data-key="frequency-1" selected>1 يوم</option>
+                                <option value="2" data-key="frequency-2">2 أيام</option>
+                                <option value="3" data-key="frequency-3">3 أيام</option>
+                                <option value="4" data-key="frequency-4">4 أيام</option>
+                                <option value="5" data-key="frequency-5">5 أيام</option>
+                                <option value="6" data-key="frequency-6">6 أيام</option>
+                            </select>
+                        </div>
+                        <p class="package-total-price">
+                            <span data-key="total-monthly-price-label">الإجمالي الشهري:</span> 
+                            <span id="kids-total-price">0</span> ج.م
+                        </p>
+                        <ul class="package-features-list">
+                            <li data-key="feature-flexibility"><i class="fas fa-check-circle"></i> مرونة في تحديد المواعيد</li>
+                            <li data-key="feature-postpone-cancel"><i class="fas fa-check-circle"></i> إمكانية تأجيل أو إلغاء الحلقة</li>
+                            <li data-key="feature-custom-plan"><i class="fas fa-check-circle"></i> خطة مخصصة حسب ما يرغب به الطالب</li>
+                        </ul>
+                    </div>
+                    <a href="#contact" class="btn" data-key="package-btn">احجز الآن</a>
                 </div>
-                <div class="course-card scale-in" style="transition-delay: 0.3s;">
-                    <i class="fas fa-child icon"></i>
-                    <h3 data-key="course-card4-h3">دورات للأطفال والمبتدئين</h3>
-                    <p data-key="course-card4-p">تعليم القراءة الصحيحة والتهجي والتجويد المبسط للأطفال والمبتدئين بأساليب تعليمية ممتعة وجذابة.</p>
-                    <a href="#contact" class="btn" data-key="course-card4-btn">سجل لطفلك</a>
+
+                <div class="package-card scale-in" style="transition-delay: 0.3s;">
+                    <i class="fas fa-user icon"></i>
+                    <h3 data-key="package4-h3">الباقة الفردية للبالغين</h3>
+                    <p data-key="package4-desc">تطوير مستواك القرآني بتركيز كامل ودعم شخصي.</p>
+                    <div class="package-details">
+                        <div class="package-options">
+                            <label for="adults-duration" data-key="select-duration-label">مدة الحصة:</label>
+                            <select id="adults-duration" onchange="calculatePackagePrice('adults')">
+                                <option value="20" data-key="duration-20min" selected>20 دقيقة</option>
+                                <option value="30" data-key="duration-30min">30 دقيقة</option>
+                                <option value="40" data-key="duration-40min">40 دقيقة</option>
+                                <option value="60" data-key="duration-60min">60 دقيقة</option>
+                            </select>
+                            <label for="adults-frequency" data-key="select-frequency-label">عدد الحصص أسبوعياً:</label>
+                            <select id="adults-frequency" onchange="calculatePackagePrice('adults')">
+                                <option value="1" data-key="frequency-1" selected>1 يوم</option>
+                                <option value="2" data-key="frequency-2">2 أيام</option>
+                                <option value="3" data-key="frequency-3">3 أيام</option>
+                                <option value="4" data-key="frequency-4">4 أيام</option>
+                                <option value="5" data-key="frequency-5">5 أيام</option>
+                                <option value="6" data-key="frequency-6">6 أيام</option>
+                            </select>
+                        </div>
+                        <p class="package-total-price">
+                            <span data-key="total-monthly-price-label">الإجمالي الشهري:</span> 
+                            <span id="adults-total-price">0</span> ج.م
+                        </p>
+                        <ul class="package-features-list">
+                            <li data-key="feature-flexibility"><i class="fas fa-check-circle"></i> مرونة في تحديد المواعيد</li>
+                            <li data-key="feature-postpone-cancel"><i class="fas fa-check-circle"></i> إمكانية تأجيل أو إلغاء الحلقة</li>
+                            <li data-key="feature-custom-plan"><i class="fas fa-check-circle"></i> خطة مخصصة حسب ما يرغب به الطالب</li>
+                        </ul>
+                    </div>
+                    <a href="#contact" class="btn" data-key="package-btn">احجز الآن</a>
+                </div>
+
+                <div class="package-card scale-in" style="transition-delay: 0.4s;">
+                    <i class="fas fa-scroll icon"></i>
+                    <h3 data-key="package5-h3">باقة الإجازة بالسند</h3>
+                    <p data-key="package5-desc">مسار مخصص لإتقان القرآن والحصول على الإجازة بالسند المتصل برواية حفص أو بقراءة عاصم.</p>
+                    <div class="package-details">
+                        <div class="package-options">
+                            <label for="ijazah-duration" data-key="select-duration-label">مدة الحصة:</label>
+                            <select id="ijazah-duration" onchange="calculatePackagePrice('ijazah')">
+                                <option value="20" data-key="duration-20min" selected>20 دقيقة</option>
+                                <option value="30" data-key="duration-30min">30 دقيقة</option>
+                                <option value="45" data-key="duration-45min">45 دقيقة</option> 
+                                <option value="60" data-key="duration-60min">60 دقيقة</option>
+                            </select>
+                            <label for="ijazah-frequency" data-key="select-frequency-label">عدد الحصص أسبوعياً:</label>
+                            <select id="ijazah-frequency" onchange="calculatePackagePrice('ijazah')">
+                                <option value="1" data-key="frequency-1" selected>1 يوم</option>
+                                <option value="2" data-key="frequency-2">2 أيام</option>
+                                <option value="3" data-key="frequency-3">3 أيام</option>
+                                <option value="4" data-key="frequency-4">4 أيام</option>
+                                <option value="5" data-key="frequency-5">5 أيام</option>
+                                <option value="6" data-key="frequency-6">6 أيام</option>
+                            </select>
+                        </div>
+                        <p class="package-total-price">
+                            <span data-key="total-monthly-price-label">الإجمالي الشهري:</span> 
+                            <span id="ijazah-total-price">0</span> ج.م
+                        </p>
+                        <ul class="package-features-list">
+                            <li data-key="feature-flexibility"><i class="fas fa-check-circle"></i> مرونة في تحديد المواعيد</li>
+                            <li data-key="feature-postpone-cancel"><i class="fas fa-check-circle"></i> إمكانية تأجيل أو إلغاء الحلقة</li>
+                            <li data-key="feature-custom-plan"><i class="fas fa-check-circle"></i> خطة مخصصة حسب ما يرغب به الطالب</li>
+                            <li data-key="feature-ijazah-free"><i class="fas fa-check-circle"></i> الإجازة مجانية</li>
+                        </ul>
+                    </div>
+                    <a href="#contact" class="btn" data-key="package-btn">استفسر الآن</a>
                 </div>
             </div>
         </section>
@@ -1698,8 +1724,7 @@
                         <li><a href="#hero" data-key="nav-home-footer">الرئيسية</a></li>
                         <li><a href="#about" data-key="nav-about-footer">عن الشيخ</a></li>
                         <li><a href="#ijazat" data-key="nav-ijazat-footer">الإجازات</a></li>
-                        <li><a href="#courses" data-key="nav-courses-footer">الدورات</a></li>
-                        <li><a href="#faq-footer" data-key="nav-faq-footer">الأسئلة الشائعة</a></li>
+                        <li><a href="#packages" data-key="nav-packages-footer">باقاتنا</a></li> <li><a href="#faq-footer" data-key="nav-faq-footer">الأسئلة الشائعة</a></li>
                         <li><a href="#contact" data-key="nav-contact-footer">تواصل معنا</a></li>
                     </ul>
                 </div>
@@ -1732,7 +1757,7 @@
     <div id="successModal" class="modal">
         <div class="modal-content">
             <h3 data-key="modal-h3">تم إرسال طلبك بنجاح!</h3>
-            <p data-key="modal-p">شكراً لك يا عبدالرحمن! لقد تم استلام طلب حجز جلستك التجريبية. سنتواصل معك قريباً جداً لتأكيد الموعد المناسب.</p>
+            <p data-key="modal-p">شكراً لك! لقد تم استلام طلبك. سنتواصل معك قريباً جداً.</p>
             <button class="close-button" id="closeModal" data-key="modal-close-btn">حسناً</button>
         </div>
     </div>
@@ -1746,7 +1771,7 @@
                 'nav-home': 'الرئيسية',
                 'nav-about': 'عن الشيخ',
                 'nav-ijazat': 'الإجازات والمؤهلات',
-                'nav-courses': 'دوراتنا',
+                'nav-packages': 'باقاتنا',
                 'nav-why-us': 'لماذا تختارنا؟',
                 'nav-faq': 'الأسئلة الشائعة',
                 'nav-contact': 'تواصل معنا',
@@ -1773,28 +1798,40 @@
                 'ijaza-card2-li2': 'خبرة كمعلم قرآن أونلاين (أكاديمية رفرف وعمل حر) ومعلم قرآن أوفلاين.',
                 'ijaza-card2-li3': 'منهجية تعليمية مرنة ومخصصة تناسب احتياجات كل طالب.',
                 'ijaza-card2-li4': 'مهارات تواصل ممتازة لضمان بيئة تعليمية محفزة.',
-                'courses-h2': 'دوراتنا وبرامجنا التعليمية',
-                'course-card1-h3': 'دورة التجويد الشاملة',
-                'course-card1-p': 'تعلم أحكام التجويد الأساسية والمتقدمة، من مخارج الحروف وصفاتها إلى أحكام المدود والإدغامات، مع التطبيق العملي المكثف.',
-                'course-card1-btn': 'تفاصيل الدورة',
-                'course-card2-h3': 'برنامج تحفيظ القرآن الكريم',
-                'course-card2-p': 'مسارات مخصصة لحفظ القرآن الكريم كاملاً أو أجزاء منه، مع المراجعة الدورية وتقنيات التثبيت لضمان حفظ متين.',
-                'course-card2-btn': 'انضم الآن',
-                'course-card3-h3': 'مسار الإجازة بالسند',
-                'course-card3-p': 'تأهيل الطلاب المجيدين للقراءة للحصول على إجازة بالسند المتصل إلى النبي صلى الله عليه وسلم، في الروايات المختلفة.',
-                'course-card3-btn': 'تعرف أكثر',
-                'course-card4-h3': 'دورات للأطفال والمبتدئين',
-                'course-card4-p': 'تعليم القراءة الصحيحة والتهجي والتجويد المبسط للأطفال والمبتدئين بأساليب تعليمية ممتعة وجذابة.',
-                'course-card4-btn': 'سجل لطفلك',
-                'why-us-h2': 'لماذا تختارنا لرحلتك القرآنية؟',
-                'why-us-item1-h3': 'سند موثوق وعالٍ',
-                'why-us-item1-p': 'تلقي القرآن بسندٍ متصل إلى رسول الله صلى الله عليه وسلم، يضمن لك أصالة التلقي ودقة الأداء.',
-                'why-us-item2-h3': 'مرونة التعليم عن بُعد',
-                'why-us-item2-p': 'تعلم القرآن من أي مكان في العالم، وفي الأوقات التي تناسب جدولك اليومي.',
-                'why-us-item3-h3': 'منهجية تعليمية متطورة',
-                'why-us-item3-p': 'نستخدم أساليب تعليمية حديثة ومبتكرة لضمان فهم عميق وإتقان سريع.',
-                'why-us-item4-h3': 'إرشاد ودعم مستمر',
-                'why-us-item4-p': 'نحن معك في كل خطوة من رحلتك القرآنية، نقدم الإرشاد والمتابعة لضمان نجاحك.',
+                'packages-h2': 'باقاتنا التعليمية',
+                'package1-h3': 'الباقة الجماعية للأطفال',
+                'package1-desc': 'دروس جماعية ممتعة ومحفزة للأطفال (5 طلاب)، ساعة كاملة للحصة.',
+                'package1-availability': 'متاحة كل يوم ما عدا الجمعة.',
+                'package2-h3': 'الباقة الجماعية للبالغين',
+                'package2-desc': 'دروس جماعية مركزة للبالغين (3 طلاب)، ساعة كاملة للحصة.',
+                'package2-availability': '', 
+                'package3-h3': 'الباقة الفردية للأطفال',
+                'package3-desc': 'اهتمام شخصي وتركيز كامل على طفلك.',
+                'select-duration-label': 'مدة الحصة:',
+                'duration-20min': '20 دقيقة',
+                'duration-30min': '30 دقيقة',
+                'duration-40min': '40 دقيقة',
+                'duration-45min': '45 دقيقة',
+                'duration-60min': '60 دقيقة',
+                'select-frequency-label': 'عدد الحصص أسبوعياً:',
+                'frequency-1': '1 يوم',
+                'frequency-2': '2 أيام',
+                'frequency-3': '3 أيام',
+                'frequency-4': '4 أيام',
+                'frequency-5': '5 أيام',
+                'frequency-6': '6 أيام',
+                'total-monthly-price-label': 'الإجمالي الشهري:', 
+                'package3-flexibility': 'مرونة في تحديد المواعيد.',
+                'package4-h3': 'الباقة الفردية للبالغين',
+                'package4-desc': 'تطوير مستواك القرآني بتركيز كامل ودعم شخصي.',
+                'package4-flexibility': 'مرونة في تحديد المواعيد.',
+                'package5-h3': 'باقة الإجازة بالسند',
+                'package5-desc': 'مسار مخصص لإتقان القرآن والحصول على الإجازة بالسند المتصل برواية حفص أو بقراءة عاصم.',
+                'package-btn': 'احجز الآن',
+                'feature-flexibility': 'مرونة في تحديد المواعيد',
+                'feature-postpone-cancel': 'إمكانية تأجيل أو إلغاء الحلقة',
+                'feature-custom-plan': 'خطة مخصصة حسب ما يرغب به الطالب',
+                'feature-ijazah-free': 'الإجازة مجانية',
                 'newsletter-h2': 'اشترك في نشرتنا البريدية',
                 'newsletter-p': 'ابق على اطلاع بآخر أخبارنا، الدورات الجديدة، والمقالات القرآنية المفيدة مباشرة في بريدك الوارد.',
                 'newsletter-email-placeholder': 'أدخل بريدك الإلكتروني',
@@ -1818,7 +1855,7 @@
                 'contact-info-p-general': 'لا تتردد في الاتصال بنا. نحن هنا لخدمتك والإجابة على استفساراتك.',
                 'booking-form-h3': 'احجز جلستك التجريبية المجانية',
                 'modal-h3': 'تم إرسال طلبك بنجاح!',
-                'modal-p': 'شكراً لك يا عبدالرحمن! لقد تم استلام طلب حجز جلستك التجريبية. سنتواصل معك قريباً جداً لتأكيد الموعد المناسب.',
+                'modal-p': 'شكراً لك! لقد تم استلام طلبك. سنتواصل معك قريباً جداً.', 
                 'modal-close-btn': 'حسناً',
                 'footer-col1-h3': 'عن الشيخ',
                 'footer-col1-p': 'الشيخ عبد الرحمن حماده خليل، معلم ومجاز في القرآن الكريم بسند متصل، ملتزم بنشر علم كتاب الله وتقديم تعليم قرآني متميز للعالم أجمع.',
@@ -1826,7 +1863,7 @@
                 'nav-home-footer': 'الرئيسية',
                 'nav-about-footer': 'عن الشيخ',
                 'nav-ijazat-footer': 'الإجازات',
-                'nav-courses-footer': 'الدورات',
+                'nav-packages-footer': 'باقاتنا',
                 'nav-faq-footer': 'الأسئلة الشائعة',
                 'nav-contact-footer': 'تواصل معنا',
                 'footer-col3-h3': 'ابق على تواصل',
@@ -1840,7 +1877,7 @@
                 'nav-home': 'Home',
                 'nav-about': 'About Shaykh',
                 'nav-ijazat': 'Certifications & Qualifications',
-                'nav-courses': 'Our Courses',
+                'nav-packages': 'Our Packages',
                 'nav-why-us': 'Why Choose Us?',
                 'nav-faq': 'FAQ',
                 'nav-contact': 'Contact Us',
@@ -1859,7 +1896,7 @@
                 'ijaza-card1-p': 'I am honored to hold several Quranic certifications with a connected Sanad to the Messenger of Allah (peace be upon him), ensuring the accuracy and authenticity of the recitation I will convey to you.',
                 'ijaza-card1-li1': 'Ijazah in Hafs from Asim narration via Al-Shatibiyyah (from Shaykh Azab Mahmoud).',
                 'ijaza-card1-li2': 'Ijazah in Imam Asim\'s recitation with Hafs and Shu\'bah narrations via Al-Shatibiyyah (from Shaykhah Hanan Mohamed Abdel Aziz).',
-                'ijaza-card1-li3': 'Ijazah in Imam Hamza\'s recitation with Khalaf and Khallad narrations via Al-Shatibiyyah (from Shaykh Hani Mansour El-Sharqawy).',
+                'ijaza-card1-li3': 'Ijazah in Imam Hamza\'s recitation with Khalaf and Khallad narrations via Al-Shatibiyyah (from Shaykh Hany Mansour El-Sharqawy).',
                 'ijaza-card1-li4': 'Received the Quran from esteemed scholars known for their knowledge and virtue.',
                 'ijaza-card2-h3': 'Educational Qualifications & Experience',
                 'ijaza-card2-p': 'In addition to Quranic certifications, I possess educational qualifications and extensive practical experience in teaching the Holy Quran and its sciences.',
@@ -1867,28 +1904,40 @@
                 'ijaza-card2-li2': 'Experience as an online Quran teacher (Rafraf Academy and freelance) and an offline Quran teacher.',
                 'ijaza-card2-li3': 'Flexible and personalized teaching methodology to suit each student\'s needs.',
                 'ijaza-card2-li4': 'Excellent communication skills to ensure a motivating learning environment.',
-                'courses-h2': 'Our Educational Courses & Programs',
-                'course-card1-h3': 'Comprehensive Tajweed Course',
-                'course-card1-p': 'Learn fundamental and advanced Tajweed rules, from articulation points and characteristics of letters to rules of Madd and Idgham, with extensive practical application.',
-                'course-card1-btn': 'Course Details',
-                'course-card2-h3': 'Quran Memorization Program',
-                'course-card2-p': 'Customized tracks for memorizing the entire Holy Quran or parts of it, with regular review and reinforcement techniques to ensure strong memorization.',
-                'course-card2-btn': 'Join Now',
-                'course-card3-h3': 'Ijazah with Sanad Track',
-                'course-card3-p': 'Qualifying proficient students for recitation to obtain an Ijazah with a connected Sanad to the Prophet (peace be upon him), in various narrations.',
-                'course-card3-btn': 'Learn More',
-                'course-card4-h3': 'Courses for Children & Beginners',
-                'course-card4-p': 'Teaching correct reading, spelling, and simplified Tajweed for children and beginners using fun and engaging educational methods.',
-                'course-card4-btn': 'Enroll Your Child',
-                'why-us-h2': 'Why Choose Us for Your Quranic Journey?',
-                'why-us-item1-h3': 'Authentic & High Sanad',
-                'why-us-item1-p': 'Receiving the Quran with a connected Sanad to the Messenger of Allah (peace be upon him) ensures the authenticity of reception and accuracy of performance.',
-                'why-us-item2-h3': 'Flexible Distance Learning',
-                'why-us-item2-p': 'Learn the Quran from anywhere in the world, at times that suit your daily schedule.',
-                'why-us-item3-h3': 'Advanced Teaching Methodology',
-                'why-us-item3-p': 'We use modern and innovative teaching methods to ensure deep understanding and quick mastery.',
-                'why-us-item4-h3': 'Continuous Guidance & Support',
-                'why-us-item4-p': 'We are with you every step of your Quranic journey, providing guidance and follow-up to ensure your success.',
+                'packages-h2': 'Our Educational Packages',
+                'package1-h3': 'Kids Group Package',
+                'package1-desc': 'Fun and motivating group lessons for children (5 students), one full hour per session.',
+                'package1-availability': 'Available every day except Friday.',
+                'package2-h3': 'Adults Group Package',
+                'package2-desc': 'Focused group lessons for adults (3 students), one full hour per session.',
+                'package2-availability': '', 
+                'package3-h3': 'Kids Individual Package',
+                'package3-desc': 'Personalized attention and full focus on your child.',
+                'select-duration-label': 'Session Duration:',
+                'duration-20min': '20 Minutes',
+                'duration-30min': '30 Minutes',
+                'duration-40min': '40 Minutes',
+                'duration-45min': '45 Minutes',
+                'duration-60min': '60 Minutes',
+                'select-frequency-label': 'Sessions per Week:',
+                'frequency-1': '1 Day',
+                'frequency-2': '2 Days',
+                'frequency-3': '3 Days',
+                'frequency-4': '4 Days',
+                'frequency-5': '5 Days',
+                'frequency-6': '6 Days',
+                'total-monthly-price-label': 'Total Monthly:', 
+                'package3-flexibility': 'Flexible scheduling.',
+                'package4-h3': 'Adults Individual Package',
+                'package4-desc': 'Develop your Quranic level with full focus and personal support.',
+                'package4-flexibility': 'Flexible scheduling.',
+                'package5-h3': 'Ijazah with Sanad Package',
+                'package5-desc': 'A dedicated track to master the Quran and obtain an Ijazah with a connected Sanad in Hafs or Asim recitation.',
+                'package-btn': 'Enroll Now',
+                'feature-flexibility': 'Flexible scheduling',
+                'feature-postpone-cancel': 'Possibility to postpone or cancel the session',
+                'feature-custom-plan': 'Customized plan according to student\'s wishes',
+                'feature-ijazah-free': 'Ijazah is free',
                 'newsletter-h2': 'Subscribe to Our Newsletter',
                 'newsletter-p': 'Stay updated with our latest news, new courses, and beneficial Quranic articles directly in your inbox.',
                 'newsletter-email-placeholder': 'Enter your email address',
@@ -1912,7 +1961,7 @@
                 'contact-info-p-general': 'Do not hesitate to contact us. We are here to serve you and answer your inquiries.',
                 'booking-form-h3': 'Book Your Free Trial Session',
                 'modal-h3': 'Your Request Has Been Sent Successfully!',
-                'modal-p': 'Thank you, Abdelrahman! Your trial session booking request has been received. We will contact you very soon to confirm a suitable appointment.',
+                'modal-p': 'Thank you! Your request has been received. We will contact you very soon.', 
                 'modal-close-btn': 'Okay',
                 'footer-col1-h3': 'About Shaykh',
                 'footer-col1-p': 'Shaykh Abdelrahman Hamada Khalil, a certified and qualified teacher of the Holy Quran with a connected Sanad, is committed to spreading the knowledge of Allah\'s Book and providing distinguished Quranic education worldwide.',
@@ -1920,7 +1969,7 @@
                 'nav-home-footer': 'Home',
                 'nav-about-footer': 'About Shaykh',
                 'nav-ijazat-footer': 'Certifications',
-                'nav-courses-footer': 'Courses',
+                'nav-packages-footer': 'Our Packages',
                 'nav-faq-footer': 'FAQ',
                 'nav-contact-footer': 'Contact Us',
                 'footer-col3-h3': 'Stay Connected',
@@ -1935,10 +1984,9 @@
             document.documentElement.lang = lang;
             document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
 
-            // Update text content for elements with data-key
             document.querySelectorAll('[data-key]').forEach(element => {
                 const key = element.dataset.key;
-                if (translations[lang][key]) {
+                if (translations[lang] && translations[lang][key]) { // Check if lang and key exist
                     if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
                         element.placeholder = translations[lang][key];
                     } else if (element.tagName === 'IMG' && element.hasAttribute('alt')) {
@@ -1946,186 +1994,291 @@
                     } else {
                         element.innerHTML = translations[lang][key];
                     }
+                } else {
+                    // console.warn(`Translation key "${key}" not found for language "${lang}".`);
                 }
             });
 
-            // Update current language display in switcher
-            document.querySelector('[data-key="current-lang-display"]').textContent = translations[lang]['current-lang-display'];
+            const currentLangDisplay = document.querySelector('[data-key="current-lang-display"]');
+            if (currentLangDisplay && translations[lang] && translations[lang]['current-lang-display']) {
+                 currentLangDisplay.textContent = translations[lang]['current-lang-display'];
+            }
 
-            // Adjust logo margin based on direction
             const logoImg = document.querySelector('.logo img');
             if (logoImg) {
                 if (lang === 'ar') {
-                    logoImg.style.marginInlineEnd = '15px'; // Margin to the left of the image in RTL
+                    logoImg.style.marginInlineEnd = '15px';
                     logoImg.style.marginInlineStart = '0';
                 } else {
-                    logoImg.style.marginInlineStart = '15px'; // Margin to the right of the image in LTR
+                    logoImg.style.marginInlineStart = '15px';
                     logoImg.style.marginInlineEnd = '0';
                 }
             }
-
-            // Store language preference
-            localStorage.setItem('selectedLang', lang);
         }
 
-        // Initialize content on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('selectedLang') || 'ar'; // Default to Arabic
-            updateContent(savedLang);
+        // Function to calculate package price
+        function calculatePackagePrice(packageType) {
+            // console.log(`Attempting to calculate price for: ${packageType}`); 
 
-            // Smooth scrolling for navigation links and back-to-top button
+            let durationSelect, frequencySelect, totalPriceSpan;
+            let pricePerMinute = 0;
+            let baseMonthlyPricePerFrequency = 0; 
+            let monthlyPrice = 0;
+
+            try {
+                switch (packageType) {
+                    case 'kids': 
+                        durationSelect = document.getElementById('kids-duration');
+                        frequencySelect = document.getElementById('kids-frequency');
+                        totalPriceSpan = document.getElementById('kids-total-price'); // This is the <span> for the price value
+                        if (durationSelect && frequencySelect && totalPriceSpan) {
+                            const duration = parseInt(durationSelect.value);
+                            const frequency = parseInt(frequencySelect.value);
+                            // Updated price for individual kids: 150 EGP per hour = 150 / 60 = 2.5 EGP per minute
+                            pricePerMinute = 150 / 60; 
+                            const pricePerSession = pricePerMinute * duration;
+                            monthlyPrice = pricePerSession * frequency * 4; 
+                            totalPriceSpan.textContent = monthlyPrice.toFixed(0); // Display as integer
+                            // console.log(`Kids Individual: Duration=${duration}min, Freq/wk=${frequency}, Price/Session=${pricePerSession}, MonthlyPrice=${monthlyPrice}`);
+                        } else {
+                            console.error(`Error for ${packageType}: One or more elements not found. Duration: ${durationSelect}, Frequency: ${frequencySelect}, Price Span: ${totalPriceSpan}`);
+                        }
+                        break;
+                    case 'adults': 
+                        durationSelect = document.getElementById('adults-duration');
+                        frequencySelect = document.getElementById('adults-frequency');
+                        totalPriceSpan = document.getElementById('adults-total-price');
+                        if (durationSelect && frequencySelect && totalPriceSpan) {
+                            const duration = parseInt(durationSelect.value);
+                            const frequency = parseInt(frequencySelect.value);
+                            // Updated price for individual adults: 200 EGP per hour = 200 / 60 = 3.333... EGP per minute
+                            pricePerMinute = 200 / 60; 
+                            const pricePerSession = pricePerMinute * duration;
+                            monthlyPrice = pricePerSession * frequency * 4; 
+                            totalPriceSpan.textContent = monthlyPrice.toFixed(0); // Display as integer
+                            // console.log(`Adults Individual: Duration=${duration}min, Freq/wk=${frequency}, Price/Session=${pricePerSession}, MonthlyPrice=${monthlyPrice}`);
+                        } else {
+                            console.error(`Error for ${packageType}: One or more elements not found. Duration: ${durationSelect}, Frequency: ${frequencySelect}, Price Span: ${totalPriceSpan}`);
+                        }
+                        break;
+                    case 'group-kids': 
+                        frequencySelect = document.getElementById('group-kids-frequency');
+                        totalPriceSpan = document.getElementById('group-kids-total-price');
+                        if (frequencySelect && totalPriceSpan) {
+                            const frequency = parseInt(frequencySelect.value);
+                            baseMonthlyPricePerFrequency = 100; 
+                            monthlyPrice = frequency * baseMonthlyPricePerFrequency;
+                            totalPriceSpan.textContent = monthlyPrice.toFixed(0); // Display as integer
+                            // console.log(`Kids Group: Freq/wk=${frequency}, BasePrice/Freq=${baseMonthlyPricePerFrequency}, MonthlyPrice=${monthlyPrice}`);
+                        } else {
+                            console.error(`Error for ${packageType}: One or more elements not found. Frequency: ${frequencySelect}, Price Span: ${totalPriceSpan}`);
+                        }
+                        break;
+                    case 'group-adults': 
+                        frequencySelect = document.getElementById('group-adults-frequency');
+                        totalPriceSpan = document.getElementById('group-adults-total-price');
+                        if (frequencySelect && totalPriceSpan) {
+                            const frequency = parseInt(frequencySelect.value);
+                            baseMonthlyPricePerFrequency = 160; 
+                            monthlyPrice = frequency * baseMonthlyPricePerFrequency;
+                            totalPriceSpan.textContent = monthlyPrice.toFixed(0); // Display as integer
+                            // console.log(`Adults Group: Freq/wk=${frequency}, BasePrice/Freq=${baseMonthlyPricePerFrequency}, MonthlyPrice=${monthlyPrice}`);
+                        } else {
+                            console.error(`Error for ${packageType}: One or more elements not found. Frequency: ${frequencySelect}, Price Span: ${totalPriceSpan}`);
+                        }
+                        break;
+                    case 'ijazah': 
+                        durationSelect = document.getElementById('ijazah-duration');
+                        frequencySelect = document.getElementById('ijazah-frequency');
+                        totalPriceSpan = document.getElementById('ijazah-total-price');
+                        if (durationSelect && frequencySelect && totalPriceSpan) {
+                            const duration = parseInt(durationSelect.value);
+                            const frequency = parseInt(frequencySelect.value);
+                            // Updated price for Ijazah package: 250 EGP per hour = 250 / 60 = 4.166... EGP per minute
+                            pricePerMinute = 250 / 60; 
+                            const pricePerSession = pricePerMinute * duration;
+                            monthlyPrice = pricePerSession * frequency * 4;
+                            totalPriceSpan.textContent = monthlyPrice.toFixed(0); // Display as integer
+                            // console.log(`Ijazah: Duration=${duration}min, Freq/wk=${frequency}, Price/Session=${pricePerSession}, MonthlyPrice=${monthlyPrice}`);
+                        } else {
+                           console.error(`Error for ${packageType}: One or more elements not found. Duration: ${durationSelect}, Frequency: ${frequencySelect}, Price Span: ${totalPriceSpan}`);
+                        }
+                        break;
+                    default:
+                        console.error(`Unknown package type: ${packageType}`);
+                }
+            } catch (error) {
+                console.error(`Exception in calculatePackagePrice for ${packageType}:`, error);
+                if(totalPriceSpan) { // Check if totalPriceSpan was assigned before error
+                    totalPriceSpan.textContent = 'خطأ'; 
+                }
+            }
+        }
+
+        // Function to initialize all event listeners and initial calculations
+        function initializePage() {
+            const savedLang = localStorage.getItem('selectedLang') || 'ar'; 
+            updateContent(savedLang); // Update text content first
+
+            // console.log('DOM fully loaded and parsed. Initializing prices and listeners...');
+            
+            // Now that content (including data-key elements) is updated, calculate prices
+            // Adding a small delay to ensure all elements are rendered, though DOMContentLoaded should handle most cases.
+            setTimeout(() => {
+                calculatePackagePrice('kids');
+                calculatePackagePrice('adults');
+                calculatePackagePrice('group-kids');
+                calculatePackagePrice('group-adults');
+                calculatePackagePrice('ijazah');
+            }, 100); 
+            
             document.querySelectorAll('nav a[href^="#"], #back-to-top').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
                     const targetId = this.getAttribute('href');
-                    // Only scroll if the href is not just '#' or empty
                     if (targetId && targetId !== '#') {
                         const targetElement = document.querySelector(targetId);
                         if (targetElement) {
-                            targetElement.scrollIntoView({
-                                behavior: 'smooth'
-                            });
+                            targetElement.scrollIntoView({ behavior: 'smooth' });
                         } else {
-                            console.warn(`Element with ID ${targetId} not found for scrolling.`);
+                            // console.warn(`Scroll target ${targetId} not found.`);
                         }
                     } else {
-                        // For href="#", scroll to top of the page
-                        window.scrollTo({
-                            top: 0,
-                            behavior: 'smooth'
-                        });
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                     }
-
-                    if (window.innerWidth <= 768 && document.querySelector('.nav-links').classList.contains('active')) {
-                        document.querySelector('.nav-links').classList.remove('active');
+                    const navLinksElement = document.querySelector('.nav-links');
+                    if (window.innerWidth <= 768 && navLinksElement && navLinksElement.classList.contains('active')) {
+                        navLinksElement.classList.remove('active');
                     }
                 });
             });
 
-            // Mobile menu toggle functionality
             const menuToggle = document.querySelector('.menu-toggle');
             const navLinks = document.querySelector('.nav-links');
+            if(menuToggle && navLinks) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                });
+                document.addEventListener('click', function(event) {
+                    if (navLinks.classList.contains('active') && 
+                        !navLinks.contains(event.target) && 
+                        !menuToggle.contains(event.target)) {
+                        navLinks.classList.remove('active');
+                    }
+                });
+            }
 
-            menuToggle.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
-            });
-
-            document.addEventListener('click', function(event) {
-                if (!navLinks.contains(event.target) && !menuToggle.contains(event.target) && navLinks.classList.contains('active')) {
-                    navLinks.classList.remove('active');
-                }
-            });
-
-            // Language switcher functionality
             const languageSwitcher = document.querySelector('.language-switcher');
             if (languageSwitcher) {
                 languageSwitcher.addEventListener('click', (event) => {
-                    event.stopPropagation(); // Prevent document click from closing immediately
+                    event.stopPropagation(); 
                     languageSwitcher.classList.toggle('active');
                 });
                 document.querySelectorAll('.language-switcher .dropdown-content a').forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
-                        e.stopPropagation(); // Prevent click from bubbling to document and re-opening/interfering
+                        e.stopPropagation(); 
                         const newLang = e.target.dataset.lang;
-                        updateContent(newLang);
-                        languageSwitcher.classList.remove('active'); // Close dropdown after selection
+                        localStorage.setItem('selectedLang', newLang); // Save selected language
+                        updateContent(newLang); // Update content based on new language
+                        languageSwitcher.classList.remove('active'); 
                     });
                 });
                 document.addEventListener('click', function(event) {
-                    if (!languageSwitcher.contains(event.target) && languageSwitcher.classList.contains('active')) {
+                    if (languageSwitcher.classList.contains('active') && !languageSwitcher.contains(event.target)) {
                         languageSwitcher.classList.remove('active');
                     }
                 });
             }
 
-            // Intersection Observer for scroll animations
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('animate');
                     }
-                }
-            );
+                });
             }, { threshold: 0.1 });
-
             document.querySelectorAll('.fade-in, .scale-in, .section-header').forEach(element => {
                 observer.observe(element);
             });
 
-            // Set current year in footer
-            document.getElementById('current-year').textContent = new Date().getFullYear();
+            const currentYearSpan = document.getElementById('current-year');
+            if(currentYearSpan) {
+                currentYearSpan.textContent = new Date().getFullYear();
+            }
 
-            // FAQ Accordion functionality - Simplified for smoother animation
             document.querySelectorAll('.faq-question').forEach(item => {
                 item.addEventListener('click', function() {
-                    // Close any other open answers first
-                    document.querySelectorAll('.faq-question.active').forEach(openQuestion => {
-                        if (openQuestion !== this) { // 'this' refers to the clicked faq-question
-                            openQuestion.classList.remove('active');
-                            openQuestion.querySelector('.icon').style.transform = 'rotate(0deg)';
-                        }
-                    });
-
-                    // Toggle the current clicked question
-                    this.classList.toggle('active');
-                    const icon = this.querySelector('.icon');
-                    if (this.classList.contains('active')) {
-                        icon.style.transform = 'rotate(180deg)';
-                    } else {
-                        icon.style.transform = 'rotate(0deg)';
+                    const currentlyActive = document.querySelector('.faq-question.active');
+                    if (currentlyActive && currentlyActive !== this) {
+                        currentlyActive.classList.remove('active');
                     }
+                    this.classList.toggle('active');
                 });
             });
 
-            // Show/hide Back to Top button on scroll
             const backToTopButton = document.getElementById('back-to-top');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 300) {
-                    backToTopButton.classList.add('show');
-                } else {
-                    backToTopButton.classList.remove('show');
-                }
-            });
+            if(backToTopButton){
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 300) {
+                        backToTopButton.classList.add('show');
+                    } else {
+                        backToTopButton.classList.remove('show');
+                    }
+                });
+            }
 
-            // The success modal is now only used for the newsletter, so its logic remains.
             const successModal = document.getElementById('successModal');
             const closeModalButton = document.getElementById('closeModal');
-
-            closeModalButton.addEventListener('click', () => {
-                successModal.classList.remove('show');
-            });
-
-            window.addEventListener('click', (event) => {
-                if (event.target == successModal) {
+            if(successModal && closeModalButton) {
+                closeModalButton.addEventListener('click', () => {
                     successModal.classList.remove('show');
-                }
-            });
+                });
+                window.addEventListener('click', (event) => {
+                    if (event.target == successModal) {
+                        successModal.classList.remove('show');
+                    }
+                });
+            }
 
-            // Handle newsletter form submission
             const newsletterForm = document.getElementById('newsletterForm');
             if (newsletterForm) {
                 newsletterForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
                     const emailInput = document.getElementById('newsletterEmail');
+                    if (!emailInput) {
+                        console.error("Newsletter email input not found.");
+                        return;
+                    }
                     const email = emailInput.value;
-                    console.log('Newsletter Subscription Email:', email);
                     
-                    // Simulate API call
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    // Using a custom modal message instead of alert()
-                    const newsletterModal = document.getElementById('successModal'); // Reusing the success modal for newsletter
-                    const modalH3 = newsletterModal.querySelector('h3');
-                    const modalP = newsletterModal.querySelector('p');
-
-                    modalH3.textContent = translations[localStorage.getItem('selectedLang') || 'ar']['modal-h3']; // Use translated text
-                    modalP.textContent = translations[localStorage.getItem('selectedLang') || 'ar']['modal-p']; // Use translated text
-                    newsletterModal.classList.add('show');
-
-                    emailInput.value = ''; // Clear input
+                    await new Promise(resolve => setTimeout(resolve, 1000)); 
+                    
+                    const newsletterModal = document.getElementById('successModal');
+                    if (newsletterModal) {
+                        const modalH3 = newsletterModal.querySelector('h3');
+                        const modalP = newsletterModal.querySelector('p');
+                        const currentLang = localStorage.getItem('selectedLang') || 'ar';
+                        if(modalH3 && translations[currentLang] && translations[currentLang]['modal-h3']) modalH3.innerHTML = translations[currentLang]['modal-h3'];
+                        if(modalP && translations[currentLang] && translations[currentLang]['modal-p']) modalP.innerHTML = translations[currentLang]['modal-p'];
+                        newsletterModal.classList.add('show');
+                    } else {
+                        console.error("Success modal for newsletter not found.");
+                        const currentLang = localStorage.getItem('selectedLang') || 'ar';
+                        alert(translations[currentLang] && translations[currentLang]['modal-h3'] ? translations[currentLang]['modal-h3'] : "Success!");
+                    }
+                    emailInput.value = ''; 
                 });
             }
-        });
+        }
+
+        // Ensure the script runs after the DOM is fully loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializePage);
+        } else {
+            // DOMContentLoaded has already fired
+            initializePage();
+        }
     </script>
 </body>
 </html>
