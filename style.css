@@ -315,21 +315,20 @@ html[dir="ltr"] .language-switcher .dropdown-content a {
     padding-bottom: 60px;
 }
 .hero h1 {
-    font-size: 4.5em;
+    font-size: 4.2em;
     margin-bottom: 30px;
     color: var(--bright-gold);
-    text-shadow: 5px 5px 15px var(--shadow-strong);
+    text-shadow: 4px 4px 12px var(--shadow-medium);
     animation: fadeInDown 1.2s ease-out forwards;
 }
 .hero p {
-    font-size: 2em;
+    font-size: 1.9em;
     max-width: 900px;
     margin: 0 auto 60px auto;
     line-height: 1.7;
     animation: fadeIn 1.4s ease-out 0.3s forwards;
     opacity: 0;
     color: #fff;
-    text-shadow: 2px 2px 8px var(--shadow-medium);
 }
 .hero .btn {
     display: inline-block;
@@ -482,6 +481,14 @@ html[dir="ltr"] .about-text h3::before {
 .about-text p {
     margin-bottom: 25px;
     line-height: 1.9;
+}
+
+/* Ijazat Section */
+.ijazat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 60px;
+    margin-top: 70px;
 }
 
 /* Ijazat Section */
