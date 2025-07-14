@@ -220,16 +220,8 @@ html[dir="ltr"] .language-switcher {
     margin-left: 20px;
 }
 
-.language-switcher:hover {
-    background-color: var(--warm-sandy-beige);
-}
-
 .language-switcher .fas.fa-chevron-down {
-    transition: transform 0.3s ease;
-}
-
-.language-switcher.active .fas.fa-chevron-down {
-    transform: rotate(180deg);
+    display: none;
 }
 
 .language-switcher [data-key="current-lang-display"] {
@@ -257,17 +249,6 @@ html[dir="ltr"] .language-switcher {
     overflow: hidden;
     top: 100%;
     margin-top: 10px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-}
-
-.language-switcher.active .dropdown-content {
-    display: block;
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
 }
 
 html[dir="rtl"] .language-switcher .dropdown-content {
@@ -500,6 +481,69 @@ html[dir="ltr"] .about-text h3::before {
 .about-text p {
     margin-bottom: 25px;
     line-height: 1.9;
+}
+
+/* Portfolio Section */
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 40px;
+    margin-top: 70px;
+}
+
+.portfolio-item {
+    position: relative;
+    border-radius: var(--border-radius-main);
+    overflow: hidden;
+    box-shadow: 0 12px 35px var(--shadow-subtle);
+    transition: all var(--transition-speed) ease-out;
+}
+
+.portfolio-item:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 22px 50px var(--shadow-medium);
+}
+
+.portfolio-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.portfolio-item:hover img {
+    transform: scale(1.1);
+}
+
+.portfolio-item-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(26, 62, 99, 0.9), transparent);
+    color: var(--off-white);
+    padding: 30px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.portfolio-item:hover .portfolio-item-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.portfolio-item-overlay h3 {
+    color: var(--bright-gold);
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.portfolio-item-overlay .btn {
+    background-color: var(--bright-gold);
+    color: var(--primary-dark-blue);
+    padding: 10px 20px;
 }
 
 /* Ijazat Section */
@@ -1446,35 +1490,36 @@ html[dir="ltr"] #back-to-top {
 }
 
 @media (max-width: 768px) {
-    nav { padding: 18px 20px; flex-wrap: wrap; justify-content: space-between; }
-    .logo { font-size: 1.8em; order: 1; }
-    .logo img { height: 60px; width: auto; }
-    .nav-links { display: none; flex-direction: column; width: 100%; text-align: center; background: rgba(255, 255, 255, 0.98); position: absolute; top: 86px; left: 0; padding: 25px 0; box-shadow: 0 6px 20px var(--shadow-subtle); z-index: 999; order: 3; }
+    nav { padding: 18px 20px; flex-wrap: wrap; }
+    .logo { font-size: 1.8em; }
+    .logo img { height: 80px; width: auto; }
+    .nav-links { display: none; flex-direction: column; width: 100%; text-align: center; background: rgba(255, 255, 255, 0.98); position: absolute; top: 86px; left: 0; padding: 25px 0; box-shadow: 0 6px 20px var(--shadow-subtle); z-index: 999; }
     .nav-links.active { display: flex; }
     .nav-links li { margin: 15px 0; }
-    .menu-toggle { display: flex; order: 2; }
+    .menu-toggle { display: flex; }
     .language-switcher {
         order: 0;
-        width: auto;
-        height: auto;
-        min-width: unset;
-        min-height: unset;
-        max-width: unset;
-        max-height: unset;
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        min-height: 48px;
+        max-width: 48px;
+        max-height: 48px;
         text-align: center;
         margin: 0;
-        padding: 8px;
+        padding: 0;
         background-color: transparent;
-        border-radius: 50px;
-        border: 1px solid var(--primary-dark-blue);
+        border-radius: 50%;
+        border: none;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1em;
+        font-size: 1.3em;
         font-weight: bold;
         color: var(--primary-dark-blue);
         transition: box-shadow 0.2s, background 0.2s;
-        position: relative;
+        position: static;
+        margin-left: 15px;
         z-index: 1002;
     }
     .language-switcher:active {
@@ -1482,37 +1527,29 @@ html[dir="ltr"] #back-to-top {
         background-color: var(--warm-sandy-beige);
     }
     .language-switcher .fas.fa-chevron-down {
-        display: inline-block !important;
-        margin-left: 5px;
+        display: none !important;
     }
     .language-switcher .dropdown-content {
-        display: none; /* Controlled by JS */
-        position: absolute;
-        top: 110%;
-        right: 0;
-        background-color: var(--off-white);
-        min-width: 150px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1003;
-    }
-     .language-switcher.active .dropdown-content {
-        display: block !important;
+        display: none !important;
     }
     .language-switcher [data-key="current-lang-display"] {
-        font-size: 1em;
+        font-size: 1.2em;
         font-weight: bold;
         color: var(--primary-dark-blue);
-        width: auto;
-        height: auto;
-        display: inline;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
         padding: 0;
         margin: 0;
-        border-radius: 0;
-        border: none;
-        background: transparent;
+        border-radius: 50%;
+        border: 2px solid var(--primary-dark-blue);
+        background: var(--bright-gold);
         box-sizing: border-box;
     }
-    .hero h1 { font-size: 2.2em; }
+    .hero h1 { font-size: 2.5em; }
     .hero p { font-size: 1.3em; }
     .hero .btn { padding: 18px 38px; font-size: 1.3em; }
     section { padding: 80px 0; }
