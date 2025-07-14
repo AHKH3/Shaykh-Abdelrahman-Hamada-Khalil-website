@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Language switcher
     const languageSwitcher = document.querySelector('.language-switcher');
-    const langDropdown = languageSwitcher.querySelector('.dropdown-content');
     const currentLangDisplay = document.querySelector('[data-key="current-lang-display"]');
 
     function updateLangButtonText(lang) {
@@ -15,28 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     languageSwitcher.addEventListener('click', function(e) {
-        e.stopPropagation();
-        this.classList.toggle('active');
-    });
-
-    langDropdown.addEventListener('click', function(e) {
-        e.stopPropagation();
-    });
-
-    document.querySelectorAll('.dropdown-content a').forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const lang = this.dataset.lang;
-            updateContent(lang);
-            updateLangButtonText(lang);
-            languageSwitcher.classList.remove('active');
-        });
-    });
-
-    document.addEventListener('click', function() {
-        if (languageSwitcher.classList.contains('active')) {
-            languageSwitcher.classList.remove('active');
-        }
+        e.preventDefault();
+        const currentLang = document.documentElement.lang;
+        const newLang = currentLang === 'ar' ? 'en' : 'ar';
+        updateContent(newLang);
+        updateLangButtonText(newLang);
     });
 
     // Mobile menu
@@ -178,9 +160,7 @@ const translations = {
         'logo-alt': 'شعار الشيخ عبد الرحمن حماده خليل',
         'nav-home': 'الرئيسية',
         'nav-about': 'عن الشيخ',
-        'nav-portfolio': 'أعمالنا',
         'nav-packages': 'باقاتنا',
-        'nav-why-us': 'لماذا تختارنا؟',
         'nav-faq': 'الأسئلة الشائعة',
         'nav-contact': 'تواصل معنا',
         'current-lang-display': 'العربية',
@@ -192,11 +172,6 @@ const translations = {
         'about-h3': 'نبذة عن مسيرتي في خدمة القرآن',
         'about-p1': 'الحمد لله رب العالمين، والصلاة والسلام على خاتم الأنبياء والمرسلين. أنا الشيخ عبد الرحمن حماده خليل، طالب بكلية اللغات والترجمة بقسم الأدب الصيني بجامعة الأزهر، ومعلم ومجاز في القرآن الكريم. لقد كرست حياتي لخدمة كتاب الله العزيز، وتلقيت العلم من شيوخ أجلاء وحصلت على الإجازات الشرعية التي تؤهلني لتعليم وإقراء كتاب الله بسندٍ متصل إلى نبينا الكريم محمد صلى الله عليه وسلم.',
         'about-p2': 'أؤمن بأن تعلم القرآن هو رحلة نور وسكينة، وأن كل طالب يستحق أن يتلقى العلم بأفضل الطرق وأيسرها. لهذا، أقدم لكم عبر هذه المنصة منهجي التعليمي الذي يجمع بين أصالة التلقي ومتطلبات التعليم الحديث عن بُعد، لكي تتمكنوا من إتقان التلاوة، وتجويد الحروف، وتحقيق الإجازة، وأن تكونوا من أهل القرآن الذين هم أهل الله وخاصته. لدي خبرة كمعلم قرآن أونلاين في أكاديمية رفرف (يوليو 2024 - الوقت الحاضر) ومعلم قرآن أونلاين (عمل حر) منذ يوليو 2021، ومعلم قرآن أوفلاين (عمل حر) منذ نوفمبر 2024.',
-        'portfolio-h2': 'أعمالنا',
-        'portfolio-item1-h3': 'تلاوة عطرة',
-        'portfolio-item2-h3': 'شرح مبسط لأحكام التجويد',
-        'portfolio-item3-h3': 'مجالس قرآنية',
-        'portfolio-item-btn': 'استمع الآن',
         'packages-h2': 'باقاتنا التعليمية',
         'package1-h3': 'الباقة الجماعية للأطفال',
         'package1-desc': 'دروس جماعية ممتعة ومحفزة للأطفال (5 طلاب)، ساعة كاملة للحصة.',
@@ -257,7 +232,6 @@ const translations = {
         'footer-col2-h3': 'روابط سريعة',
         'nav-home-footer': 'الرئيسية',
         'nav-about-footer': 'عن الشيخ',
-        'nav-portfolio-footer': 'أعمالنا',
         'nav-packages-footer': 'باقاتنا',
         'nav-faq-footer': 'الأسئلة الشائعة',
         'nav-contact-footer': 'تواصل معنا',
@@ -271,9 +245,7 @@ const translations = {
         'logo-alt': 'Shaykh Abdelrahman Hamada Khalil Logo',
         'nav-home': 'Home',
         'nav-about': 'About Shaykh',
-        'nav-portfolio': 'Portfolio',
         'nav-packages': 'Our Packages',
-        'nav-why-us': 'Why Choose Us?',
         'nav-faq': 'FAQ',
         'nav-contact': 'Contact Us',
         'current-lang-display': 'English',
@@ -285,11 +257,6 @@ const translations = {
         'about-h3': 'My Journey in Serving the Quran',
         'about-p1': 'All praise is due to Allah, Lord of the Worlds, and prayers and peace be upon the Seal of the Prophets and Messengers. I am Shaykh Abdelrahman Hamada Khalil, a student at Al-Azhar University, Faculty of Languages and Translation, Chinese Literature Department, and a certified and qualified teacher of the Holy Quran. I have dedicated my life to serving the Noble Book of Allah, having received knowledge from esteemed scholars and obtained religious certifications that qualify me to teach and recite the Book of Allah with a connected chain of narration (Sanad) back to our Noble Prophet Muhammad (peace be upon him).',
         'about-p2': 'I believe that learning the Quran is a journey of light and tranquility, and that every student deserves to receive knowledge in the best and easiest ways. Therefore, through this platform, I offer my educational methodology that combines the authenticity of traditional reception with the requirements of modern distance learning, so that you can master recitation, perfect Tajweed, achieve certification (Ijazah), and become among the people of the Quran, who are the people of Allah and His chosen ones. I have experience as an online Quran teacher at Rafraf Academy (July 2024 - Present), a freelance online Quran teacher since July 2021, and a freelance offline Quran teacher since November 2024.',
-        'portfolio-h2': 'Our Works',
-        'portfolio-item1-h3': 'Melodious Recitation',
-        'portfolio-item2-h3': 'Simplified Explanation of Tajweed Rules',
-        'portfolio-item3-h3': 'Quranic Gatherings',
-        'portfolio-item-btn': 'Listen Now',
         'packages-h2': 'Our Educational Packages',
         'package1-h3': 'Kids Group Package',
         'package1-desc': 'Fun and motivating group lessons for children (5 students), one full hour per session.',
@@ -350,7 +317,6 @@ const translations = {
         'footer-col2-h3': 'Quick Links',
         'nav-home-footer': 'Home',
         'nav-about-footer': 'About Shaykh',
-        'nav-portfolio-footer': 'Portfolio',
         'nav-packages-footer': 'Our Packages',
         'nav-faq-footer': 'FAQ',
         'nav-contact-footer': 'Contact Us',
