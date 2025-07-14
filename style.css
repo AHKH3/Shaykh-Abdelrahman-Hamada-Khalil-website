@@ -484,6 +484,14 @@ html[dir="ltr"] .about-text h3::before {
     line-height: 1.9;
 }
 
+/* Ijazat Section */
+.ijazat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 60px;
+    margin-top: 70px;
+}
+
 .ijaza-card {
     background-color: var(--off-white);
     border-radius: var(--border-radius-main);
