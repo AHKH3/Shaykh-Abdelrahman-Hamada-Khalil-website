@@ -2,6 +2,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Language switcher
     const languageSwitcher = document.querySelector('.language-switcher');
     const langDropdown = languageSwitcher.querySelector('.dropdown-content');
+    const currentLangDisplay = document.querySelector('[data-key="current-lang-display"]');
+
+    function updateLangButtonText(lang) {
+        if (!currentLangDisplay) return;
+        const isMobile = () => window.innerWidth <= 768;
+        if (isMobile()) {
+            currentLangDisplay.textContent = lang === 'ar' ? 'E' : 'ع';
+        } else {
+            currentLangDisplay.textContent = lang === 'ar' ? 'English' : 'العربية';
+        }
+    }
 
     languageSwitcher.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -17,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const lang = this.dataset.lang;
             updateContent(lang);
+            updateLangButtonText(lang);
             languageSwitcher.classList.remove('active');
         });
     });
@@ -124,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    updateLangButtonText(document.documentElement.lang);
 });
 
 function calculatePackagePrice(packageType) {
@@ -165,7 +178,7 @@ const translations = {
         'logo-alt': 'شعار الشيخ عبد الرحمن حماده خليل',
         'nav-home': 'الرئيسية',
         'nav-about': 'عن الشيخ',
-        'nav-ijazat': 'الإجازات والمؤهلات',
+        'nav-portfolio': 'أعمالنا',
         'nav-packages': 'باقاتنا',
         'nav-why-us': 'لماذا تختارنا؟',
         'nav-faq': 'الأسئلة الشائعة',
@@ -179,20 +192,11 @@ const translations = {
         'about-h3': 'نبذة عن مسيرتي في خدمة القرآن',
         'about-p1': 'الحمد لله رب العالمين، والصلاة والسلام على خاتم الأنبياء والمرسلين. أنا الشيخ عبد الرحمن حماده خليل، طالب بكلية اللغات والترجمة بقسم الأدب الصيني بجامعة الأزهر، ومعلم ومجاز في القرآن الكريم. لقد كرست حياتي لخدمة كتاب الله العزيز، وتلقيت العلم من شيوخ أجلاء وحصلت على الإجازات الشرعية التي تؤهلني لتعليم وإقراء كتاب الله بسندٍ متصل إلى نبينا الكريم محمد صلى الله عليه وسلم.',
         'about-p2': 'أؤمن بأن تعلم القرآن هو رحلة نور وسكينة، وأن كل طالب يستحق أن يتلقى العلم بأفضل الطرق وأيسرها. لهذا، أقدم لكم عبر هذه المنصة منهجي التعليمي الذي يجمع بين أصالة التلقي ومتطلبات التعليم الحديث عن بُعد، لكي تتمكنوا من إتقان التلاوة، وتجويد الحروف، وتحقيق الإجازة، وأن تكونوا من أهل القرآن الذين هم أهل الله وخاصته. لدي خبرة كمعلم قرآن أونلاين في أكاديمية رفرف (يوليو 2024 - الوقت الحاضر) ومعلم قرآن أونلاين (عمل حر) منذ يوليو 2021، ومعلم قرآن أوفلاين (عمل حر) منذ نوفمبر 2024.',
-        'about-p3': 'أسأل الله تعالى أن يتقبل منا ومنكم صالح الأعمال، وأن يجعلنا جميعاً خداماً لكتابه الكريم.',
-        'ijazat-h2': 'الإجازات والمؤهلات',
-        'ijaza-card1-h3': 'الإجازات القرآنية',
-        'ijaza-card1-p': 'أتشرف بحمل عدة إجازات قرآنية بالسند المتصل إلى رسول الله صلى الله عليه وسلم، مما يضمن دقة وصحة التلاوة التي سأنقلها إليكم.',
-        'ijaza-card1-li1': 'إجازة برواية حفص عن عاصم من طريق الشاطبية (من فضيلة الشيخ عزب محمود).',
-        'ijaza-card1-li2': 'إجازة بقراءة الإمام عاصم بروايتي حفص وشعبة من طريق الشاطبية (من فضيلة الشيخة حنان محمد عبد العزيز).',
-        'ijaza-card1-li3': 'إجازة بقراءة الإمام حمزة بروايتي خلف وخلاد من طريق الشاطبية (من فضيلة الشيخ هاني منصور الشرقاوي).',
-        'ijaza-card1-li4': 'تلقي القرآن عن شيوخ أجلاء مشهود لهم بالعلم والفضل.',
-        'ijaza-card2-h3': 'المؤهلات التعليمية والخبرات',
-        'ijaza-card2-p': 'إلى جانب الإجازات القرآنية، أمتلك مؤهلات تعليمية وخبرة عملية واسعة في تدريس القرآن الكريم وعلومه.',
-        'ijaza-card2-li1': 'طالب بكلية اللغات والترجمة، قسم الأدب الصيني، جامعة الأزهر.',
-        'ijaza-card2-li2': 'خبرة كمعلم قرآن أونلاين (أكاديمية رفرف وعمل حر) ومعلم قرآن أوفلاين.',
-        'ijaza-card2-li3': 'منهجية تعليمية مرنة ومخصصة تناسب احتياجات كل طالب.',
-        'ijaza-card2-li4': 'مهارات تواصل ممتازة لضمان بيئة تعليمية محفزة.',
+        'portfolio-h2': 'أعمالنا',
+        'portfolio-item1-h3': 'تلاوة عطرة',
+        'portfolio-item2-h3': 'شرح مبسط لأحكام التجويد',
+        'portfolio-item3-h3': 'مجالس قرآنية',
+        'portfolio-item-btn': 'استمع الآن',
         'packages-h2': 'باقاتنا التعليمية',
         'package1-h3': 'الباقة الجماعية للأطفال',
         'package1-desc': 'دروس جماعية ممتعة ومحفزة للأطفال (5 طلاب)، ساعة كاملة للحصة.',
@@ -227,10 +231,6 @@ const translations = {
         'feature-postpone-cancel': 'إمكانية تأجيل أو إلغاء الحلقة',
         'feature-custom-plan': 'خطة مخصصة حسب ما يرغب به الطالب',
         'feature-ijazah-free': 'الإجازة مجانية',
-        'newsletter-h2': 'اشترك في نشرتنا البريدية',
-        'newsletter-p': 'ابق على اطلاع بآخر أخبارنا، الدورات الجديدة، والمقالات القرآنية المفيدة مباشرة في بريدك الوارد.',
-        'newsletter-email-placeholder': 'أدخل بريدك الإلكتروني',
-        'newsletter-subscribe-btn': 'اشترك الآن',
         'faq-h2': 'الأسئلة الشائعة',
         'faq-q0': 'ما هي الإجازة؟',
         'faq-a0': 'هي رخصة وشهادة من شيخ مجاز له سند متصل بالنبي صلى الله عليه وسلم، وهي شهادة من الشيخ أنك قرأت القرآن الكريم كاملاً بأحكام التجويد والتلاوة الصحيحة غيباً عن ظهر قلب، ورخصة قراءة وإقراء، أي أن تعلم من بعدك من طلبة العلم.',
@@ -257,7 +257,7 @@ const translations = {
         'footer-col2-h3': 'روابط سريعة',
         'nav-home-footer': 'الرئيسية',
         'nav-about-footer': 'عن الشيخ',
-        'nav-ijazat-footer': 'الإجازات',
+        'nav-portfolio-footer': 'أعمالنا',
         'nav-packages-footer': 'باقاتنا',
         'nav-faq-footer': 'الأسئلة الشائعة',
         'nav-contact-footer': 'تواصل معنا',
@@ -271,7 +271,7 @@ const translations = {
         'logo-alt': 'Shaykh Abdelrahman Hamada Khalil Logo',
         'nav-home': 'Home',
         'nav-about': 'About Shaykh',
-        'nav-ijazat': 'Certifications & Qualifications',
+        'nav-portfolio': 'Portfolio',
         'nav-packages': 'Our Packages',
         'nav-why-us': 'Why Choose Us?',
         'nav-faq': 'FAQ',
@@ -285,20 +285,11 @@ const translations = {
         'about-h3': 'My Journey in Serving the Quran',
         'about-p1': 'All praise is due to Allah, Lord of the Worlds, and prayers and peace be upon the Seal of the Prophets and Messengers. I am Shaykh Abdelrahman Hamada Khalil, a student at Al-Azhar University, Faculty of Languages and Translation, Chinese Literature Department, and a certified and qualified teacher of the Holy Quran. I have dedicated my life to serving the Noble Book of Allah, having received knowledge from esteemed scholars and obtained religious certifications that qualify me to teach and recite the Book of Allah with a connected chain of narration (Sanad) back to our Noble Prophet Muhammad (peace be upon him).',
         'about-p2': 'I believe that learning the Quran is a journey of light and tranquility, and that every student deserves to receive knowledge in the best and easiest ways. Therefore, through this platform, I offer my educational methodology that combines the authenticity of traditional reception with the requirements of modern distance learning, so that you can master recitation, perfect Tajweed, achieve certification (Ijazah), and become among the people of the Quran, who are the people of Allah and His chosen ones. I have experience as an online Quran teacher at Rafraf Academy (July 2024 - Present), a freelance online Quran teacher since July 2021, and a freelance offline Quran teacher since November 2024.',
-        'about-p3': 'I ask Allah Almighty to accept our good deeds and yours, and to make us all servants of His Noble Book.',
-        'ijazat-h2': 'Certifications & Qualifications',
-        'ijaza-card1-h3': 'Quranic Certifications (Ijazat)',
-        'ijaza-card1-p': 'I am honored to hold several Quranic certifications with a connected Sanad to the Messenger of Allah (peace be upon him), ensuring the accuracy and authenticity of the recitation I will convey to you.',
-        'ijaza-card1-li1': 'Ijazah in Hafs from Asim narration via Al-Shatibiyyah (from Shaykh Azab Mahmoud).',
-        'ijaza-card1-li2': 'Ijazah in Imam Asim\'s recitation with Hafs and Shu\'bah narrations via Al-Shatibiyyah (from Shaykhah Hanan Mohamed Abdel Aziz).',
-        'ijaza-card1-li3': 'Ijazah in Imam Hamza\'s recitation with Khalaf and Khallad narrations via Al-Shatibiyyah (from Shaykh Hany Mansour El-Sharqawy).',
-        'ijaza-card1-li4': 'Received the Quran from esteemed scholars known for their knowledge and virtue.',
-        'ijaza-card2-h3': 'Educational Qualifications & Experience',
-        'ijaza-card2-p': 'In addition to Quranic certifications, I possess educational qualifications and extensive practical experience in teaching the Holy Quran and its sciences.',
-        'ijaza-card2-li1': 'Student at Al-Azhar University, Faculty of Languages and Translation, Chinese Literature Department.',
-        'ijaza-card2-li2': 'Experience as an online Quran teacher (Rafraf Academy and freelance) and an offline Quran teacher.',
-        'ijaza-card2-li3': 'Flexible and personalized teaching methodology to suit each student\'s needs.',
-        'ijaza-card2-li4': 'Excellent communication skills to ensure a motivating learning environment.',
+        'portfolio-h2': 'Our Works',
+        'portfolio-item1-h3': 'Melodious Recitation',
+        'portfolio-item2-h3': 'Simplified Explanation of Tajweed Rules',
+        'portfolio-item3-h3': 'Quranic Gatherings',
+        'portfolio-item-btn': 'Listen Now',
         'packages-h2': 'Our Educational Packages',
         'package1-h3': 'Kids Group Package',
         'package1-desc': 'Fun and motivating group lessons for children (5 students), one full hour per session.',
@@ -333,10 +324,6 @@ const translations = {
         'feature-postpone-cancel': 'Possibility to postpone or cancel the session',
         'feature-custom-plan': 'Customized plan according to student\'s wishes',
         'feature-ijazah-free': 'Ijazah is free',
-        'newsletter-h2': 'Subscribe to Our Newsletter',
-        'newsletter-p': 'Stay updated with our latest news, new courses, and beneficial Quranic articles directly in your inbox.',
-        'newsletter-email-placeholder': 'Enter your email address',
-        'newsletter-subscribe-btn': 'Subscribe Now',
         'faq-h2': 'Frequently Asked Questions',
         'faq-q0': 'What is an Ijazah?',
         'faq-a0': 'It is a license and certificate from a certified Shaykh with a connected Sanad to the Prophet (peace be upon him). It is a certificate from the Shaykh that you have recited the entire Holy Quran correctly with Tajweed rules by heart, and a license to recite and teach, meaning you can teach subsequent students of knowledge.',
@@ -363,7 +350,7 @@ const translations = {
         'footer-col2-h3': 'Quick Links',
         'nav-home-footer': 'Home',
         'nav-about-footer': 'About Shaykh',
-        'nav-ijazat-footer': 'Certifications',
+        'nav-portfolio-footer': 'Portfolio',
         'nav-packages-footer': 'Our Packages',
         'nav-faq-footer': 'FAQ',
         'nav-contact-footer': 'Contact Us',
