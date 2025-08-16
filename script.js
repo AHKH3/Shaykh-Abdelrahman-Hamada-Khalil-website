@@ -93,31 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Pricing calculator
     calculateAllPrices();
 
-    // Newsletter Form Submission
-    const newsletterForm = document.getElementById('newsletterForm');
-    const successModal = document.getElementById('successModal');
-    const closeModal = document.getElementById('closeModal');
-    const newsletterEmailInput = document.getElementById('newsletterEmail');
-
-    if (newsletterForm && successModal && closeModal && newsletterEmailInput) {
-        newsletterForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            // In a real application, you would send the email to a server here.
-            // For this static site, we'll just show the success message.
-            successModal.classList.add('show');
-            newsletterEmailInput.value = ''; // Clear the input field
-        });
-
-        closeModal.addEventListener('click', function() {
-            successModal.classList.remove('show');
-        });
-
-        window.addEventListener('click', function(e) {
-            if (e.target == successModal) {
-                successModal.classList.remove('show');
-            }
-        });
-    }
     updateLangButtonText(document.documentElement.lang);
 });
 
@@ -172,6 +147,19 @@ const translations = {
         'about-h3': 'نبذة عن مسيرتي في خدمة القرآن',
         'about-p1': 'الحمد لله رب العالمين، والصلاة والسلام على خاتم الأنبياء والمرسلين. أنا الشيخ عبد الرحمن حماده خليل، طالب بكلية اللغات والترجمة بقسم الأدب الصيني بجامعة الأزهر، ومعلم ومجاز في القرآن الكريم. لقد كرست حياتي لخدمة كتاب الله العزيز، وتلقيت العلم من شيوخ أجلاء وحصلت على الإجازات الشرعية التي تؤهلني لتعليم وإقراء كتاب الله بسندٍ متصل إلى نبينا الكريم محمد صلى الله عليه وسلم.',
         'about-p2': 'أؤمن بأن تعلم القرآن هو رحلة نور وسكينة، وأن كل طالب يستحق أن يتلقى العلم بأفضل الطرق وأيسرها. لهذا، أقدم لكم عبر هذه المنصة منهجي التعليمي الذي يجمع بين أصالة التلقي ومتطلبات التعليم الحديث عن بُعد، لكي تتمكنوا من إتقان التلاوة، وتجويد الحروف، وتحقيق الإجازة، وأن تكونوا من أهل القرآن الذين هم أهل الله وخاصته. لدي خبرة كمعلم قرآن أونلاين في أكاديمية رفرف (يوليو 2024 - الوقت الحاضر) ومعلم قرآن أونلاين (عمل حر) منذ يوليو 2021، ومعلم قرآن أوفلاين (عمل حر) منذ نوفمبر 2024.',
+        'ijazat-h2': 'الإجازات والمؤهلات',
+        'ijaza-card1-h3': 'الإجازات القرآنية',
+        'ijaza-card1-p': 'أتشرف بحمل عدة إجازات قرآنية بالسند المتصل إلى رسول الله صلى الله عليه وسلم، مما يضمن دقة وصحة التلاوة التي سأنقلها إليكم.',
+        'ijaza-card1-li1': '<i class="fas fa-check-circle"></i> إجازة برواية حفص عن عاصم من طريق الشاطبية (من فضيلة الشيخ عزب محمود).',
+        'ijaza-card1-li2': '<i class="fas fa-check-circle"></i> إجازة بقراءة الإمام عاصم بروايتي حفص وشعبة من طريق الشاطبية (من فضيلة الشيخة حنان محمد عبد العزيز).',
+        'ijaza-card1-li3': '<i class="fas fa-check-circle"></i> إجازة بقراءة الإمام حمزة بروايتي خلف وخلاد من طريق الشاطبية (من فضيلة الشيخ هاني منصور الشرقاوي).',
+        'ijaza-card1-li4': '<i class="fas fa-check-circle"></i> تلقي القرآن عن شيوخ أجلاء مشهود لهم بالعلم والفضل.',
+        'ijaza-card2-h3': 'المؤهلات التعليمية والخبرات',
+        'ijaza-card2-p': 'إلى جانب الإجازات القرآنية، أمتلك مؤهلات تعليمية وخبرة عملية واسعة في تدريس القرآن الكريم وعلومه.',
+        'ijaza-card2-li1': '<i class="fas fa-check-circle"></i> طالب بكلية اللغات والترجمة، قسم الأدب الصيني، جامعة الأزهر.',
+        'ijaza-card2-li2': '<i class="fas fa-check-circle"></i> خبرة كمعلم قرآن أونلاين (أكاديمية رفرف وعمل حر) ومعلم قرآن أوفلاين.',
+        'ijaza-card2-li3': '<i class="fas fa-check-circle"></i> منهجية تعليمية مرنة ومخصصة تناسب احتياجات كل طالب.',
+        'ijaza-card2-li4': '<i class="fas fa-check-circle"></i> مهارات تواصل ممتازة لضمان بيئة تعليمية محفزة.',
         'packages-h2': 'باقاتنا التعليمية',
         'package1-h3': 'الباقة الجماعية للأطفال',
         'package1-desc': 'دروس جماعية ممتعة ومحفزة للأطفال (5 طلاب)، ساعة كاملة للحصة.',
@@ -202,6 +190,7 @@ const translations = {
         'package5-h3': 'باقة الإجازة بالسند',
         'package5-desc': 'مسار مخصص لإتقان القرآن والحصول على الإجازة بالسند المتصل برواية حفص أو بقراءة عاصم.',
         'package-btn': 'احجز الآن',
+        'package-btn-inquire': 'استفسر الآن',
         'feature-flexibility': 'مرونة في تحديد المواعيد',
         'feature-postpone-cancel': 'إمكانية تأجيل أو إلغاء الحلقة',
         'feature-custom-plan': 'خطة مخصصة حسب ما يرغب به الطالب',
@@ -224,9 +213,6 @@ const translations = {
         'contact-info-location': '<i class="fas fa-map-marker-alt"></i> الموقع: العاشر من رمضان، الشرقية، مصر (خدمة عالمية)',
         'contact-info-p-general': 'لا تتردد في الاتصال بنا. نحن هنا لخدمتك والإجابة على استفساراتك.',
         'booking-form-h3': 'احجز جلستك التجريبية المجانية',
-        'modal-h3': 'تم إرسال طلبك بنجاح!',
-        'modal-p': 'شكراً لك! لقد تم استلام طلبك. سنتواصل معك قريباً جداً.',
-        'modal-close-btn': 'حسناً',
         'footer-col1-h3': 'عن الشيخ',
         'footer-col1-p': 'الشيخ عبد الرحمن حماده خليل، معلم ومجاز في القرآن الكريم بسند متصل، ملتزم بنشر علم كتاب الله وتقديم تعليم قرآني متميز للعالم أجمع.',
         'footer-col2-h3': 'روابط سريعة',
@@ -257,6 +243,19 @@ const translations = {
         'about-h3': 'My Journey in Serving the Quran',
         'about-p1': 'All praise is due to Allah, Lord of the Worlds, and prayers and peace be upon the Seal of the Prophets and Messengers. I am Shaykh Abdelrahman Hamada Khalil, a student at Al-Azhar University, Faculty of Languages and Translation, Chinese Literature Department, and a certified and qualified teacher of the Holy Quran. I have dedicated my life to serving the Noble Book of Allah, having received knowledge from esteemed scholars and obtained religious certifications that qualify me to teach and recite the Book of Allah with a connected chain of narration (Sanad) back to our Noble Prophet Muhammad (peace be upon him).',
         'about-p2': 'I believe that learning the Quran is a journey of light and tranquility, and that every student deserves to receive knowledge in the best and easiest ways. Therefore, through this platform, I offer my educational methodology that combines the authenticity of traditional reception with the requirements of modern distance learning, so that you can master recitation, perfect Tajweed, achieve certification (Ijazah), and become among the people of the Quran, who are the people of Allah and His chosen ones. I have experience as an online Quran teacher at Rafraf Academy (July 2024 - Present), a freelance online Quran teacher since July 2021, and a freelance offline Quran teacher since November 2024.',
+        'ijazat-h2': 'Certifications and Qualifications',
+        'ijaza-card1-h3': 'Quranic Ijazahs',
+        'ijaza-card1-p': 'I am honored to hold several Quranic Ijazahs with a connected Sanad to the Prophet Muhammad (PBUH), which ensures the accuracy and authenticity of the recitation I will convey to you.',
+        'ijaza-card1-li1': '<i class="fas fa-check-circle"></i> Ijazah in the recitation of Hafs from Asim by the way of Al-Shatibiyyah (from Sheikh Azab Mahmoud).',
+        'ijaza-card1-li2': '<i class="fas fa-check-circle"></i> Ijazah in the recitation of Imam Asim with both narrations (Hafs and Shu\'bah) by the way of Al-Shatibiyyah (from Sheikha Hanan Muhammad Abdul Aziz).',
+        'ijaza-card1-li3': '<i class="fas fa-check-circle"></i> Ijazah in the recitation of Imam Hamzah with both narrations (Khalaf and Khallad) by the way of Al-Shatibiyyah (from Sheikh Hani Mansour Al-Sharqawi).',
+        'ijaza-card1-li4': '<i class="fas fa-check-circle"></i> Received the Quran from esteemed scholars known for their knowledge and virtue.',
+        'ijaza-card2-h3': 'Educational Qualifications and Experience',
+        'ijaza-card2-p': 'In addition to Quranic Ijazahs, I have educational qualifications and extensive practical experience in teaching the Holy Quran and its sciences.',
+        'ijaza-card2-li1': '<i class="fas fa-check-circle"></i> Student at the Faculty of Languages and Translation, Department of Chinese Literature, Al-Azhar University.',
+        'ijaza-card2-li2': '<i class="fas fa-check-circle"></i> Experience as an online Quran teacher (Rafraf Academy and freelance) and offline Quran teacher.',
+        'ijaza-card2-li3': '<i class="fas fa-check-circle"></i> Flexible and customized teaching methodology to suit the needs of each student.',
+        'ijaza-card2-li4': '<i class="fas fa-check-circle"></i> Excellent communication skills to ensure a stimulating learning environment.',
         'packages-h2': 'Our Educational Packages',
         'package1-h3': 'Kids Group Package',
         'package1-desc': 'Fun and motivating group lessons for children (5 students), one full hour per session.',
@@ -287,6 +286,7 @@ const translations = {
         'package5-h3': 'Ijazah with Sanad Package',
         'package5-desc': 'A dedicated track to master the Quran and obtain an Ijazah with a connected Sanad in Hafs or Asim recitation.',
         'package-btn': 'Enroll Now',
+        'package-btn-inquire': 'Inquire Now',
         'feature-flexibility': 'Flexible scheduling',
         'feature-postpone-cancel': 'Possibility to postpone or cancel the session',
         'feature-custom-plan': 'Customized plan according to student\'s wishes',
@@ -309,9 +309,6 @@ const translations = {
         'contact-info-location': '<i class="fas fa-map-marker-alt"></i> Location: 10th of Ramadan City, Sharqia, Egypt (Global Service)',
         'contact-info-p-general': 'Do not hesitate to contact us. We are here to serve you and answer your inquiries.',
         'booking-form-h3': 'Book Your Free Trial Session',
-        'modal-h3': 'Your Request Has Been Sent Successfully!',
-        'modal-p': 'Thank you! Your request has been received. We will contact you very soon.',
-        'modal-close-btn': 'Okay',
         'footer-col1-h3': 'About Shaykh',
         'footer-col1-p': 'Shaykh Abdelrahman Hamada Khalil, a certified and qualified teacher of the Holy Quran with a connected Sanad, is committed to spreading the knowledge of Allah\'s Book and providing distinguished Quranic education worldwide.',
         'footer-col2-h3': 'Quick Links',

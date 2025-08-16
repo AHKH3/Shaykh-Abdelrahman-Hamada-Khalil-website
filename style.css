@@ -614,53 +614,6 @@ html[dir="ltr"] .ijaza-card ul li::before {
     right: unset;
 }
 
-/* Why Us Section */
-.why-us-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 50px;
-    margin-top: 70px;
-}
-
-.why-us-item {
-    background-color: var(--off-white);
-    border-radius: var(--border-radius-main);
-    padding: 45px;
-    box-shadow: 0 12px 35px var(--shadow-subtle);
-    text-align: center;
-    transition: all var(--transition-speed) ease;
-    border: 2px solid transparent;
-}
-
-.why-us-item:hover {
-    background-color: var(--warm-sandy-beige);
-    transform: translateY(-12px) scale(1.02);
-    border-color: var(--primary-dark-blue);
-    box-shadow: 0 18px 40px var(--shadow-medium);
-}
-
-.why-us-item .icon {
-    font-size: 5em;
-    color: var(--primary-dark-blue);
-    margin-bottom: 35px;
-    animation: rotateIn 1s ease-out;
-}
-
-@keyframes rotateIn {
-    from { opacity: 0; transform: rotate(-100deg) scale(0.5); }
-    to { opacity: 1; transform: rotate(0deg) scale(1); }
-}
-
-.why-us-item h3 {
-    color: var(--primary-dark-blue);
-    font-size: 2.2em;
-    margin-bottom: 20px;
-}
-
-.why-us-item p {
-    color: var(--dark-brown);
-    line-height: 1.8;
-}
 
 /* Packages Section */
 .packages-grid {
@@ -854,75 +807,6 @@ html[dir="ltr"] .package-features-list li i {
     left: 0;
 }
 
-/* Newsletter Section */
-.newsletter-section {
-    background-color: var(--primary-dark-blue);
-    color: var(--off-white);
-    padding: 80px 0;
-    text-align: center;
-}
-
-.newsletter-section h2 {
-    color: var(--bright-gold);
-    margin-bottom: 30px;
-}
-
-.newsletter-section p {
-    font-size: 1.3em;
-    max-width: 700px;
-    margin: 0 auto 40px auto;
-    line-height: 1.7;
-}
-
-.newsletter-form {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    max-width: 600px;
-    margin: 0 auto;
-    flex-wrap: wrap;
-}
-
-.newsletter-form input[type="email"] {
-    flex-grow: 1;
-    padding: 18px 25px;
-    border: none;
-    border-radius: 50px;
-    font-size: 1.1em;
-    background-color: rgba(255, 255, 255, 0.9);
-    color: var(--dark-brown);
-    transition: all 0.3s ease;
-}
-
-html[dir="rtl"] .newsletter-form input[type="email"] {
-    text-align: right;
-}
-
-html[dir="ltr"] .newsletter-form input[type="email"] {
-    text-align: left;
-}
-
-.newsletter-form input[type="email"]:focus {
-    outline: none;
-    box-shadow: 0 0 0 4px var(--bright-gold);
-}
-
-.newsletter-form button {
-    background-color: var(--bright-gold);
-    color: var(--primary-dark-blue);
-    padding: 18px 40px;
-    border: none;
-    border-radius: 50px;
-    font-size: 1.1em;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.newsletter-form button:hover {
-    background-color: var(--off-white);
-    color: var(--primary-dark-blue);
-}
 
 /* FAQ Section */
 .faq-accordion {
@@ -1344,79 +1228,6 @@ html[dir="ltr"] #back-to-top {
     transform: translateY(-15px) scale(1.08);
 }
 
-/* Custom Modal for Booking Confirmation (kept for newsletter, removed for booking form) */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1001;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.modal.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-.modal-content {
-    background-color: var(--off-white);
-    margin: auto;
-    padding: 40px;
-    border-radius: var(--border-radius-main);
-    box-shadow: 0 15px 40px var(--shadow-strong);
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-    position: relative;
-    transform: translateY(-50px);
-    opacity: 0;
-    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
-}
-
-.modal.show .modal-content {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.modal-content h3 {
-    color: var(--primary-dark-blue);
-    font-size: 2.2em;
-    margin-bottom: 25px;
-}
-
-.modal-content p {
-    font-size: 1.1em;
-    color: var(--dark-brown);
-    margin-bottom: 30px;
-    line-height: 1.7;
-}
-
-.modal-content .close-button {
-    background-color: var(--bright-gold);
-    color: var(--primary-dark-blue);
-    padding: 12px 30px;
-    border: none;
-    border-radius: 30px;
-    font-size: 1.1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.modal-content .close-button:hover {
-    background-color: var(--primary-dark-blue);
-    color: var(--off-white);
-}
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {
@@ -1504,13 +1315,13 @@ html[dir="ltr"] #back-to-top {
     .ijaza-card ul li { padding-left: 0; padding-right: 0; }
     .ijaza-card ul li::before { position: static; margin-right: 8px; margin-left: 0; }
     /* البطاقات معتمة تمامًا */
-    .package-card, .ijaza-card, .why-us-item, .course-card {
+    .package-card, .ijaza-card {
         background-color: rgba(255,255,255,0.92) !important;
         box-shadow: 0 12px 35px var(--shadow-subtle);
         z-index: 1100;
     }
-    .course-card .icon, .why-us-item .icon, .package-card .icon { font-size: 4em; }
-    .course-card h3, .why-us-item h3, .package-card h3 { font-size: 2em; }
+    .package-card .icon { font-size: 4em; }
+    .package-card h3 { font-size: 2em; }
     .package-card .package-details .price-large { font-size: 2em; }
     .contact-content { flex-direction: column; gap: 50px; }
     .contact-info, .booking-form-wrapper { min-width: unset; width: 100%; padding: 40px; }
@@ -1533,10 +1344,10 @@ html[dir="ltr"] #back-to-top {
     section { padding: 60px 0; }
     .container { padding: 0 15px; }
     h2 { font-size: 2em; margin-bottom: 40px; }
-    .ijazat-grid, .courses-grid, .why-us-grid, .packages-grid { grid-template-columns: 1fr; gap: 30px; }
-    .ijaza-card, .course-card, .why-us-item, .package-card, .faq-item, .contact-info, .booking-form-wrapper { padding: 30px; }
-    .ijaza-card h3, .course-card h3, .why-us-item h3, .package-card h3, .contact-info h3, .booking-form-wrapper h3 { font-size: 1.8em; margin-bottom: 20px; }
-    .ijaza-card p, .course-card p, .why-us-item p, .package-card p, .faq-answer p, .contact-info p { font-size: 0.95em; }
+    .ijazat-grid, .packages-grid { grid-template-columns: 1fr; gap: 30px; }
+    .ijaza-card, .package-card, .faq-item, .contact-info, .booking-form-wrapper { padding: 30px; }
+    .ijaza-card h3, .package-card h3, .contact-info h3, .booking-form-wrapper h3 { font-size: 1.8em; margin-bottom: 20px; }
+    .ijaza-card p, .package-card p, .faq-answer p, .contact-info p { font-size: 0.95em; }
     .ijaza-card ul li, .package-card .package-details .price-options li { font-size: 1em; }
     .newsletter-form { flex-direction: column; gap: 15px; }
     .newsletter-form input[type="email"], .newsletter-form button { width: 100%; }
