@@ -8,17 +8,17 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-muted/30">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="border-t border-border bg-muted/30 w-full">
+      <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 py-16 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Brand */}
           <div>
-            <h3 className="text-lg font-bold font-['Amiri',serif] mb-3">
+            <h3 className="text-xl font-bold font-['Amiri',serif] mb-4">
               {locale === "ar"
                 ? "الشيخ عبد الرحمن حماده خليل"
                 : "Shaykh Abdelrahman Hamada Khalil"}
             </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-base text-muted-foreground leading-relaxed">
               {locale === "ar"
                 ? "معلم قرآن كريم مجاز بالسند المتصل"
                 : "Certified Quran Teacher with Connected Chains of Narration"}
@@ -27,14 +27,14 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-semibold mb-3 text-foreground">
+            <h4 className="text-base font-bold mb-4 text-foreground">
               {locale === "ar" ? "روابط سريعة" : "Quick Links"}
             </h4>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               <li>
                 <Link
                   href="/"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-base text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t.nav.home}
                 </Link>
@@ -42,7 +42,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/mushaf"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-base text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t.nav.mushaf}
                 </Link>
@@ -50,7 +50,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/library"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-base text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t.nav.library}
                 </Link>
@@ -60,10 +60,10 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-sm font-semibold mb-3 text-foreground">
+            <h4 className="text-base font-bold mb-4 text-foreground">
               {t.contact.title}
             </h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <ul className="space-y-3 text-base text-muted-foreground">
               <li>
                 <a
                   href="mailto:abdelrahmanhamada3342@gmail.com"
@@ -86,15 +86,15 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">
+        <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-muted-foreground">
             &copy; {year}{" "}
             {locale === "ar"
               ? "الشيخ عبد الرحمن حماده خليل"
               : "Shaykh Abdelrahman Hamada Khalil"}
             . {t.footer.rights}.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             {[
               {
                 href: "https://facebook.com/shaykh.abdelrahman",
@@ -118,7 +118,7 @@ export default function Footer() {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {social.label}
               </a>

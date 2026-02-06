@@ -1,73 +1,86 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Award, Link as LinkIcon } from "lucide-react";
+import { Award, BookOpen } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 
 export default function IjazatSection() {
   const { t, locale } = useI18n();
 
   return (
-    <section id="ijazat" className="py-24">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        {/* Section Title */}
+    <section id="ijazat" className="py-24 w-full overflow-x-hidden">
+      <div className="mx-auto max-w-6xl px-6 sm:px-8 lg:px-12 w-full">
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-4"
+          className="text-center mb-20"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold font-['Amiri',serif] mb-4">
+          <h2 className="text-4xl sm:text-5xl font-bold font-['Amiri',serif] mb-6 text-foreground">
             {t.ijazat.title}
           </h2>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
             {t.ijazat.subtitle}
           </p>
+          <div className="w-20 h-1.5 bg-accent mx-auto rounded-full" />
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="w-16 h-0.5 bg-foreground/20 mx-auto mb-16"
-        />
-
-        {/* Ijazat Cards */}
-        <div className="space-y-6">
+        {/* Ijazat Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {t.ijazat.items.map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.15 * i }}
-              className="group"
+              transition={{ duration: 0.6, delay: 0.1 * i }}
+              className="relative group"
             >
-              <div className="bg-card rounded-2xl p-8 border border-border hover:border-foreground/20 transition-all duration-300">
-                <div className="flex items-start gap-5">
-                  <div className="p-3 bg-muted rounded-xl shrink-0 group-hover:bg-foreground/5 transition-colors">
-                    <Award size={24} className="text-foreground" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold font-['Amiri',serif] mb-3 leading-relaxed">
-                      {item.title}
-                    </h3>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <LinkIcon size={14} />
-                      <span>
-                        {locale === "ar" ? "على يد" : "Under"}{" "}
-                        <span className="text-foreground font-medium">
-                          {item.sheikh}
-                        </span>
-                      </span>
-                    </div>
-                  </div>
+              <div className="h-full bg-card rounded-2xl p-8 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-lg">
+                {/* Icon Badge */}
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:bg-accent/20 transition-colors">
+                  <BookOpen size={32} className="text-accent" />
                 </div>
+
+                {/* Ijazah Title */}
+                <h3 className="text-lg font-bold font-['Amiri',serif] mb-6 leading-relaxed text-foreground">
+                  {item.title}
+                </h3>
+
+                {/* Sheikh Info */}
+                <div className="flex items-center gap-2 text-base">
+                  <Award size={18} className="text-muted-foreground" />
+                  <span className="text-muted-foreground">
+                    {locale === "ar" ? "على يد:" : "From:"}
+                  </span>
+                  <span className="font-semibold text-foreground">
+                    {item.sheikh}
+                  </span>
+                </div>
+
+                {/* Corner Accent */}
+                <div className="absolute top-0 end-0 w-20 h-20 bg-gradient-to-bl from-accent/5 to-transparent rounded-tr-2xl rounded-bl-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </motion.div>
           ))}
         </div>
+
+        {/* Bottom Note */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mt-16 text-center"
+        >
+          <p className="text-sm text-muted-foreground/70 max-w-2xl mx-auto leading-relaxed">
+            {locale === "ar"
+              ? "جميع الإجازات بالسند المتصل إلى رسول الله ﷺ"
+              : "All Ijazahs with connected chains of narration to Prophet Muhammad ﷺ"}
+          </p>
+        </motion.div>
       </div>
     </section>
   );

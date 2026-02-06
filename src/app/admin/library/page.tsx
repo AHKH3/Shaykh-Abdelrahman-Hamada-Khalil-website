@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -209,9 +210,11 @@ export default function AdminLibraryPage() {
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center shrink-0">
                       {app.icon_url ? (
-                        <img
+                        <Image
                           src={app.icon_url}
                           alt=""
+                          width={24}
+                          height={24}
                           className="w-6 h-6 object-contain"
                         />
                       ) : (

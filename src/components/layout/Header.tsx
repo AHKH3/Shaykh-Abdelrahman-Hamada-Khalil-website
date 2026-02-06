@@ -38,28 +38,28 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 start-0 end-0 z-50 transition-all duration-300 w-full ${
         scrolled
-          ? "bg-background/80 backdrop-blur-xl border-b border-border shadow-sm"
+          ? "bg-background/90 backdrop-blur-xl border-b border-border shadow-sm"
           : "bg-transparent"
       }`}
     >
-      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+      <nav className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 w-full" role="navigation" aria-label="Main navigation">
+        <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <span className="text-lg font-bold font-['Amiri',serif] text-foreground group-hover:text-accent transition-colors">
+            <span className="text-xl font-bold font-['Amiri',serif] text-foreground group-hover:text-accent transition-colors">
               {locale === "ar" ? "ع. حماده خليل" : "A. Hamada Khalil"}
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-2">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`relative px-5 py-2.5 text-base font-medium rounded-xl transition-colors ${
                   isActive(link.href)
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground"
@@ -69,7 +69,7 @@ export default function Header() {
                 {isActive(link.href) && (
                   <motion.div
                     layoutId="nav-indicator"
-                    className="absolute inset-0 bg-muted rounded-lg -z-10"
+                    className="absolute inset-0 bg-muted rounded-xl -z-10"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
@@ -81,26 +81,28 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <button
               onClick={toggleLocale}
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              className="p-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               aria-label="Toggle language"
             >
-              <Languages size={18} />
+              <Languages size={20} />
             </button>
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              className="p-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               aria-label="Toggle theme"
             >
-              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
             </button>
 
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              className="md:hidden p-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
             >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
@@ -110,18 +112,19 @@ export default function Header() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
             className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border overflow-hidden"
           >
-            <div className="px-4 py-3 space-y-1">
+            <div className="px-6 py-4 space-y-2" role="menu">
               {links.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                  className={`block px-5 py-4 rounded-xl text-base font-medium transition-colors ${
                     isActive(link.href)
                       ? "bg-muted text-foreground"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"

@@ -4,11 +4,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ChevronRight,
-  ChevronLeft,
   SkipBack,
   SkipForward,
-  Download,
   Image as ImageIcon,
   FileText,
   Trash2,
@@ -16,7 +13,6 @@ import {
   MessageSquare,
   Eraser,
   Highlighter,
-  X,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/context";

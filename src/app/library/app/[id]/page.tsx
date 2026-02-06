@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import type { LibraryApp } from "@/lib/supabase/types";
 
 export default function StandaloneAppPage() {
   const params = useParams();

@@ -18,17 +18,18 @@ export default function StudentsPage() {
 
   const supabase = createClient();
 
-  const loadStudents = async () => {
-    const { data } = await supabase
-      .from("students")
-      .select("*")
-      .order("created_at", { ascending: false });
-    setStudents(data || []);
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const loadStudents = async () => {
+      const { data } = await supabase
+        .from("students")
+        .select("*")
+        .order("created_at", { ascending: false });
+      setStudents(data || []);
+      setLoading(false);
+    };
+
     loadStudents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addStudent = async () => {
@@ -37,7 +38,12 @@ export default function StudentsPage() {
     const { error } = await supabase.from("students").insert({ name: newName.trim() });
     if (!error) {
       setNewName("");
-      loadStudents();
+      // Reload students
+      const { data } = await supabase
+        .from("students")
+        .select("*")
+        .order("created_at", { ascending: false });
+      setStudents(data || []);
     }
     setAdding(false);
   };
@@ -46,7 +52,12 @@ export default function StudentsPage() {
     if (!confirm(t.admin.confirmDelete)) return;
     await supabase.from("annotations").delete().eq("student_id", id);
     await supabase.from("students").delete().eq("id", id);
-    loadStudents();
+    // Reload students
+    const { data } = await supabase
+      .from("students")
+      .select("*")
+      .order("created_at", { ascending: false });
+    setStudents(data || []);
   };
 
   return (

@@ -1,136 +1,35 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ArrowDown, Mail, BookOpen } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
-import Image from "next/image";
+import Link from "next/link";
 
 export default function HeroSection() {
   const { t } = useI18n();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animationId: number;
-    const particles: Array<{
-      x: number;
-      y: number;
-      size: number;
-      speedX: number;
-      speedY: number;
-      opacity: number;
-    }> = [];
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener("resize", resize);
-
-    for (let i = 0; i < 50; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 2 + 0.5,
-        speedX: (Math.random() - 0.5) * 0.3,
-        speedY: (Math.random() - 0.5) * 0.3,
-        opacity: Math.random() * 0.3 + 0.1,
-      });
-    }
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach((p) => {
-        p.x += p.speedX;
-        p.y += p.speedY;
-
-        if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(120, 120, 120, ${p.opacity})`;
-        ctx.fill();
-      });
-
-      // Draw connecting lines
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 150) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(120, 120, 120, ${0.05 * (1 - dist / 150)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-
-      animationId = requestAnimationFrame(animate);
-    };
-    animate();
-
-    return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 pointer-events-none"
-      />
-
-      <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-        {/* Logo */}
+    <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted/30 w-full overflow-hidden">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 sm:px-8 lg:px-12 text-center">
+        {/* Top Badge */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <div className="mx-auto w-28 h-28 rounded-full bg-muted border-2 border-border flex items-center justify-center overflow-hidden">
-            <Image
-              src="/logo.png"
-              alt="Logo"
-              width={112}
-              height={112}
-              className="w-full h-full object-cover"
-              priority
-            />
-          </div>
+          <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent/5 border border-accent/10 text-base text-accent">
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+            {t.hero.greeting}
+          </span>
         </motion.div>
-
-        {/* Greeting */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-sm text-muted-foreground mb-4 tracking-wide"
-        >
-          {t.hero.greeting}
-        </motion.p>
 
         {/* Name */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-4xl sm:text-5xl lg:text-6xl font-bold font-['Amiri',serif] leading-tight mb-6"
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-5xl sm:text-6xl lg:text-7xl font-bold font-['Amiri',serif] leading-tight mb-8 text-foreground"
         >
           {t.hero.name}
         </motion.h1>
@@ -139,48 +38,63 @@ export default function HeroSection() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="text-lg sm:text-xl text-muted-foreground mb-3"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-xl sm:text-2xl text-muted-foreground mb-6 font-medium"
         >
           {t.hero.title}
         </motion.p>
 
-        {/* Subtitle */}
+        {/* Subtitle - Bio */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-sm text-muted-foreground/70 mb-10 max-w-2xl mx-auto"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-lg text-muted-foreground/70 mb-12 max-w-3xl mx-auto leading-relaxed"
         >
-          {t.hero.subtitle}
+          {t.about.bio}
         </motion.p>
 
-        {/* CTA */}
-        <motion.a
-          href="#about"
+        {/* CTA Buttons */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.0 }}
-          className="inline-flex items-center gap-2 px-8 py-3 bg-foreground text-background rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full"
         >
-          {t.hero.cta}
-        </motion.a>
-      </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <ChevronDown size={24} className="text-muted-foreground" />
+          <a
+            href="#contact"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-foreground text-background rounded-xl text-base font-medium hover:opacity-90 transition-opacity min-w-[160px]"
+          >
+            <Mail size={18} />
+            {t.contact.title}
+          </a>
+          <Link
+            href="/mushaf"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent text-accent-foreground rounded-xl text-base font-medium hover:opacity-90 transition-opacity min-w-[160px]"
+          >
+            <BookOpen size={18} />
+            {t.nav.mushaf}
+          </Link>
         </motion.div>
-      </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="absolute -bottom-16 start-0 end-0 mx-auto"
+        >
+          <motion.a
+            href="#ijazat"
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <span className="text-sm">{t.hero.cta}</span>
+            <ArrowDown size={18} />
+          </motion.a>
+        </motion.div>
+      </div>
     </section>
   );
 }

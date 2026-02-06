@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Library, ExternalLink, Copy, Check, AppWindow } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -77,9 +78,11 @@ export default function LibraryPage() {
                   {/* Icon/Preview */}
                   <div className="h-32 bg-muted flex items-center justify-center">
                     {app.icon_url ? (
-                      <img
+                      <Image
                         src={app.icon_url}
                         alt=""
+                        width={64}
+                        height={64}
                         className="w-16 h-16 object-contain"
                       />
                     ) : (

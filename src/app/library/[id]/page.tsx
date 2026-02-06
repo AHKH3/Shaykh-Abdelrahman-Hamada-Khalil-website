@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowRight, ExternalLink, Maximize2 } from "lucide-react";
+import { ArrowRight, Maximize2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/context";
 import type { LibraryApp } from "@/lib/supabase/types";

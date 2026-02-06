@@ -14,14 +14,16 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("ar");
-
-  useEffect(() => {
-    const saved = localStorage.getItem("locale") as Locale | null;
-    if (saved && translations[saved]) {
-      setLocaleState(saved);
+  const [locale, setLocaleState] = useState<Locale>(() => {
+    // Initialize from localStorage during render to avoid setState in useEffect
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("locale") as Locale | null;
+      if (saved && translations[saved]) {
+        return saved;
+      }
     }
-  }, []);
+    return "ar";
+  });
 
   useEffect(() => {
     document.documentElement.lang = locale;
