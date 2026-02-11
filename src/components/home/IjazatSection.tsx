@@ -24,7 +24,7 @@ export default function IjazatSection() {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
             {t.ijazat.subtitle}
           </p>
-          <div className="w-20 h-1.5 bg-accent mx-auto rounded-full" />
+          <div className="w-20 h-1 bg-secondary mx-auto rounded-full" />
         </motion.div>
 
         {/* Ijazat Grid */}
@@ -38,10 +38,10 @@ export default function IjazatSection() {
               transition={{ duration: 0.6, delay: 0.1 * i }}
               className="relative group"
             >
-              <div className="h-full bg-card rounded-2xl p-8 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-lg">
+              <div className="card-elevated h-full bg-card rounded-2xl p-8 border border-border">
                 {/* Icon Badge */}
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:bg-accent/20 transition-colors">
-                  <BookOpen size={32} className="text-accent" />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-muted mb-6">
+                  <BookOpen size={32} className="text-foreground" />
                 </div>
 
                 {/* Ijazah Title */}
@@ -60,8 +60,6 @@ export default function IjazatSection() {
                   </span>
                 </div>
 
-                {/* Corner Accent */}
-                <div className="absolute top-0 end-0 w-20 h-20 bg-gradient-to-bl from-accent/5 to-transparent rounded-tr-2xl rounded-bl-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </motion.div>
           ))}

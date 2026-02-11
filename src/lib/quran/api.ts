@@ -187,6 +187,16 @@ export async function getJuzs(): Promise<Juz[]> {
   return data.juzs;
 }
 
+// Every Ayah API reciters mapping
+export const RECITERS_EVERYAYAH: Record<number, string> = {
+  7: "Alafasy_128kbps",
+  1: "Abdul_Basit_Mujawwad_128kbps",
+  5: "Maher_AlMuaiqly_128kbps",
+  4: "Ahmed_ibn_Ali_al-Ajamy_128kbps_2013",
+  6: "Saud_ash-Shuraim_128kbps",
+  10: "Yasser_Ad-Dussary_128kbps",
+};
+
 export function getAudioUrl(
   reciterId: number,
   chapterId: number,
@@ -194,12 +204,37 @@ export function getAudioUrl(
 ): string {
   const paddedChapter = chapterId.toString().padStart(3, "0");
   const paddedVerse = verseNumber.toString().padStart(3, "0");
-  return `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${paddedChapter}${paddedVerse}.mp3`;
+
+  const reciterSlug = RECITERS_EVERYAYAH[reciterId] || RECITERS_EVERYAYAH[7];
+  return `https://everyayah.com/data/${reciterSlug}/${paddedChapter}${paddedVerse}.mp3`;
 }
 
 export function getPageAudioUrl(reciterId: number, pageNumber: number): string {
   return `https://cdn.qurancdn.com/audio/page/${reciterId}/${pageNumber}.mp3`;
 }
+
+// Tafsir resources
+export interface TafsirResource {
+  id: number;
+  name: string;
+  language: string;
+  nameEn: string;
+}
+
+export const TAFSIR_RESOURCES: Record<number, TafsirResource> = {
+  // Arabic tafsirs
+  169: { id: 169, name: "ابن كثير (مختصر)", language: "ar", nameEn: "Ibn Kathir (Abridged)" },
+  14: { id: 14, name: "ابن كثير (كامل)", language: "ar", nameEn: "Ibn Kathir (Complete)" },
+  15: { id: 15, name: "الطبري", language: "ar", nameEn: "Al-Tabari" },
+  16: { id: 16, name: "التفسير الميسر", language: "ar", nameEn: "Tafsir al-Muyassar" },
+  90: { id: 90, name: "القرطبي", language: "ar", nameEn: "Al-Qurtubi" },
+  91: { id: 91, name: "السعدي", language: "ar", nameEn: "Al-Sa'di" },
+  93: { id: 93, name: "الوسيط (طنطاوي)", language: "ar", nameEn: "Al-Wasit" },
+  94: { id: 94, name: "البغوي", language: "ar", nameEn: "Al-Baghawi" },
+  // English tafsirs
+  168: { id: 168, name: "Ma'arif al-Qur'an", language: "en", nameEn: "Ma'arif al-Qur'an" },
+  817: { id: 817, name: "Tazkirul Quran", language: "en", nameEn: "Tazkirul Quran" },
+};
 
 export async function getTafsir(
   verseKey: string,

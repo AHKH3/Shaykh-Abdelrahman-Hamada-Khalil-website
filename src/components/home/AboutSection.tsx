@@ -21,7 +21,7 @@ export default function AboutSection() {
           <h2 className="text-4xl sm:text-5xl font-bold font-['Amiri',serif] mb-6 text-foreground">
             {t.about.title}
           </h2>
-          <div className="w-20 h-1.5 bg-accent mx-auto rounded-full" />
+          <div className="w-20 h-1 bg-secondary mx-auto rounded-full" />
         </motion.div>
 
         {/* Education Card */}
@@ -32,10 +32,10 @@ export default function AboutSection() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="mb-16"
         >
-          <div className="bg-card rounded-2xl p-8 border border-border shadow-sm">
+          <div className="card-elevated bg-card rounded-2xl p-8 border border-border">
             <div className="flex items-center gap-4 mb-6">
-              <div className="p-3 bg-accent/10 rounded-xl">
-                <GraduationCap size={28} className="text-accent" />
+              <div className="p-3 bg-muted rounded-xl">
+                <GraduationCap size={28} className="text-foreground" />
               </div>
               <h3 className="text-2xl font-bold text-foreground">
                 {locale === "ar" ? "التعليم" : "Education"}
@@ -62,8 +62,8 @@ export default function AboutSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <div className="flex items-center gap-4 mb-8">
-            <div className="p-3 bg-accent/10 rounded-xl">
-              <Briefcase size={28} className="text-accent" />
+            <div className="p-3 bg-muted rounded-xl">
+              <Briefcase size={28} className="text-foreground" />
             </div>
             <h3 className="text-2xl font-bold text-foreground">
               {t.about.experience}
@@ -88,14 +88,14 @@ export default function AboutSection() {
                 <div className="flex gap-5">
                   {/* Timeline Dot */}
                   <div className="relative shrink-0">
-                    <div className="w-10 h-10 rounded-full bg-accent border-4 border-background flex items-center justify-center">
-                      <div className="w-2.5 h-2.5 rounded-full bg-accent-foreground" />
+                    <div className="w-10 h-10 rounded-full bg-secondary/20 border-4 border-background flex items-center justify-center">
+                      <div className="w-2.5 h-2.5 rounded-full bg-secondary" />
                     </div>
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 pb-10">
-                    <div className="bg-card rounded-2xl p-6 border border-border hover:border-accent/30 transition-colors">
+                    <div className="card-elevated-sm bg-card rounded-2xl p-6 border border-border">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
                         <h4 className="text-lg font-bold text-foreground">
                           {item.role}

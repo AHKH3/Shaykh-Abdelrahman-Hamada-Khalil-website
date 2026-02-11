@@ -18,8 +18,8 @@ export default function HeroSection() {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent/5 border border-accent/10 text-base text-accent">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+          <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-secondary/10 border border-secondary/30 text-base text-secondary">
+            <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
             {t.hero.greeting}
           </span>
         </motion.div>
@@ -63,14 +63,14 @@ export default function HeroSection() {
         >
           <a
             href="#contact"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-foreground text-background rounded-xl text-base font-medium hover:opacity-90 transition-opacity min-w-[160px]"
+            className="btn-anthropic inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-primary text-primary-foreground rounded-lg text-base font-medium hover:bg-primary-hover min-w-[160px]"
           >
             <Mail size={18} />
             {t.contact.title}
           </a>
           <Link
             href="/mushaf"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent text-accent-foreground rounded-xl text-base font-medium hover:opacity-90 transition-opacity min-w-[160px]"
+            className="btn-anthropic inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-secondary text-secondary-foreground rounded-lg text-base font-medium hover:bg-secondary-hover min-w-[160px]"
           >
             <BookOpen size={18} />
             {t.nav.mushaf}

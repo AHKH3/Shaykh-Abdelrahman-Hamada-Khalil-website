@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useI18n } from "@/lib/i18n/context";
+import { useTheme } from "@/lib/theme/context";
 
 export default function Footer() {
   const { t, locale } = useI18n();
+  const { theme } = useTheme();
   const year = new Date().getFullYear();
 
   return (
@@ -13,11 +16,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Brand */}
           <div>
-            <h3 className="text-xl font-bold font-['Amiri',serif] mb-4">
-              {locale === "ar"
-                ? "الشيخ عبد الرحمن حماده خليل"
-                : "Shaykh Abdelrahman Hamada Khalil"}
-            </h3>
+            <Image
+              src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
+              alt={locale === "ar" ? "الشيخ عبد الرحمن حماده خليل" : "Shaykh Abdelrahman Hamada Khalil"}
+              width={160}
+              height={64}
+              className="h-14 w-auto object-contain mb-4"
+            />
             <p className="text-base text-muted-foreground leading-relaxed">
               {locale === "ar"
                 ? "معلم قرآن كريم مجاز بالسند المتصل"

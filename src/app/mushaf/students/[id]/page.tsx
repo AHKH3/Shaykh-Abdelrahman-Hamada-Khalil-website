@@ -48,11 +48,10 @@ export default function StudentMushafPage() {
   const [commentText, setCommentText] = useState("");
   const [exporting, setExporting] = useState(false);
 
-  const supabase = createClient();
-
   // Load student info
   useEffect(() => {
     const loadStudent = async () => {
+      const supabase = createClient();
       const { data } = await supabase
         .from("students")
         .select("*")
@@ -62,7 +61,7 @@ export default function StudentMushafPage() {
       else router.push("/mushaf/students");
     };
     loadStudent();
-  }, [studentId]);
+  }, [studentId, router]);
 
   // Load chapters
   useEffect(() => {
@@ -80,6 +79,7 @@ export default function StudentMushafPage() {
 
   // Load annotations for current page
   const loadAnnotations = useCallback(async () => {
+    const supabase = createClient();
     const { data } = await supabase
       .from("annotations")
       .select("*")
@@ -128,7 +128,7 @@ export default function StudentMushafPage() {
 
   const saveAnnotation = async () => {
     if (!pendingAnnotation) return;
-
+    const supabase = createClient();
     await supabase.from("annotations").insert({
       student_id: studentId,
       page_number: currentPage,
@@ -148,11 +148,13 @@ export default function StudentMushafPage() {
   };
 
   const deleteAnnotation = async (id: string) => {
+    const supabase = createClient();
     await supabase.from("annotations").delete().eq("id", id);
     loadAnnotations();
   };
 
   const clearTemporaryAnnotations = async () => {
+    const supabase = createClient();
     await supabase
       .from("annotations")
       .delete()
@@ -325,7 +327,7 @@ export default function StudentMushafPage() {
             ) : (
               <div
                 ref={mushafRef}
-                className="bg-white dark:bg-card border border-border rounded-2xl p-6 sm:p-10 shadow-sm"
+                className="bg-white dark:bg-card border border-border rounded-2xl p-6 sm:p-10"
                 onMouseUp={handleTextSelection}
               >
                 {/* Student Name Header */}
@@ -448,7 +450,7 @@ export default function StudentMushafPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-card border border-border rounded-2xl w-full max-w-sm mx-4 p-6 shadow-2xl"
+                className="bg-card border border-border rounded-2xl w-full max-w-sm mx-4 p-6 shadow-lg"
                 onClick={(e) => e.stopPropagation()}
               >
                 <h3 className="font-semibold font-['Amiri',serif] mb-2">
@@ -496,7 +498,7 @@ export default function StudentMushafPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={saveAnnotation}
-                    className="flex-1 py-2 bg-foreground text-background rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+                    className="btn-anthropic flex-1 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-hover"
                   >
                     {t.mushaf.saveComment}
                   </button>

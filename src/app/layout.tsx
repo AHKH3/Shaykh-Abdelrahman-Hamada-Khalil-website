@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   creator: "Shaykh Abdelrahman Hamada Khalil",
   icons: {
     icon: "/favicon.ico",
+    apple: "/logo.png",
   },
   openGraph: {
     title: "الشيخ عبد الرحمن حماده خليل | Shaykh Abdelrahman Hamada Khalil",
@@ -66,9 +67,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <a href="#main-content" className="skip-to-content">
-            {typeof document !== 'undefined' && document.documentElement.dir === 'rtl'
-              ? 'انتقل إلى المحتوى الرئيسي'
-              : 'Skip to main content'}
+            انتقل إلى المحتوى الرئيسي
           </a>
           {children}
         </Providers>

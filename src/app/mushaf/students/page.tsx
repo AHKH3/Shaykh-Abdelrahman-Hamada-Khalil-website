@@ -16,10 +16,9 @@ export default function StudentsPage() {
   const [newName, setNewName] = useState("");
   const [adding, setAdding] = useState(false);
 
-  const supabase = createClient();
-
   useEffect(() => {
     const loadStudents = async () => {
+      const supabase = createClient();
       const { data } = await supabase
         .from("students")
         .select("*")
@@ -29,16 +28,15 @@ export default function StudentsPage() {
     };
 
     loadStudents();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addStudent = async () => {
     if (!newName.trim()) return;
     setAdding(true);
+    const supabase = createClient();
     const { error } = await supabase.from("students").insert({ name: newName.trim() });
     if (!error) {
       setNewName("");
-      // Reload students
       const { data } = await supabase
         .from("students")
         .select("*")
@@ -50,9 +48,9 @@ export default function StudentsPage() {
 
   const deleteStudent = async (id: string) => {
     if (!confirm(t.admin.confirmDelete)) return;
+    const supabase = createClient();
     await supabase.from("annotations").delete().eq("student_id", id);
     await supabase.from("students").delete().eq("id", id);
-    // Reload students
     const { data } = await supabase
       .from("students")
       .select("*")
@@ -88,7 +86,7 @@ export default function StudentsPage() {
             <button
               onClick={addStudent}
               disabled={adding || !newName.trim()}
-              className="flex items-center gap-2 px-5 py-2.5 bg-foreground text-background rounded-xl text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+              className="btn-anthropic flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-hover disabled:opacity-50"
             >
               <Plus size={16} />
               {t.mushaf.addStudent}
@@ -115,7 +113,7 @@ export default function StudentsPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="flex items-center justify-between bg-card border border-border rounded-xl p-4 hover:border-foreground/20 transition-colors group"
+                  className="card-elevated-sm flex items-center justify-between bg-card border border-border rounded-xl p-4 group"
                 >
                   <Link
                     href={`/mushaf/students/${student.id}`}

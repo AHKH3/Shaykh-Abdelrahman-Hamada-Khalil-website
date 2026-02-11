@@ -61,7 +61,7 @@ export default function ContactSection() {
           <h2 className="text-4xl sm:text-5xl font-bold font-['Amiri',serif] mb-6 text-foreground">
             {t.contact.title}
           </h2>
-          <div className="w-20 h-1.5 bg-accent mx-auto rounded-full" />
+          <div className="w-20 h-1 bg-secondary mx-auto rounded-full" />
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -71,8 +71,8 @@ export default function ContactSection() {
               const Icon = item.icon;
               const content = (
                 <>
-                  <div className="p-3 bg-accent/10 rounded-xl group-hover:bg-accent/20 transition-colors">
-                    <Icon size={24} className="text-accent" />
+                  <div className="p-3 bg-muted rounded-xl">
+                    <Icon size={24} className="text-foreground" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-muted-foreground mb-2">
@@ -104,7 +104,7 @@ export default function ContactSection() {
                       href={item.href}
                       target={item.href.startsWith("http") ? "_blank" : undefined}
                       rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="flex items-start gap-5 bg-card rounded-2xl p-6 border border-border hover:border-accent/30 transition-all group cursor-pointer"
+                      className="card-elevated-sm flex items-start gap-5 bg-card rounded-2xl p-6 border border-border group cursor-pointer"
                     >
                       {content}
                     </a>
@@ -124,11 +124,11 @@ export default function ContactSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="bg-card rounded-2xl p-8 border border-border"
+            className="card-elevated bg-card rounded-2xl p-8 border border-border"
           >
             <div className="flex items-center gap-4 mb-8">
-              <div className="p-3 bg-accent/10 rounded-xl">
-                <Share2 size={24} className="text-accent" />
+              <div className="p-3 bg-muted rounded-xl">
+                <Share2 size={24} className="text-foreground" />
               </div>
               <p className="text-lg font-bold text-foreground">
                 {t.contact.social}
@@ -141,7 +141,7 @@ export default function ContactSection() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-6 py-4 bg-muted/50 rounded-xl text-base text-foreground hover:bg-accent/10 hover:text-accent transition-all"
+                  className="card-elevated-sm flex items-center gap-3 px-6 py-4 border border-border rounded-xl text-base text-foreground"
                 >
                   <span>{social.name}</span>
                   <ExternalLink size={16} className="text-muted-foreground" />

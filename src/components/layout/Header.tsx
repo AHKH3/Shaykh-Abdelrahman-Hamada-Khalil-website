@@ -2,18 +2,49 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, Languages } from "lucide-react";
+import { Menu, X, Sun, Moon, Languages, LogIn, LogOut } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import { useTheme } from "@/lib/theme/context";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 export default function Header() {
   const { t, locale, toggleLocale } = useI18n();
   const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
+  const router = useRouter();
+  const supabase = createClient();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    // Check for existing session
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+    checkSession();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: string, session: any) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
+
+  const handleAuth = async () => {
+    if (user) {
+      await supabase.auth.signOut();
+      router.push("/");
+    } else {
+      router.push("/login");
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -38,19 +69,23 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 start-0 end-0 z-50 transition-all duration-300 w-full ${
-        scrolled
-          ? "bg-background/90 backdrop-blur-xl border-b border-border shadow-sm"
-          : "bg-transparent"
-      }`}
+      className={`fixed top-0 start-0 end-0 z-50 transition-all duration-300 w-full ${scrolled
+        ? "bg-background/90 backdrop-blur-xl border-b border-border"
+        : "bg-transparent"
+        }`}
     >
       <nav className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 w-full" role="navigation" aria-label="Main navigation">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <span className="text-xl font-bold font-['Amiri',serif] text-foreground group-hover:text-accent transition-colors">
-              {locale === "ar" ? "ع. حماده خليل" : "A. Hamada Khalil"}
-            </span>
+            <Image
+              src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
+              alt={locale === "ar" ? "الشيخ عبد الرحمن حماده خليل" : "Shaykh Abdelrahman Hamada Khalil"}
+              width={180}
+              height={72}
+              className="h-16 w-auto object-contain"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -59,11 +94,10 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative px-5 py-2.5 text-base font-medium rounded-xl transition-colors ${
-                  isActive(link.href)
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                className={`relative px-5 py-2.5 text-base font-medium rounded-xl transition-colors ${isActive(link.href)
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+                  }`}
               >
                 {link.label}
                 {isActive(link.href) && (
@@ -92,6 +126,14 @@ export default function Header() {
               aria-label="Toggle theme"
             >
               {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            <button
+              onClick={handleAuth}
+              className="p-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              aria-label={user ? t.nav.logout : t.nav.login}
+              title={user ? t.nav.logout : t.nav.login}
+            >
+              {user ? <LogOut size={20} /> : <LogIn size={20} />}
             </button>
 
             {/* Mobile menu button */}
@@ -124,11 +166,10 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`block px-5 py-4 rounded-xl text-base font-medium transition-colors ${
-                    isActive(link.href)
-                      ? "bg-muted text-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  }`}
+                  className={`block px-5 py-4 rounded-xl text-base font-medium transition-colors ${isActive(link.href)
+                    ? "bg-muted text-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`}
                 >
                   {link.label}
                 </Link>
