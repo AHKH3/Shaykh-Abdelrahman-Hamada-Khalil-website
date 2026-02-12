@@ -175,7 +175,28 @@ export async function searchQuran(
 
   const res = await fetch(`${BASE_URL}/search?${params}`);
   if (!res.ok) throw new Error("Failed to search");
-  return res.json();
+
+  // Check if response is empty
+  const text = await res.text();
+  if (!text || text.trim() === "") {
+    // Return empty search result
+    return {
+      search: {
+        query,
+        total_results: 0,
+        current_page: 1,
+        total_pages: 1,
+        results: []
+      }
+    };
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    console.error("Failed to parse search response:", error);
+    throw new Error("Invalid search response");
+  }
 }
 
 export async function getJuzs(): Promise<Juz[]> {
@@ -191,10 +212,6 @@ export async function getJuzs(): Promise<Juz[]> {
 export const RECITERS_EVERYAYAH: Record<number, string> = {
   7: "Alafasy_128kbps",
   1: "Abdul_Basit_Mujawwad_128kbps",
-  5: "Maher_AlMuaiqly_128kbps",
-  4: "Ahmed_ibn_Ali_al-Ajamy_128kbps_2013",
-  6: "Saud_ash-Shuraim_128kbps",
-  10: "Yasser_Ad-Dussary_128kbps",
 };
 
 export function getAudioUrl(
@@ -253,10 +270,6 @@ export async function getTafsir(
 export const RECITERS = [
   { id: 7, name: "مشاري العفاسي", nameEn: "Mishary Alafasy" },
   { id: 1, name: "عبد الباسط عبد الصمد", nameEn: "Abdul Basit" },
-  { id: 5, name: "ماهر المعيقلي", nameEn: "Maher Al-Muaiqly" },
-  { id: 4, name: "أحمد العجمي", nameEn: "Ahmed Al-Ajmi" },
-  { id: 6, name: "سعود الشريم", nameEn: "Saud Al-Shuraim" },
-  { id: 10, name: "ياسر الدوسري", nameEn: "Yasser Al-Dosari" },
 ];
 
 // Surah page mapping (first page of each surah)

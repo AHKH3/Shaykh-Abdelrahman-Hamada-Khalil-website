@@ -86,6 +86,28 @@ CREATE POLICY "Reading progress is manageable by authenticated users"
   USING (true)
   WITH CHECK (true);
 
+-- User bookmarks table
+CREATE TABLE IF NOT EXISTS user_bookmarks (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  verse_key TEXT NOT NULL,
+  chapter_id INTEGER NOT NULL,
+  page_number INTEGER NOT NULL,
+  note TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, verse_key)
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_bookmarks_user ON user_bookmarks(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_bookmarks_verse ON user_bookmarks(user_id, verse_key);
+
+ALTER TABLE user_bookmarks ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their own bookmarks"
+  ON user_bookmarks FOR ALL TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
 -- Storage bucket for library app HTML files
 -- Note: Create a bucket named "library-apps" in Supabase Dashboard > Storage
 -- Set it as PUBLIC for the files to be accessible via iframe

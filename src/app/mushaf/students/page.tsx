@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Plus, BookOpen, Trash2, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/context";
 import type { Student } from "@/lib/supabase/types";
 import Header from "@/components/layout/Header";
+import { ToastContainer } from "@/components/ui/Toast";
 
 export default function StudentsPage() {
   const { t, locale } = useI18n();
@@ -15,6 +16,19 @@ export default function StudentsPage() {
   const [loading, setLoading] = useState(true);
   const [newName, setNewName] = useState("");
   const [adding, setAdding] = useState(false);
+  const [toasts, setToasts] = useState<Array<{ id: string; message: string; type: "success" | "error" }>>([]);
+
+  const showToast = (message: string, type: "success" | "error") => {
+    const id = Date.now().toString();
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 3000);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
 
   useEffect(() => {
     const loadStudents = async () => {
@@ -31,19 +45,59 @@ export default function StudentsPage() {
   }, []);
 
   const addStudent = async () => {
-    if (!newName.trim()) return;
+    // Validate input
+    if (!newName.trim()) {
+      showToast(locale === "ar" ? "الرجاء إدخال اسم الطالب" : "Please enter student name", "error");
+      return;
+    }
+
+    // Check minimum length
+    if (newName.trim().length < 2) {
+      showToast(locale === "ar" ? "الاسم قصير جداً" : "Name is too short", "error");
+      return;
+    }
+
+    // Check maximum length
+    if (newName.trim().length > 100) {
+      showToast(locale === "ar" ? "الاسم طويل جداً" : "Name is too long", "error");
+      return;
+    }
+
     setAdding(true);
     const supabase = createClient();
-    const { error } = await supabase.from("students").insert({ name: newName.trim() });
-    if (!error) {
-      setNewName("");
-      const { data } = await supabase
-        .from("students")
-        .select("*")
-        .order("created_at", { ascending: false });
-      setStudents(data || []);
+
+    try {
+      const { error } = await supabase.from("students").insert({ name: newName.trim() });
+
+      if (error) {
+        console.error("Error adding student:", error);
+        showToast(
+          locale === "ar" ? "فشل إضافة الطالب. حاول مرة أخرى." : "Failed to add student. Please try again.",
+          "error"
+        );
+      } else {
+        showToast(
+          locale === "ar" ? "تمت إضافة الطالب بنجاح" : "Student added successfully",
+          "success"
+        );
+        setNewName("");
+
+        // Reload students list
+        const { data } = await supabase
+          .from("students")
+          .select("*")
+          .order("created_at", { ascending: false });
+        setStudents(data || []);
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      showToast(
+        locale === "ar" ? "حدث خطأ غير متوقع. حاول مرة أخرى." : "An unexpected error occurred. Please try again.",
+        "error"
+      );
+    } finally {
+      setAdding(false);
     }
-    setAdding(false);
   };
 
   const deleteStudent = async (id: string) => {
@@ -141,6 +195,7 @@ export default function StudentsPage() {
           )}
         </div>
       </main>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
   );
 }

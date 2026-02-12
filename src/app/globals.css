@@ -301,29 +301,35 @@
   }
 
   /* Reading Mode Styles */
-  .reading-mode-normal {
-    background-color: var(--background);
-    color: var(--foreground);
-  }
-
-  .reading-mode-sepia {
+  .mushaf-reading-mode-sepia {
     background-color: #f4ecd8;
     color: #5c4b37;
   }
 
-  .reading-mode-dark {
+  .dark .mushaf-reading-mode-sepia {
+    background-color: #3a3428;
+    color: #d4c9b3;
+  }
+
+  .mushaf-reading-mode-dark {
     background-color: #1a1a2e;
     color: #eaeaea;
   }
 
-  .reading-mode-sepia .card,
-  .reading-mode-sepia .bg-card {
+  .mushaf-reading-mode-sepia .card,
+  .mushaf-reading-mode-sepia .bg-card {
     background-color: #faf6e8;
     border-color: #e8e0d0;
   }
 
-  .reading-mode-dark .card,
-  .reading-mode-dark .bg-card {
+  .dark .mushaf-reading-mode-sepia .card,
+  .dark .mushaf-reading-mode-sepia .bg-card {
+    background-color: #2d2a20;
+    border-color: #3d3828;
+  }
+
+  .mushaf-reading-mode-dark .card,
+  .mushaf-reading-mode-dark .bg-card {
     background-color: #16213e;
     border-color: #0f3460;
   }

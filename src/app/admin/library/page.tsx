@@ -19,6 +19,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/context";
 import type { LibraryApp } from "@/lib/supabase/types";
 import Header from "@/components/layout/Header";
+import { ToastContainer } from "@/components/ui/Toast";
 
 interface AppForm {
   title: string;
@@ -50,8 +51,21 @@ export default function AdminLibraryPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<AppForm>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [toasts, setToasts] = useState<Array<{ id: string; message: string; type: "success" | "error" }>>([]);
 
   const supabase = createClient();
+
+  const showToast = (message: string, type: "success" | "error") => {
+    const id = Date.now().toString();
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 3000);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
 
   const loadApps = async () => {
     const { data } = await supabase
@@ -67,8 +81,45 @@ export default function AdminLibraryPage() {
   }, []);
 
   const handleSubmit = async () => {
-    if (!form.title.trim() || (!form.file && !editingId)) return;
+    // Validate inputs
+    if (!form.title.trim()) {
+      showToast(
+        locale === "ar" ? "الرجاء إدخال عنوان التطبيق" : "Please enter app title",
+        "error"
+      );
+      return;
+    }
+
+    if (!form.file && !editingId) {
+      showToast(
+        locale === "ar" ? "الرجاء اختيار ملف HTML" : "Please select an HTML file",
+        "error"
+      );
+      return;
+    }
+
+    // Validate file size (10MB max)
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    if (form.file && form.file.size > MAX_FILE_SIZE) {
+      showToast(
+        locale === "ar" ? "حجم الملف كبير جداً (الحد الأقصى 10MB)" : "File size too large (max 10MB)",
+        "error"
+      );
+      return;
+    }
+
+    if (form.icon && form.icon.size > MAX_FILE_SIZE) {
+      showToast(
+        locale === "ar" ? "حجم الصورة كبير جداً (الحد الأقصى 10MB)" : "Image size too large (max 10MB)",
+        "error"
+      );
+      return;
+    }
+
     setSaving(true);
+
+    // Track uploaded files for rollback
+    const uploadedFiles: string[] = [];
 
     try {
       let filePath = "";
@@ -82,6 +133,7 @@ export default function AdminLibraryPage() {
           .upload(fileName, form.file, { contentType: "text/html" });
         if (uploadError) throw uploadError;
         filePath = fileName;
+        uploadedFiles.push(fileName);
       }
 
       // Upload icon
@@ -95,6 +147,12 @@ export default function AdminLibraryPage() {
           .from("library-apps")
           .getPublicUrl(iconName);
         iconUrl = iconData?.publicUrl || null;
+        uploadedFiles.push(iconName);
+      }
+
+      // Verify filePath exists before database insert
+      if (!editingId && !filePath) {
+        throw new Error("File path is required for new apps");
       }
 
       if (editingId) {
@@ -108,10 +166,11 @@ export default function AdminLibraryPage() {
         if (filePath) updateData.file_path = filePath;
         if (iconUrl) updateData.icon_url = iconUrl;
 
-        await supabase.from("library_apps").update(updateData).eq("id", editingId);
+        const { error: updateError } = await supabase.from("library_apps").update(updateData).eq("id", editingId);
+        if (updateError) throw updateError;
       } else {
         // Insert
-        await supabase.from("library_apps").insert({
+        const { error: insertError } = await supabase.from("library_apps").insert({
           title: form.title,
           title_en: form.title_en || null,
           description: form.description,
@@ -119,7 +178,13 @@ export default function AdminLibraryPage() {
           file_path: filePath,
           icon_url: iconUrl,
         });
+        if (insertError) throw insertError;
       }
+
+      showToast(
+        locale === "ar" ? "تم حفظ التطبيق بنجاح" : "App saved successfully",
+        "success"
+      );
 
       setShowForm(false);
       setEditingId(null);
@@ -127,6 +192,20 @@ export default function AdminLibraryPage() {
       loadApps();
     } catch (err) {
       console.error("Save failed:", err);
+
+      // Rollback: Delete uploaded files if database operation failed
+      if (uploadedFiles.length > 0) {
+        try {
+          await supabase.storage.from("library-apps").remove(uploadedFiles);
+        } catch (rollbackErr) {
+          console.error("Rollback failed:", rollbackErr);
+        }
+      }
+
+      showToast(
+        locale === "ar" ? "فشل حفظ التطبيق. حاول مرة أخرى." : "Failed to save app. Please try again.",
+        "error"
+      );
     } finally {
       setSaving(false);
     }
@@ -356,8 +435,8 @@ export default function AdminLibraryPage() {
                         {form.file
                           ? form.file.name
                           : locale === "ar"
-                          ? "اختر ملف HTML"
-                          : "Choose HTML file"}
+                            ? "اختر ملف HTML"
+                            : "Choose HTML file"}
                       </button>
                     </div>
 
@@ -385,8 +464,8 @@ export default function AdminLibraryPage() {
                         {form.icon
                           ? form.icon.name
                           : locale === "ar"
-                          ? "اختر صورة"
-                          : "Choose image"}
+                            ? "اختر صورة"
+                            : "Choose image"}
                       </button>
                     </div>
                   </div>
@@ -419,6 +498,7 @@ export default function AdminLibraryPage() {
           </AnimatePresence>
         </div>
       </main>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
   );
 }

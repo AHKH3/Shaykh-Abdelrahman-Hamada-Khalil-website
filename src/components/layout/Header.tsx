@@ -40,9 +40,11 @@ export default function Header() {
   const handleAuth = async () => {
     if (user) {
       await supabase.auth.signOut();
-      router.push("/");
+      router.replace("/");
+      router.refresh();
     } else {
-      router.push("/login");
+      router.replace("/login");
+      router.refresh();
     }
   };
 
