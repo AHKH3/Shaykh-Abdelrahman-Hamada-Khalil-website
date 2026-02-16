@@ -18,7 +18,7 @@ export default function MushafFrame({ readingMode, isDark = false }: MushafFrame
             case "purple": return isDark ? "#9D8CA1" : "#6A4C93"; // Muted Purple
             case "blue": return isDark ? "#7FAAC1" : "#1B4F72"; // Steel Blue
             case "red": return isDark ? "#B87E7E" : "#8B0000"; // Muted Red
-            case "pink": return isDark ? "#D18CAD" : "#C71585"; // Muted Pink
+            case "pink": return isDark ? "#A67A8E" : "#B46482"; // Muted Rose/Pink
             default: return isDark ? "#52525b" : "#71717a"; // Zinc Gray
         }
     };
