@@ -22,6 +22,7 @@ import {
   Sun,
   HelpCircle,
   Scroll,
+  Monitor,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import {
@@ -79,29 +80,39 @@ export default function MushafViewer() {
   const [pageWidth, setPageWidth] = useState<"normal" | "wide" | "full">("normal");
   const [displayMode, setDisplayMode] = useState<"single" | "double">("single");
   const [showDisplaySettings, setShowDisplaySettings] = useState(false);
-  const [readingMode, setReadingMode] = useState<"normal" | "sepia" | "cream" | "dark" | "black" | "purple">("normal");
+  const [readingMode, setReadingMode] = useState<"normal" | "sepia" | "green">("normal");
+  const [screenMode, setScreenMode] = useState<"normal" | "focus" | "fullscreen">("normal");
 
   // Additional features
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [autoScroll, setAutoScroll] = useState(false);
   const [scrollSpeed, setScrollSpeed] = useState(1);
-  const [isSiteDark, setIsSiteDark] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const fullscreenContainerRef = useRef<HTMLDivElement>(null);
 
-  // Detect site theme and reset reading mode when theme changes
+  // Reset reading mode to normal when site theme changes
   useEffect(() => {
     const checkTheme = () => {
-      const newIsSiteDark = document.documentElement.classList.contains('dark');
-      setIsSiteDark(newIsSiteDark);
-      // Reset reading mode to normal when site theme changes
-      setReadingMode(newIsSiteDark ? "dark" : "normal");
+      // Reset to normal when theme changes
+      setReadingMode("normal");
     };
-    checkTheme();
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     return () => observer.disconnect();
   }, []);
+
+  // Handle focus mode - add class to body to hide site header only in focus mode
+  useEffect(() => {
+    if (screenMode === "focus") {
+      document.body.classList.add("mushaf-focus-mode");
+    } else {
+      document.body.classList.remove("mushaf-focus-mode");
+    }
+    return () => {
+      document.body.classList.remove("mushaf-focus-mode");
+    };
+  }, [screenMode]);
 
   // Helper functions for display settings
   const getFontSizeClass = (size: number) => {
@@ -127,11 +138,42 @@ export default function MushafViewer() {
     switch (mode) {
       case "normal": return "mushaf-reading-mode-normal";
       case "sepia": return "mushaf-reading-mode-sepia";
-      case "cream": return "mushaf-reading-mode-cream";
-      case "dark": return "mushaf-reading-mode-dark";
-      case "black": return "mushaf-reading-mode-black";
-      case "purple": return "mushaf-reading-mode-purple";
+      case "green": return "mushaf-reading-mode-green";
       default: return "mushaf-reading-mode-normal";
+    }
+  };
+
+  const getScreenModeClass = (mode: string) => {
+    switch (mode) {
+      case "focus": return "screen-mode-focus";
+      case "fullscreen": return "screen-mode-fullscreen";
+      default: return "";
+    }
+  };
+
+  // Handle fullscreen toggle
+  const toggleFullscreen = () => {
+    if (!fullscreenContainerRef.current) return;
+
+    if (screenMode === "fullscreen") {
+      document.exitFullscreen().catch(console.error);
+      setScreenMode("normal");
+    } else {
+      fullscreenContainerRef.current.requestFullscreen().catch(console.error);
+      setScreenMode("fullscreen");
+    }
+  };
+
+  // Handle screen mode changes
+  const handleScreenModeChange = (mode: "normal" | "focus" | "fullscreen") => {
+    if (mode === "fullscreen") {
+      toggleFullscreen();
+    } else {
+      // Exit fullscreen if currently in fullscreen mode
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(console.error);
+      }
+      setScreenMode(mode);
     }
   };
 
@@ -163,6 +205,18 @@ export default function MushafViewer() {
   useEffect(() => {
     loadPage(currentPage);
   }, [currentPage, loadPage]);
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && screenMode === "fullscreen") {
+        setScreenMode("normal");
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, [screenMode]);
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= TOTAL_PAGES) {
@@ -391,9 +445,12 @@ export default function MushafViewer() {
   });
 
   return (
-    <div className={`flex flex-col h-[calc(100vh-4rem)] ${getReadingModeClass(readingMode)} transition-colors duration-300`}>
+    <div
+      ref={fullscreenContainerRef}
+      className={`flex flex-col h-[calc(100vh-4rem)] ${getReadingModeClass(readingMode)} ${getScreenModeClass(screenMode)} transition-colors duration-300`}
+    >
       {/* Progress Bar */}
-      <div className="h-1 bg-muted">
+      <div className="mushaf-progress-bar h-1 bg-muted">
         <div
           className="h-full bg-primary transition-all duration-300"
           style={{ width: `${(currentPage / TOTAL_PAGES) * 100}%` }}
@@ -401,7 +458,7 @@ export default function MushafViewer() {
       </div>
 
       {/* Top Bar */}
-      <div className="flex items-center justify-between px-4 py-2 bg-card border-b border-border">
+      <div className="mushaf-top-bar flex items-center justify-between px-4 py-2 bg-card border-b border-border">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowNav(true)}
@@ -456,6 +513,21 @@ export default function MushafViewer() {
             title={t.mushaf.displaySettings}
           >
             <Settings size={16} />
+          </button>
+          <div className="w-px h-6 bg-border mx-1" />
+          <button
+            onClick={() => handleScreenModeChange("focus")}
+            className={`p-2 rounded-lg transition-colors ${screenMode === "focus" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+            title={t.mushaf.screenModeFocus}
+          >
+            <Layers size={16} />
+          </button>
+          <button
+            onClick={() => handleScreenModeChange("fullscreen")}
+            className={`p-2 rounded-lg transition-colors ${screenMode === "fullscreen" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+            title={t.mushaf.screenModeFullscreen}
+          >
+            <Monitor size={16} />
           </button>
         </div>
       </div>
@@ -631,7 +703,7 @@ export default function MushafViewer() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="flex items-center justify-center gap-3 px-4 py-3 bg-card border-t border-border">
+      <div className="mushaf-bottom-nav flex items-center justify-center gap-3 px-4 py-3 bg-card border-t border-border">
         <button
           onClick={prevPage}
           disabled={currentPage <= 1}
@@ -1027,7 +1099,8 @@ export default function MushafViewer() {
         goToPage={goToPage}
         readingMode={readingMode}
         setReadingMode={setReadingMode}
-        isSiteDark={isSiteDark}
+        screenMode={screenMode}
+        setScreenMode={handleScreenModeChange}
       />
 
       {/* Hidden audio element */}

@@ -19,9 +19,10 @@ interface DisplaySettingsProps {
     pageInput: string;
     setPageInput: (input: string) => void;
     goToPage: (page: number) => void;
-    readingMode: "normal" | "sepia" | "cream" | "dark" | "black" | "purple";
-    setReadingMode: (mode: "normal" | "sepia" | "cream" | "dark" | "black" | "purple") => void;
-    isSiteDark: boolean;
+    readingMode: "normal" | "sepia" | "green";
+    setReadingMode: (mode: "normal" | "sepia" | "green") => void;
+    screenMode: "normal" | "focus" | "fullscreen";
+    setScreenMode: (mode: "normal" | "focus" | "fullscreen") => void;
 }
 
 export default function DisplaySettings({
@@ -40,7 +41,8 @@ export default function DisplaySettings({
     goToPage,
     readingMode,
     setReadingMode,
-    isSiteDark,
+    screenMode,
+    setScreenMode,
 }: DisplaySettingsProps) {
     const { t, locale, dir } = useI18n();
 
@@ -62,17 +64,17 @@ export default function DisplaySettings({
         { value: "double" as const, label: t.mushaf.doublePage },
     ];
 
-    const readingModes = isSiteDark
-        ? [
-            { value: "dark" as const, label: t.mushaf.dark },
-            { value: "black" as const, label: t.mushaf.black },
-            { value: "purple" as const, label: t.mushaf.purple },
-        ]
-        : [
-            { value: "normal" as const, label: t.mushaf.normal },
-            { value: "sepia" as const, label: t.mushaf.sepia },
-            { value: "cream" as const, label: t.mushaf.cream },
-        ];
+    const readingModes = [
+        { value: "normal" as const, label: t.mushaf.normal },
+        { value: "sepia" as const, label: t.mushaf.sepia },
+        { value: "green" as const, label: t.mushaf.green },
+    ];
+
+    const screenModes = [
+        { value: "normal" as const, label: t.mushaf.screenModeNormal },
+        { value: "focus" as const, label: t.mushaf.screenModeFocus },
+        { value: "fullscreen" as const, label: t.mushaf.screenModeFullscreen },
+    ];
 
     if (!isOpen) return null;
 
@@ -242,6 +244,28 @@ export default function DisplaySettings({
                                         key={mode.value}
                                         onClick={() => setReadingMode(mode.value)}
                                         className={`p-3 rounded-lg text-sm font-medium transition-colors ${readingMode === mode.value
+                                            ? "bg-foreground text-background"
+                                            : "bg-muted hover:bg-muted/80"
+                                            }`}
+                                    >
+                                        {mode.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Screen Mode */}
+                        <div>
+                            <label className="flex items-center gap-2 text-sm font-medium mb-3">
+                                <Monitor size={16} className="text-muted-foreground" />
+                                {t.mushaf.screenMode}
+                            </label>
+                            <div className="grid grid-cols-3 gap-2">
+                                {screenModes.map((mode) => (
+                                    <button
+                                        key={mode.value}
+                                        onClick={() => setScreenMode(mode.value)}
+                                        className={`p-3 rounded-lg text-sm font-medium transition-colors ${screenMode === mode.value
                                             ? "bg-foreground text-background"
                                             : "bg-muted hover:bg-muted/80"
                                             }`}

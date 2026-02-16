@@ -511,24 +511,19 @@
     color: #5c4b37;
   }
 
-  .mushaf-reading-mode-cream {
-    background-color: #fff8f0;
-    color: #4a4036;
+  .dark .mushaf-reading-mode-sepia {
+    background-color: #3a2e20;
+    color: #d4c9b3;
   }
 
-  .mushaf-reading-mode-dark {
-    background-color: #1a1a2e;
-    color: #eaeaea;
+  .mushaf-reading-mode-green {
+    background-color: #e8f5e9;
+    color: #2d5a3d;
   }
 
-  .mushaf-reading-mode-black {
-    background-color: #0a0a0a;
-    color: #e8e8e8;
-  }
-
-  .mushaf-reading-mode-purple {
-    background-color: #1a0a2e;
-    color: #e8d8f8;
+  .dark .mushaf-reading-mode-green {
+    background-color: #1a2f25;
+    color: #a8d4b8;
   }
 
   /* Card styles for each reading mode */
@@ -544,28 +539,22 @@
     border-color: #e8e0d0;
   }
 
-  .mushaf-reading-mode-cream .card,
-  .mushaf-reading-mode-cream .bg-card {
-    background-color: #fffef8;
-    border-color: #f0e8d8;
+  .dark .mushaf-reading-mode-sepia .card,
+  .dark .mushaf-reading-mode-sepia .bg-card {
+    background-color: #2d2a20;
+    border-color: #3d3828;
   }
 
-  .mushaf-reading-mode-dark .card,
-  .mushaf-reading-mode-dark .bg-card {
-    background-color: #16213e;
-    border-color: #0f3460;
+  .mushaf-reading-mode-green .card,
+  .mushaf-reading-mode-green .bg-card {
+    background-color: #f0faf5;
+    border-color: #d0e8d8;
   }
 
-  .mushaf-reading-mode-black .card,
-  .mushaf-reading-mode-black .bg-card {
-    background-color: #1a1a1a;
-    border-color: #2a2a2a;
-  }
-
-  .mushaf-reading-mode-purple .card,
-  .mushaf-reading-mode-purple .bg-card {
-    background-color: #2a1a3e;
-    border-color: #4a2a6e;
+  .dark .mushaf-reading-mode-green .card,
+  .dark .mushaf-reading-mode-green .bg-card {
+    background-color: #1e2f28;
+    border-color: #2d4a3d;
   }
 
   /* Muted foreground colors for each mode */
@@ -573,20 +562,16 @@
     color: #8b7355;
   }
 
-  .mushaf-reading-mode-cream .text-muted-foreground {
-    color: #7a6a5a;
+  .dark .mushaf-reading-mode-sepia .text-muted-foreground {
+    color: #a89a7a;
   }
 
-  .mushaf-reading-mode-dark .text-muted-foreground {
-    color: #a0a0b0;
+  .mushaf-reading-mode-green .text-muted-foreground {
+    color: #4a6b5d;
   }
 
-  .mushaf-reading-mode-black .text-muted-foreground {
-    color: #888888;
-  }
-
-  .mushaf-reading-mode-purple .text-muted-foreground {
-    color: #b8a8c8;
+  .dark .mushaf-reading-mode-green .text-muted-foreground {
+    color: #7a9a8a;
   }
 
   /* Border colors for each mode */
@@ -594,20 +579,16 @@
     border-color: #e8e0d0;
   }
 
-  .mushaf-reading-mode-cream .border-border {
-    border-color: #f0e8d8;
+  .dark .mushaf-reading-mode-sepia .border-border {
+    border-color: #3d3828;
   }
 
-  .mushaf-reading-mode-dark .border-border {
-    border-color: #0f3460;
+  .mushaf-reading-mode-green .border-border {
+    border-color: #d0e8d8;
   }
 
-  .mushaf-reading-mode-black .border-border {
-    border-color: #2a2a2a;
-  }
-
-  .mushaf-reading-mode-purple .border-border {
-    border-color: #4a2a6e;
+  .dark .mushaf-reading-mode-green .border-border {
+    border-color: #2d4a3d;
   }
 
   .dark-reading-mode .page-flip {
@@ -645,5 +626,61 @@
 
   .turn-page-container .page .shadow {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Screen Mode Styles */
+  /* Focus Mode - Only hides site header, keeps internal bars visible */
+
+  /* Fullscreen Mode - Hides all UI including internal bars */
+  .screen-mode-fullscreen .mushaf-progress-bar,
+  .screen-mode-fullscreen .mushaf-top-bar,
+  .screen-mode-fullscreen .mushaf-bottom-nav {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Hide site header when in focus or fullscreen mode */
+  body.mushaf-focus-mode header {
+    display: none;
+  }
+
+  body.mushaf-focus-mode main {
+    padding-top: 0;
+  }
+
+  /* Fullscreen container styling - inherit reading mode colors */
+  .screen-mode-fullscreen:fullscreen {
+    padding: 0;
+  }
+
+  .screen-mode-fullscreen:fullscreen .page-flip {
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  /* Fullscreen with reading mode colors */
+  .screen-mode-fullscreen.mushaf-reading-mode-normal:fullscreen {
+    background-color: var(--background);
+  }
+
+  .screen-mode-fullscreen.mushaf-reading-mode-sepia:fullscreen {
+    background-color: #f4ecd8;
+  }
+
+  .dark .screen-mode-fullscreen.mushaf-reading-mode-sepia:fullscreen {
+    background-color: #3a3428;
+  }
+
+  .screen-mode-fullscreen.mushaf-reading-mode-green:fullscreen {
+    background-color: #e8f5e9;
+  }
+
+  .dark .screen-mode-fullscreen.mushaf-reading-mode-green:fullscreen {
+    background-color: #1a2f25;
+  }
+
+  .screen-mode-fullscreen.mushaf-reading-mode-dark:fullscreen {
+    background-color: #1a1a2e;
   }
 }
