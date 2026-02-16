@@ -79,14 +79,29 @@ export default function MushafViewer() {
   const [pageWidth, setPageWidth] = useState<"normal" | "wide" | "full">("normal");
   const [displayMode, setDisplayMode] = useState<"single" | "double">("single");
   const [showDisplaySettings, setShowDisplaySettings] = useState(false);
-  const [readingMode, setReadingMode] = useState<"normal" | "sepia" | "dark">("normal");
+  const [readingMode, setReadingMode] = useState<"normal" | "sepia" | "cream" | "dark" | "black" | "purple">("normal");
 
   // Additional features
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [autoScroll, setAutoScroll] = useState(false);
   const [scrollSpeed, setScrollSpeed] = useState(1);
+  const [isSiteDark, setIsSiteDark] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Detect site theme and reset reading mode when theme changes
+  useEffect(() => {
+    const checkTheme = () => {
+      const newIsSiteDark = document.documentElement.classList.contains('dark');
+      setIsSiteDark(newIsSiteDark);
+      // Reset reading mode to normal when site theme changes
+      setReadingMode(newIsSiteDark ? "dark" : "normal");
+    };
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   // Helper functions for display settings
   const getFontSizeClass = (size: number) => {
@@ -110,10 +125,13 @@ export default function MushafViewer() {
 
   const getReadingModeClass = (mode: string) => {
     switch (mode) {
-      case "normal": return "bg-background text-foreground";
-      case "sepia": return "bg-[#f4ecd8] text-[#5c4b37]";
-      case "dark": return "bg-[#1a1a2e] text-[#eaeaea]";
-      default: return "bg-background text-foreground";
+      case "normal": return "mushaf-reading-mode-normal";
+      case "sepia": return "mushaf-reading-mode-sepia";
+      case "cream": return "mushaf-reading-mode-cream";
+      case "dark": return "mushaf-reading-mode-dark";
+      case "black": return "mushaf-reading-mode-black";
+      case "purple": return "mushaf-reading-mode-purple";
+      default: return "mushaf-reading-mode-normal";
     }
   };
 
@@ -373,7 +391,7 @@ export default function MushafViewer() {
   });
 
   return (
-    <div className={`flex flex-col h-[calc(100vh-4rem)] ${readingMode === 'dark' ? 'dark-reading-mode' : ''} transition-colors duration-300`}>
+    <div className={`flex flex-col h-[calc(100vh-4rem)] ${getReadingModeClass(readingMode)} transition-colors duration-300`}>
       {/* Progress Bar */}
       <div className="h-1 bg-muted">
         <div
@@ -1009,6 +1027,7 @@ export default function MushafViewer() {
         goToPage={goToPage}
         readingMode={readingMode}
         setReadingMode={setReadingMode}
+        isSiteDark={isSiteDark}
       />
 
       {/* Hidden audio element */}

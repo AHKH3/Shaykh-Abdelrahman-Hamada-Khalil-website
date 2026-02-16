@@ -19,8 +19,9 @@ interface DisplaySettingsProps {
     pageInput: string;
     setPageInput: (input: string) => void;
     goToPage: (page: number) => void;
-    readingMode: "normal" | "sepia" | "dark";
-    setReadingMode: (mode: "normal" | "sepia" | "dark") => void;
+    readingMode: "normal" | "sepia" | "cream" | "dark" | "black" | "purple";
+    setReadingMode: (mode: "normal" | "sepia" | "cream" | "dark" | "black" | "purple") => void;
+    isSiteDark: boolean;
 }
 
 export default function DisplaySettings({
@@ -39,6 +40,7 @@ export default function DisplaySettings({
     goToPage,
     readingMode,
     setReadingMode,
+    isSiteDark,
 }: DisplaySettingsProps) {
     const { t, locale, dir } = useI18n();
 
@@ -60,11 +62,17 @@ export default function DisplaySettings({
         { value: "double" as const, label: t.mushaf.doublePage },
     ];
 
-    const readingModes = [
-        { value: "normal" as const, label: locale === "ar" ? "عادي" : "Normal" },
-        { value: "sepia" as const, label: t.mushaf.sepia },
-        { value: "dark" as const, label: locale === "ar" ? "داكن" : "Dark" },
-    ];
+    const readingModes = isSiteDark
+        ? [
+            { value: "dark" as const, label: t.mushaf.dark },
+            { value: "black" as const, label: t.mushaf.black },
+            { value: "purple" as const, label: t.mushaf.purple },
+        ]
+        : [
+            { value: "normal" as const, label: t.mushaf.normal },
+            { value: "sepia" as const, label: t.mushaf.sepia },
+            { value: "cream" as const, label: t.mushaf.cream },
+        ];
 
     if (!isOpen) return null;
 
@@ -168,8 +176,8 @@ export default function DisplaySettings({
                                         key={size.value}
                                         onClick={() => setFontSize(size.value)}
                                         className={`p-3 rounded-lg text-sm font-medium transition-colors ${fontSize === size.value
-                                                ? "bg-foreground text-background"
-                                                : "bg-muted hover:bg-muted/80"
+                                            ? "bg-foreground text-background"
+                                            : "bg-muted hover:bg-muted/80"
                                             }`}
                                     >
                                         {size.label}
@@ -190,8 +198,8 @@ export default function DisplaySettings({
                                         key={width.value}
                                         onClick={() => setPageWidth(width.value)}
                                         className={`p-3 rounded-lg text-sm font-medium transition-colors ${pageWidth === width.value
-                                                ? "bg-foreground text-background"
-                                                : "bg-muted hover:bg-muted/80"
+                                            ? "bg-foreground text-background"
+                                            : "bg-muted hover:bg-muted/80"
                                             }`}
                                     >
                                         {width.label}
@@ -212,8 +220,8 @@ export default function DisplaySettings({
                                         key={mode.value}
                                         onClick={() => setDisplayMode(mode.value)}
                                         className={`p-3 rounded-lg text-sm font-medium transition-colors ${displayMode === mode.value
-                                                ? "bg-foreground text-background"
-                                                : "bg-muted hover:bg-muted/80"
+                                            ? "bg-foreground text-background"
+                                            : "bg-muted hover:bg-muted/80"
                                             }`}
                                     >
                                         {mode.label}
@@ -234,8 +242,8 @@ export default function DisplaySettings({
                                         key={mode.value}
                                         onClick={() => setReadingMode(mode.value)}
                                         className={`p-3 rounded-lg text-sm font-medium transition-colors ${readingMode === mode.value
-                                                ? "bg-foreground text-background"
-                                                : "bg-muted hover:bg-muted/80"
+                                            ? "bg-foreground text-background"
+                                            : "bg-muted hover:bg-muted/80"
                                             }`}
                                     >
                                         {mode.label}

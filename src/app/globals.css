@@ -500,6 +500,116 @@
     border-color: var(--border);
   }
 
+  /* Reading Mode Styles */
+  .mushaf-reading-mode-normal {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  .mushaf-reading-mode-sepia {
+    background-color: #f4ecd8;
+    color: #5c4b37;
+  }
+
+  .mushaf-reading-mode-cream {
+    background-color: #fff8f0;
+    color: #4a4036;
+  }
+
+  .mushaf-reading-mode-dark {
+    background-color: #1a1a2e;
+    color: #eaeaea;
+  }
+
+  .mushaf-reading-mode-black {
+    background-color: #0a0a0a;
+    color: #e8e8e8;
+  }
+
+  .mushaf-reading-mode-purple {
+    background-color: #1a0a2e;
+    color: #e8d8f8;
+  }
+
+  /* Card styles for each reading mode */
+  .mushaf-reading-mode-normal .card,
+  .mushaf-reading-mode-normal .bg-card {
+    background-color: var(--card);
+    border-color: var(--border);
+  }
+
+  .mushaf-reading-mode-sepia .card,
+  .mushaf-reading-mode-sepia .bg-card {
+    background-color: #faf6e8;
+    border-color: #e8e0d0;
+  }
+
+  .mushaf-reading-mode-cream .card,
+  .mushaf-reading-mode-cream .bg-card {
+    background-color: #fffef8;
+    border-color: #f0e8d8;
+  }
+
+  .mushaf-reading-mode-dark .card,
+  .mushaf-reading-mode-dark .bg-card {
+    background-color: #16213e;
+    border-color: #0f3460;
+  }
+
+  .mushaf-reading-mode-black .card,
+  .mushaf-reading-mode-black .bg-card {
+    background-color: #1a1a1a;
+    border-color: #2a2a2a;
+  }
+
+  .mushaf-reading-mode-purple .card,
+  .mushaf-reading-mode-purple .bg-card {
+    background-color: #2a1a3e;
+    border-color: #4a2a6e;
+  }
+
+  /* Muted foreground colors for each mode */
+  .mushaf-reading-mode-sepia .text-muted-foreground {
+    color: #8b7355;
+  }
+
+  .mushaf-reading-mode-cream .text-muted-foreground {
+    color: #7a6a5a;
+  }
+
+  .mushaf-reading-mode-dark .text-muted-foreground {
+    color: #a0a0b0;
+  }
+
+  .mushaf-reading-mode-black .text-muted-foreground {
+    color: #888888;
+  }
+
+  .mushaf-reading-mode-purple .text-muted-foreground {
+    color: #b8a8c8;
+  }
+
+  /* Border colors for each mode */
+  .mushaf-reading-mode-sepia .border-border {
+    border-color: #e8e0d0;
+  }
+
+  .mushaf-reading-mode-cream .border-border {
+    border-color: #f0e8d8;
+  }
+
+  .mushaf-reading-mode-dark .border-border {
+    border-color: #0f3460;
+  }
+
+  .mushaf-reading-mode-black .border-border {
+    border-color: #2a2a2a;
+  }
+
+  .mushaf-reading-mode-purple .border-border {
+    border-color: #4a2a6e;
+  }
+
   .dark-reading-mode .page-flip {
     background-color: var(--card);
     border-color: var(--border);
