@@ -504,7 +504,7 @@ export default function MushafViewer() {
                             >
                               {verse.text_uthmani}{" "}
                               <span
-                                className="inline-flex items-center justify-center text-base text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer"
+                                className={`inline-flex items-center justify-center ${getFontSizeClass(fontSize)} text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer`}
                                 onClick={(e) => handleVerseNumberClick(verse, e)}
                               >
                                 ﴿{verse.verse_number.toLocaleString("ar-EG")}﴾
@@ -547,7 +547,7 @@ export default function MushafViewer() {
                                 >
                                   {verse.text_uthmani}{" "}
                                   <span
-                                    className="inline-flex items-center justify-center text-base text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer"
+                                    className={`inline-flex items-center justify-center ${getFontSizeClass(fontSize)} text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer`}
                                     onClick={(e) => handleVerseNumberClick(verse, e)}
                                   >
                                     ﴿{verse.verse_number.toLocaleString("ar-EG")}﴾
@@ -594,7 +594,7 @@ export default function MushafViewer() {
                           >
                             {verse.text_uthmani}{" "}
                             <span
-                              className="inline-flex items-center justify-center text-base text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer"
+                              className={`inline-flex items-center justify-center ${getFontSizeClass(fontSize)} text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer`}
                               onClick={(e) => handleVerseNumberClick(verse, e)}
                             >
                               ﴿{verse.verse_number.toLocaleString("ar-EG")}﴾
