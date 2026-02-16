@@ -19,8 +19,8 @@ interface DisplaySettingsProps {
     pageInput: string;
     setPageInput: (input: string) => void;
     goToPage: (page: number) => void;
-    readingMode: "normal" | "sepia" | "green";
-    setReadingMode: (mode: "normal" | "sepia" | "green") => void;
+    readingMode: "normal" | "sepia" | "green" | "purple" | "red" | "pink" | "highContrast";
+    setReadingMode: (mode: "normal" | "sepia" | "green" | "purple" | "red" | "pink" | "highContrast") => void;
     screenMode: "normal" | "focus" | "fullscreen";
     setScreenMode: (mode: "normal" | "focus" | "fullscreen") => void;
 }
@@ -68,6 +68,10 @@ export default function DisplaySettings({
         { value: "normal" as const, label: t.mushaf.normal },
         { value: "sepia" as const, label: t.mushaf.sepia },
         { value: "green" as const, label: t.mushaf.green },
+        { value: "purple" as const, label: t.mushaf.purple },
+        { value: "red" as const, label: t.mushaf.red },
+        { value: "pink" as const, label: t.mushaf.pink },
+        { value: "highContrast" as const, label: t.mushaf.highContrast },
     ];
 
     const screenModes = [

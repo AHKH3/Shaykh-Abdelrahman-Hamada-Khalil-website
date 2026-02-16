@@ -92,15 +92,14 @@ export default function QuickVerseRangePanel({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm"
+        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
         onClick={onClose}
       >
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          transition={{ type: "spring", damping: 25 }}
-          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-card shadow-2xl rounded-xl border border-border overflow-auto max-h-[90vh]"
+          className="bg-card max-w-md w-full rounded-2xl shadow-2xl overflow-hidden border border-border max-h-[90vh]"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}

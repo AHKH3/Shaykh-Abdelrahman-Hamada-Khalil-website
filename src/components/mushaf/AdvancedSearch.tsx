@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, Filter, ChevronDown } from "lucide-react";
 import type {
@@ -12,7 +12,9 @@ import {
   searchSurahs,
   SURAH_PAGES,
 } from "@/lib/quran/api";
+import { getSearchSourceLabel } from "@/lib/quran/search-engine";
 import { useI18n } from "@/lib/i18n/context";
+import { useDebounce } from "@/lib/hooks/useDebounce";
 
 interface AdvancedSearchProps {
   isOpen: boolean;
@@ -40,20 +42,47 @@ export default function AdvancedSearch({
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
+  // Search source and progress
+  const [searchSource, setSearchSource] = useState<'quran-com' | 'alquran-cloud' | 'local' | null>(null);
+  const [progressMessage, setProgressMessage] = useState<string>("");
+  const [progressPercent, setProgressPercent] = useState<number>(0);
+
+  // Debounce query for automatic search
+  const debouncedQuery = useDebounce(query, 500);
+
   // Reset page when query or filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [query, selectedSurah, selectedJuz]);
+  }, [debouncedQuery, selectedSurah, selectedJuz]);
+
+  // Perform search when debounced query changes
+  useEffect(() => {
+    if (debouncedQuery !== query) {
+      // Only search if debounced query is different (not initial render)
+      handleSearch(1);
+    }
+  }, [debouncedQuery, selectedSurah, selectedJuz]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearch = async (page: number = 1) => {
     if (!query.trim()) {
       setResults([]);
+      setProgressMessage("");
+      setProgressPercent(0);
       return;
     }
 
     setLoading(true);
+    setProgressMessage("");
+    setProgressPercent(0);
+
     try {
-      // 1. Search in verse text via API
+      // 1. Local search in surah names (only on first page and if no surah filter)
+      let surahResults: UnifiedSearchResult[] = [];
+      if (page === 1 && !selectedSurah) {
+        surahResults = searchSurahs(query, chapters, locale);
+      }
+
+      // 2. Search in verse text via hybrid search engine
       const apiResults = await searchQuranAdvanced({
         query,
         language: locale === "ar" ? "ar" : "en",
@@ -62,12 +91,6 @@ export default function AdvancedSearch({
         chapterId: selectedSurah || undefined,
         juzNumber: selectedJuz || undefined,
       });
-
-      // 2. Local search in surah names (only on first page and if no surah filter)
-      let surahResults: UnifiedSearchResult[] = [];
-      if (page === 1 && !selectedSurah) {
-        surahResults = searchSurahs(query, chapters, locale);
-      }
 
       // 3. Merge results (surahs first due to higher matchScore)
       const unified = [...surahResults, ...apiResults.results];
@@ -78,12 +101,16 @@ export default function AdvancedSearch({
       setResults(unified);
       setTotalPages(apiResults.totalPages);
       setTotalResults(apiResults.totalResults + surahResults.length);
+      setSearchSource(null); // Reset search source display
     } catch (error) {
       console.error("Search failed:", error);
       setResults([]);
       setTotalResults(0);
+      setSearchSource(null);
     } finally {
       setLoading(false);
+      setProgressMessage("");
+      setProgressPercent(0);
     }
   };
 
@@ -103,8 +130,18 @@ export default function AdvancedSearch({
     onClose();
   };
 
+  // Reset state when component closes
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchSource(null);
+      setProgressMessage("");
+      setProgressPercent(0);
+    }
+  }, [isOpen]);
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      // Manual search trigger (optional, since search is automatic)
       handleSearch();
     } else if (e.key === "Escape") {
       onClose();
@@ -145,11 +182,10 @@ export default function AdvancedSearch({
               />
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`p-2 rounded-lg transition-colors ${
-                  showFilters
-                    ? "bg-primary text-white"
-                    : "bg-muted hover:bg-muted/80"
-                }`}
+                className={`p-2 rounded-lg transition-colors ${showFilters
+                  ? "bg-primary text-white"
+                  : "bg-muted hover:bg-muted/80"
+                  }`}
                 title={t.mushaf.filters}
               >
                 <Filter size={18} />
@@ -221,14 +257,32 @@ export default function AdvancedSearch({
           {/* Results */}
           <div className="max-h-[500px] overflow-auto">
             {loading ? (
-              <div className="flex justify-center items-center p-8">
+              <div className="flex flex-col justify-center items-center p-8 gap-3">
                 <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                {progressMessage && (
+                  <div className="text-sm text-muted-foreground">
+                    {progressMessage}
+                  </div>
+                )}
+                {progressPercent > 0 && (
+                  <div className="w-full max-w-xs bg-muted rounded-full h-2">
+                    <div
+                      className="bg-primary h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                )}
               </div>
             ) : results.length > 0 ? (
               <div>
-                {/* Results count */}
-                <div className="px-4 py-2 bg-muted/20 border-b border-border text-xs text-muted-foreground">
-                  {totalResults} {t.mushaf.resultsCount}
+                {/* Results count and source */}
+                <div className="px-4 py-2 bg-muted/20 border-b border-border text-xs text-muted-foreground flex items-center justify-between">
+                  <span>{totalResults} {t.mushaf.resultsCount}</span>
+                  {searchSource && (
+                    <span className="text-primary/70">
+                      {getSearchSourceLabel(searchSource, locale)}
+                    </span>
+                  )}
                 </div>
 
                 {/* Results list */}

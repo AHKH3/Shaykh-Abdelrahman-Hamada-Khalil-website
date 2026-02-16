@@ -83,7 +83,7 @@ export default function MushafViewer() {
   const [pageWidth, setPageWidth] = useState<"normal" | "wide" | "full">("normal");
   const [displayMode, setDisplayMode] = useState<"single" | "double">("single");
   const [showDisplaySettings, setShowDisplaySettings] = useState(false);
-  const [readingMode, setReadingMode] = useState<"normal" | "sepia" | "green">("normal");
+  const [readingMode, setReadingMode] = useState<"normal" | "sepia" | "green" | "purple" | "red" | "pink" | "highContrast">("normal");
   const [screenMode, setScreenMode] = useState<"normal" | "focus" | "fullscreen">("normal");
 
   // Additional features
@@ -106,16 +106,7 @@ export default function MushafViewer() {
   } | null>(null);
   const [lastPageBeforeRange, setLastPageBeforeRange] = useState(1);
 
-  // Reset reading mode to normal when site theme changes
-  useEffect(() => {
-    const checkTheme = () => {
-      // Reset to normal when theme changes
-      setReadingMode("normal");
-    };
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
+
 
   // Handle focus mode - add class to body to hide site header only in focus mode
   useEffect(() => {
@@ -161,6 +152,10 @@ export default function MushafViewer() {
       case "normal": return "mushaf-reading-mode-normal";
       case "sepia": return "mushaf-reading-mode-sepia";
       case "green": return "mushaf-reading-mode-green";
+      case "purple": return "mushaf-reading-mode-purple";
+      case "red": return "mushaf-reading-mode-red";
+      case "pink": return "mushaf-reading-mode-pink";
+      case "highContrast": return "mushaf-reading-mode-high-contrast";
       default: return "mushaf-reading-mode-normal";
     }
   };
@@ -636,7 +631,7 @@ export default function MushafViewer() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-card border border-border rounded-2xl p-6 sm:p-10"
+              className="bg-card border border-border rounded-2xl p-6 sm:p-10 quran-border-decoration"
             >
               {/* Range Header */}
               <div className="text-center mb-8">
@@ -653,12 +648,12 @@ export default function MushafViewer() {
 
                 {/* Bismillah if first verse and not Surah 1 or 9 */}
                 {rangeData.fromVerse === 1 &&
-                 rangeData.chapterId !== 1 &&
-                 rangeData.chapterId !== 9 && (
-                  <p className={`mt-6 ${getFontSizeClass(fontSize)} font-['Amiri',serif] text-muted-foreground`}>
-                    بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
-                  </p>
-                )}
+                  rangeData.chapterId !== 1 &&
+                  rangeData.chapterId !== 9 && (
+                    <p className={`mt-6 ${getFontSizeClass(fontSize)} font-['Amiri',serif] text-muted-foreground`}>
+                      بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
+                    </p>
+                  )}
               </div>
 
               {/* Range Verses */}
@@ -666,13 +661,12 @@ export default function MushafViewer() {
                 {rangeData.verses.map((verse) => (
                   <span
                     key={verse.verse_key}
-                    className={`cursor-pointer transition-colors inline ${
-                      currentAudioVerse === verse.verse_key
-                        ? "verse-highlight"
-                        : highlightedVerse === verse.verse_key
-                          ? "bg-yellow-200/30 dark:bg-yellow-500/20"
-                          : "hover:text-foreground/70"
-                    }`}
+                    className={`cursor-pointer transition-colors inline ${currentAudioVerse === verse.verse_key
+                      ? "verse-highlight"
+                      : highlightedVerse === verse.verse_key
+                        ? "bg-yellow-200/30 dark:bg-yellow-500/20"
+                        : "hover:text-foreground/70"
+                      }`}
                     onClick={() => handleVerseClick(verse.verse_key)}
                   >
                     {verse.text_uthmani}{" "}
@@ -697,7 +691,7 @@ export default function MushafViewer() {
               style={{ transformStyle: "preserve-3d", perspective: "1500px" }}
             >
               {/* Mushaf Page Frame */}
-              <div className="bg-card border border-border rounded-2xl p-6 sm:p-10 page-flip">
+              <div className="bg-card border border-border rounded-2xl p-6 sm:p-10 page-flip quran-border-decoration">
                 {/* Page Header */}
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-border/50">
                   <span className="text-xs text-muted-foreground font-medium">

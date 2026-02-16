@@ -302,13 +302,13 @@
 
   /* Reading Mode Styles */
   .mushaf-reading-mode-sepia {
-    background-color: #f4ecd8;
+    background-color: #f8f5e6;
     color: #5c4b37;
   }
 
   .dark .mushaf-reading-mode-sepia {
-    background-color: #3a3428;
-    color: #d4c9b3;
+    background-color: #26231e;
+    color: #e6dcc8;
   }
 
   .mushaf-reading-mode-dark {
@@ -316,16 +316,17 @@
     color: #eaeaea;
   }
 
+  /* Card styles refactored to use variables where possible, or specific overrides */
   .mushaf-reading-mode-sepia .card,
   .mushaf-reading-mode-sepia .bg-card {
-    background-color: #faf6e8;
-    border-color: #e8e0d0;
+    background-color: #fdfbf7;
+    border-color: #e8dfcc;
   }
 
   .dark .mushaf-reading-mode-sepia .card,
   .dark .mushaf-reading-mode-sepia .bg-card {
-    background-color: #2d2a20;
-    border-color: #3d3828;
+    background-color: #2e2a25;
+    border-color: #3d362e;
   }
 
   .mushaf-reading-mode-dark .card,
@@ -500,115 +501,325 @@
     border-color: var(--border);
   }
 
-  /* Reading Mode Styles */
-  .mushaf-reading-mode-normal {
+  /* Reading Mode Styles - Premium V2 */
+  /* Sepia Mode - Warm Parchment */
+  .mushaf-reading-mode-sepia {
+    --background: #F5EFE0;
+    --foreground: #463318;
+    --card: #FFFDF5;
+    --card-foreground: #463318;
+    --muted: #EBE0C5;
+    --muted-foreground: #8C7756;
+    --border: #DED1B6;
+    --input: #DED1B6;
+    --primary: #463318;
+    --primary-foreground: #F5EFE0;
+    --accent: #EBE0C5;
+    --accent-foreground: #463318;
+
     background-color: var(--background);
     color: var(--foreground);
   }
 
-  .mushaf-reading-mode-sepia {
-    background-color: #f4ecd8;
-    color: #5c4b37;
-  }
-
   .dark .mushaf-reading-mode-sepia {
-    background-color: #3a2e20;
-    color: #d4c9b3;
+    --background: #1F1B16;
+    --foreground: #D6CDB8;
+    --card: #29251E;
+    --card-foreground: #D6CDB8;
+    --muted: #362F26;
+    --muted-foreground: #8F8573;
+    --border: #3D362B;
+    --input: #3D362B;
+    --primary: #D6CDB8;
+    --primary-foreground: #1F1B16;
+    --accent: #362F26;
+    --accent-foreground: #D6CDB8;
+
+    background-color: var(--background);
+    color: var(--foreground);
   }
 
+  /* Green Mode - Sage & Forest */
   .mushaf-reading-mode-green {
-    background-color: #e8f5e9;
-    color: #2d5a3d;
+    --background: #E3EDE5;
+    --foreground: #14382A;
+    --card: #F2F9F6;
+    --card-foreground: #14382A;
+    --muted: #D1E3D9;
+    --muted-foreground: #52786B;
+    --border: #C2D6CC;
+    --input: #C2D6CC;
+    --primary: #14382A;
+    --primary-foreground: #E3EDE5;
+    --accent: #D1E3D9;
+    --accent-foreground: #14382A;
+
+    background-color: var(--background);
+    color: var(--foreground);
   }
 
   .dark .mushaf-reading-mode-green {
-    background-color: #1a2f25;
-    color: #a8d4b8;
+    --background: #0D1714;
+    --foreground: #C4DAD2;
+    --card: #162420;
+    --card-foreground: #C4DAD2;
+    --muted: #1E332D;
+    --muted-foreground: #60857A;
+    --border: #233832;
+    --input: #233832;
+    --primary: #C4DAD2;
+    --primary-foreground: #0D1714;
+    --accent: #1E332D;
+    --accent-foreground: #C4DAD2;
+
+    background-color: var(--background);
+    color: var(--foreground);
   }
 
-  /* Card styles for each reading mode */
-  .mushaf-reading-mode-normal .card,
-  .mushaf-reading-mode-normal .bg-card {
-    background-color: var(--card);
-    border-color: var(--border);
+  /* Purple Mode - Amethyst */
+  .mushaf-reading-mode-purple {
+    --background: #F3F0F8;
+    --foreground: #4A2B5E;
+    --card: #FCFAFF;
+    --card-foreground: #4A2B5E;
+    --muted: #E6E0F0;
+    --muted-foreground: #8C7599;
+    --border: #DBCDE6;
+    --input: #DBCDE6;
+    --primary: #4A2B5E;
+    --primary-foreground: #F3F0F8;
+    --accent: #E6E0F0;
+    --accent-foreground: #4A2B5E;
+
+    background-color: var(--background);
+    color: var(--foreground);
   }
 
+  .dark .mushaf-reading-mode-purple {
+    --background: #181021;
+    --foreground: #DCCAE3;
+    --card: #23192E;
+    --card-foreground: #DCCAE3;
+    --muted: #2F223D;
+    --muted-foreground: #9686A3;
+    --border: #3A2B4A;
+    --input: #3A2B4A;
+    --primary: #DCCAE3;
+    --primary-foreground: #181021;
+    --accent: #2F223D;
+    --accent-foreground: #DCCAE3;
+
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  /* Red Mode - Burgundy/Rose */
+  .mushaf-reading-mode-red {
+    --background: #F8F0F0;
+    --foreground: #5E2B2B;
+    --card: #FFFAFA;
+    --card-foreground: #5E2B2B;
+    --muted: #F0E0E0;
+    --muted-foreground: #997575;
+    --border: #E6CDBD;
+    --input: #E6CDBD;
+    --primary: #5E2B2B;
+    --primary-foreground: #F8F0F0;
+    --accent: #F0E0E0;
+    --accent-foreground: #5E2B2B;
+
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  .dark .mushaf-reading-mode-red {
+    --background: #211010;
+    --foreground: #E3CACA;
+    --card: #2E1919;
+    --card-foreground: #E3CACA;
+    --muted: #3D2222;
+    --muted-foreground: #A38686;
+    --border: #4A2B2B;
+    --input: #4A2B2B;
+    --primary: #E3CACA;
+    --primary-foreground: #211010;
+    --accent: #3D2222;
+    --accent-foreground: #E3CACA;
+
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  /* Pink Mode - Blossom */
+  .mushaf-reading-mode-pink {
+    --background: #F8F0F4;
+    --foreground: #5E2B45;
+    --card: #FFFAFC;
+    --card-foreground: #5E2B45;
+    --muted: #F0E0E8;
+    --muted-foreground: #997585;
+    --border: #E6CDD9;
+    --input: #E6CDD9;
+    --primary: #5E2B45;
+    --primary-foreground: #F8F0F4;
+    --accent: #F0E0E8;
+    --accent-foreground: #5E2B45;
+
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  .dark .mushaf-reading-mode-pink {
+    --background: #211018;
+    --foreground: #E3CAD4;
+    --card: #2E1921;
+    --card-foreground: #E3CAD4;
+    --muted: #3D222C;
+    --muted-foreground: #A38691;
+    --border: #4A2B37;
+    --input: #4A2B37;
+    --primary: #E3CAD4;
+    --primary-foreground: #211018;
+    --accent: #3D222C;
+    --accent-foreground: #E3CAD4;
+
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  /* High Contrast Mode */
+  .mushaf-reading-mode-high-contrast {
+    --background: #FFFFFF;
+    --foreground: #000000;
+    --card: #FFFFFF;
+    --card-foreground: #000000;
+    --muted: #F0F0F0;
+    --muted-foreground: #404040;
+    --border: #000000;
+    --input: #000000;
+    --primary: #000000;
+    --primary-foreground: #FFFFFF;
+    --accent: #E0E0E0;
+    --accent-foreground: #000000;
+
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  .dark .mushaf-reading-mode-high-contrast {
+    --background: #000000;
+    --foreground: #FFFFFF;
+    --card: #000000;
+    --card-foreground: #FFFFFF;
+    --muted: #1A1A1A;
+    --muted-foreground: #D4D4D4;
+    --border: #FFFFFF;
+    --input: #FFFFFF;
+    --primary: #FFFFFF;
+    --primary-foreground: #000000;
+    --accent: #333333;
+    --accent-foreground: #FFFFFF;
+
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  /* Quranic Border Decoration */
+  .quran-border-decoration {
+    position: relative;
+    border: 3px double var(--border);
+    margin: 4px;
+  }
+
+  .quran-border-decoration::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  /* Corner decorations */
+  .quran-border-decoration::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at 0 0, transparent 10px, var(--border) 11px, transparent 12px),
+      radial-gradient(circle at 100% 0, transparent 10px, var(--border) 11px, transparent 12px),
+      radial-gradient(circle at 100% 100%, transparent 10px, var(--border) 11px, transparent 12px),
+      radial-gradient(circle at 0 100%, transparent 10px, var(--border) 11px, transparent 12px);
+    background-size: 20px 20px;
+    background-position: top left, top right, bottom right, bottom left;
+    background-repeat: no-repeat;
+  }
+
+  /* Apply variables to common elements within reading modes */
   .mushaf-reading-mode-sepia .card,
-  .mushaf-reading-mode-sepia .bg-card {
-    background-color: #faf6e8;
-    border-color: #e8e0d0;
-  }
-
-  .dark .mushaf-reading-mode-sepia .card,
-  .dark .mushaf-reading-mode-sepia .bg-card {
-    background-color: #2d2a20;
-    border-color: #3d3828;
-  }
-
+  .mushaf-reading-mode-sepia .bg-card,
   .mushaf-reading-mode-green .card,
-  .mushaf-reading-mode-green .bg-card {
-    background-color: #f0faf5;
-    border-color: #d0e8d8;
-  }
-
-  .dark .mushaf-reading-mode-green .card,
-  .dark .mushaf-reading-mode-green .bg-card {
-    background-color: #1e2f28;
-    border-color: #2d4a3d;
-  }
-
-  /* Muted foreground colors for each mode */
-  .mushaf-reading-mode-sepia .text-muted-foreground {
-    color: #8b7355;
-  }
-
-  .dark .mushaf-reading-mode-sepia .text-muted-foreground {
-    color: #a89a7a;
-  }
-
-  .mushaf-reading-mode-green .text-muted-foreground {
-    color: #4a6b5d;
-  }
-
-  .dark .mushaf-reading-mode-green .text-muted-foreground {
-    color: #7a9a8a;
-  }
-
-  /* Border colors for each mode */
-  .mushaf-reading-mode-sepia .border-border {
-    border-color: #e8e0d0;
-  }
-
-  .dark .mushaf-reading-mode-sepia .border-border {
-    border-color: #3d3828;
-  }
-
-  .mushaf-reading-mode-green .border-border {
-    border-color: #d0e8d8;
-  }
-
-  .dark .mushaf-reading-mode-green .border-border {
-    border-color: #2d4a3d;
-  }
-
-  .dark-reading-mode .page-flip {
+  .mushaf-reading-mode-green .bg-card,
+  .mushaf-reading-mode-purple .card,
+  .mushaf-reading-mode-purple .bg-card,
+  .mushaf-reading-mode-red .card,
+  .mushaf-reading-mode-red .bg-card,
+  .mushaf-reading-mode-pink .card,
+  .mushaf-reading-mode-pink .bg-card,
+  .mushaf-reading-mode-high-contrast .card,
+  .mushaf-reading-mode-high-contrast .bg-card {
     background-color: var(--card);
     border-color: var(--border);
+    color: var(--card-foreground);
   }
 
-  .dark-reading-mode button {
-    color: var(--foreground);
+  .mushaf-reading-mode-sepia .text-muted-foreground,
+  .mushaf-reading-mode-green .text-muted-foreground,
+  .mushaf-reading-mode-purple .text-muted-foreground,
+  .mushaf-reading-mode-red .text-muted-foreground,
+  .mushaf-reading-mode-pink .text-muted-foreground,
+  .mushaf-reading-mode-high-contrast .text-muted-foreground {
+    color: var(--muted-foreground);
   }
 
-  .dark-reading-mode button:hover {
-    background-color: var(--muted);
-  }
-
-  .dark-reading-mode input,
-  .dark-reading-mode select {
-    background-color: var(--muted);
-    color: var(--foreground);
+  .mushaf-reading-mode-sepia .border-border,
+  .mushaf-reading-mode-green .border-border,
+  .mushaf-reading-mode-purple .border-border,
+  .mushaf-reading-mode-red .border-border,
+  .mushaf-reading-mode-pink .border-border,
+  .mushaf-reading-mode-high-contrast .border-border {
     border-color: var(--border);
+  }
+
+  /* Interactive elements */
+  .mushaf-reading-mode-sepia button:hover,
+  .mushaf-reading-mode-green button:hover,
+  .mushaf-reading-mode-purple button:hover,
+  .mushaf-reading-mode-red button:hover,
+  .mushaf-reading-mode-pink button:hover,
+  .mushaf-reading-mode-high-contrast button:hover {
+    background-color: var(--muted);
+  }
+
+  .mushaf-reading-mode-sepia input,
+  .mushaf-reading-mode-sepia select,
+  .mushaf-reading-mode-green input,
+  .mushaf-reading-mode-green select,
+  .mushaf-reading-mode-purple input,
+  .mushaf-reading-mode-purple select,
+  .mushaf-reading-mode-red input,
+  .mushaf-reading-mode-red select,
+  .mushaf-reading-mode-pink input,
+  .mushaf-reading-mode-pink select,
+  .mushaf-reading-mode-high-contrast input,
+  .mushaf-reading-mode-high-contrast select {
+    background-color: var(--muted);
+    border-color: var(--border);
+    color: var(--foreground);
   }
 
   /* Turn.js page flip styles */
@@ -665,27 +876,19 @@
   }
 
   /* Fullscreen with reading mode colors */
-  .screen-mode-fullscreen.mushaf-reading-mode-normal:fullscreen {
+  /* Fullscreen with reading mode colors using variables */
+  .screen-mode-fullscreen.mushaf-reading-mode-sepia:fullscreen,
+  .screen-mode-fullscreen.mushaf-reading-mode-green:fullscreen,
+  .screen-mode-fullscreen.mushaf-reading-mode-purple:fullscreen,
+  .screen-mode-fullscreen.mushaf-reading-mode-red:fullscreen,
+  .screen-mode-fullscreen.mushaf-reading-mode-pink:fullscreen,
+  .screen-mode-fullscreen.mushaf-reading-mode-high-contrast:fullscreen,
+  .dark .screen-mode-fullscreen.mushaf-reading-mode-sepia:fullscreen,
+  .dark .screen-mode-fullscreen.mushaf-reading-mode-green:fullscreen,
+  .dark .screen-mode-fullscreen.mushaf-reading-mode-purple:fullscreen,
+  .dark .screen-mode-fullscreen.mushaf-reading-mode-red:fullscreen,
+  .dark .screen-mode-fullscreen.mushaf-reading-mode-pink:fullscreen,
+  .dark .screen-mode-fullscreen.mushaf-reading-mode-high-contrast:fullscreen {
     background-color: var(--background);
-  }
-
-  .screen-mode-fullscreen.mushaf-reading-mode-sepia:fullscreen {
-    background-color: #f4ecd8;
-  }
-
-  .dark .screen-mode-fullscreen.mushaf-reading-mode-sepia:fullscreen {
-    background-color: #3a3428;
-  }
-
-  .screen-mode-fullscreen.mushaf-reading-mode-green:fullscreen {
-    background-color: #e8f5e9;
-  }
-
-  .dark .screen-mode-fullscreen.mushaf-reading-mode-green:fullscreen {
-    background-color: #1a2f25;
-  }
-
-  .screen-mode-fullscreen.mushaf-reading-mode-dark:fullscreen {
-    background-color: #1a1a2e;
   }
 }

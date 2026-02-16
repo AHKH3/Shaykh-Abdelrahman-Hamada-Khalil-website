@@ -1,5 +1,8 @@
 const BASE_URL = "https://api.quran.com/api/v4";
 
+// Import the hybrid search engine
+import { searchWithFallback, type SearchEngineOptions } from './search-engine';
+
 export interface Chapter {
   id: number;
   revelation_place: string;
@@ -190,40 +193,35 @@ export async function searchQuran(
   language: string = "ar",
   page: number = 1
 ): Promise<SearchResult> {
-  const params = new URLSearchParams({
-    q: query,
-    size: "20",
-    page: page.toString(),
+  // Use the hybrid search engine with fallback
+  const searchOptions: SearchEngineOptions = {
+    query,
     language,
-  });
+    page,
+    size: 20,
+  };
 
-  const res = await fetch(`${BASE_URL}/search?${params}`);
-  if (!res.ok) throw new Error("Failed to search");
+  const result = await searchWithFallback(searchOptions);
 
-  // Check if response is empty
-  const text = await res.text();
-  if (!text || text.trim() === "") {
-    // Return empty search result
-    return {
-      search: {
-        query,
-        total_results: 0,
-        current_page: 1,
-        total_pages: 1,
-        results: []
-      }
-    };
-  }
-
-  try {
-    return JSON.parse(text);
-  } catch (error) {
-    console.error("Failed to parse search response:", error);
-    throw new Error("Invalid search response");
-  }
+  // Convert back to SearchResult format for backward compatibility
+  return {
+    search: {
+      query,
+      total_results: result.totalResults,
+      current_page: result.currentPage,
+      total_pages: result.totalPages,
+      results: result.results.map(r => ({
+        verse_key: r.verseKey!,
+        verse_id: r.verseId!,
+        text: r.text!,
+        highlighted: r.highlighted!,
+        words: [],
+      }))
+    }
+  };
 }
 
-// Advanced search with filters
+// Advanced search with filters (now using hybrid search engine)
 export async function searchQuranAdvanced(
   options: AdvancedSearchOptions
 ): Promise<{
@@ -241,59 +239,23 @@ export async function searchQuranAdvanced(
     juzNumber,
   } = options;
 
-  const params = new URLSearchParams({
-    q: query,
-    size: size.toString(),
-    page: page.toString(),
+  // Use the hybrid search engine with fallback
+  const searchOptions: SearchEngineOptions = {
+    query,
     language,
-  });
+    page,
+    size,
+    chapterId,
+    juzNumber,
+  };
 
-  const res = await fetch(`${BASE_URL}/search?${params}`);
-  if (!res.ok) throw new Error("Failed to search");
-
-  const text = await res.text();
-  if (!text || text.trim() === "") {
-    return {
-      results: [],
-      totalResults: 0,
-      currentPage: 1,
-      totalPages: 1,
-    };
-  }
-
-  const data: SearchResult = JSON.parse(text);
-
-  // Filter results by chapter or juz if specified
-  let filteredResults = data.search.results;
-
-  if (chapterId) {
-    filteredResults = filteredResults.filter((result) => {
-      const [chapter] = result.verse_key.split(":").map(Number);
-      return chapter === chapterId;
-    });
-  }
-
-  if (juzNumber) {
-    // Note: We would need verse data to filter by juz
-    // For now, we'll skip juz filtering on the API level
-    // This can be improved by fetching additional verse data
-  }
-
-  // Convert to UnifiedSearchResult format
-  const results: UnifiedSearchResult[] = filteredResults.map((result) => ({
-    type: 'verse' as const,
-    verseKey: result.verse_key,
-    verseId: result.verse_id,
-    text: result.text,
-    highlighted: result.highlighted,
-    matchScore: 50, // Lower priority than surahs
-  }));
+  const result = await searchWithFallback(searchOptions);
 
   return {
-    results,
-    totalResults: chapterId ? filteredResults.length : data.search.total_results,
-    currentPage: data.search.current_page,
-    totalPages: data.search.total_pages,
+    results: result.results,
+    totalResults: result.totalResults,
+    currentPage: result.currentPage,
+    totalPages: result.totalPages,
   };
 }
 
