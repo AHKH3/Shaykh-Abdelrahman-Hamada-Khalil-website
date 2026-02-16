@@ -640,13 +640,13 @@
     transition: opacity 0.3s ease;
   }
 
-  /* Hide site header when in focus or fullscreen mode */
+  /* Hide site header when in focus mode */
   body.mushaf-focus-mode header {
     display: none;
   }
 
   body.mushaf-focus-mode main {
-    padding-top: 0;
+    padding-top: 0 !important;
   }
 
   /* Fullscreen container styling - inherit reading mode colors */

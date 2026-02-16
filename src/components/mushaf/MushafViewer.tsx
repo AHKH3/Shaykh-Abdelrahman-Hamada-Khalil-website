@@ -134,6 +134,13 @@ export default function MushafViewer() {
     }
   };
 
+  const getContainerHeightClass = (mode: string) => {
+    switch (mode) {
+      case "focus": return "h-[100vh]";
+      default: return "h-[calc(100vh-4rem)]";
+    }
+  };
+
   const getReadingModeClass = (mode: string) => {
     switch (mode) {
       case "normal": return "mushaf-reading-mode-normal";
@@ -145,7 +152,7 @@ export default function MushafViewer() {
 
   const getScreenModeClass = (mode: string) => {
     switch (mode) {
-      case "focus": return "screen-mode-focus";
+      case "focus": return ""; // Focus mode only hides site header, no internal class needed
       case "fullscreen": return "screen-mode-fullscreen";
       default: return "";
     }
@@ -447,7 +454,7 @@ export default function MushafViewer() {
   return (
     <div
       ref={fullscreenContainerRef}
-      className={`flex flex-col h-[calc(100vh-4rem)] ${getReadingModeClass(readingMode)} ${getScreenModeClass(screenMode)} transition-colors duration-300`}
+      className={`flex flex-col ${getContainerHeightClass(screenMode)} ${getReadingModeClass(readingMode)} ${getScreenModeClass(screenMode)} transition-colors duration-300`}
     >
       {/* Progress Bar */}
       <div className="mushaf-progress-bar h-1 bg-muted">
@@ -516,14 +523,14 @@ export default function MushafViewer() {
           </button>
           <div className="w-px h-6 bg-border mx-1" />
           <button
-            onClick={() => handleScreenModeChange("focus")}
+            onClick={() => handleScreenModeChange(screenMode === "focus" ? "normal" : "focus")}
             className={`p-2 rounded-lg transition-colors ${screenMode === "focus" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
             title={t.mushaf.screenModeFocus}
           >
             <Layers size={16} />
           </button>
           <button
-            onClick={() => handleScreenModeChange("fullscreen")}
+            onClick={() => handleScreenModeChange(screenMode === "fullscreen" ? "normal" : "fullscreen")}
             className={`p-2 rounded-lg transition-colors ${screenMode === "fullscreen" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
             title={t.mushaf.screenModeFullscreen}
           >
