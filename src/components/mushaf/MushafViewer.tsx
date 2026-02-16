@@ -610,21 +610,6 @@ export default function MushafViewer() {
           )}
         </div>
 
-        {/* Navigation Arrows */}
-        <button
-          onClick={dir === "rtl" ? prevPage : nextPage}
-          disabled={dir === "rtl" ? currentPage <= 1 : currentPage >= TOTAL_PAGES}
-          className="fixed start-2 top-1/2 -translate-y-1/2 p-3 bg-card border border-border rounded-full hover:bg-muted transition-colors duration-200 disabled:opacity-30 disabled:cursor-not-allowed z-10"
-        >
-          <ChevronLeft size={20} />
-        </button>
-        <button
-          onClick={dir === "rtl" ? nextPage : prevPage}
-          disabled={dir === "rtl" ? currentPage >= TOTAL_PAGES : currentPage <= 1}
-          className="fixed end-2 top-1/2 -translate-y-1/2 p-3 bg-card border border-border rounded-full hover:bg-muted transition-colors duration-200 disabled:opacity-30 disabled:cursor-not-allowed z-10"
-        >
-          <ChevronRight size={20} />
-        </button>
       </div>
 
       {/* Bottom Navigation */}
@@ -634,7 +619,7 @@ export default function MushafViewer() {
           disabled={currentPage <= 1}
           className="flex items-center gap-1 px-3 py-1.5 text-sm hover:bg-muted rounded-lg transition-colors disabled:opacity-30"
         >
-          <SkipBack size={14} />
+          <SkipForward size={14} />
           {t.mushaf.prevPage}
         </button>
 
@@ -650,7 +635,7 @@ export default function MushafViewer() {
           className="flex items-center gap-1 px-3 py-1.5 text-sm hover:bg-muted rounded-lg transition-colors disabled:opacity-30"
         >
           {t.mushaf.nextPage}
-          <SkipForward size={14} />
+          <SkipBack size={14} />
         </button>
       </div>
 
