@@ -39,7 +39,6 @@ import {
   type Chapter,
 } from "@/lib/quran/api";
 import { useTheme } from "@/lib/theme/context";
-import MushafFrame from "./MushafFrame";
 import VerseOptionsMenu from "./VerseOptionsMenu";
 import TafsirPanel from "./TafsirPanel";
 import DisplaySettings from "./DisplaySettings";
@@ -637,7 +636,6 @@ export default function MushafViewer() {
               animate={{ opacity: 1, scale: 1 }}
               className="bg-card border border-border rounded-2xl p-6 sm:p-10 relative overflow-hidden"
             >
-              <MushafFrame readingMode={readingMode} isDark={theme === "dark"} />
               {/* Range Header */}
               <div className="text-center mb-8">
                 <div className="inline-block px-8 py-3 bg-primary/10 rounded-2xl border border-primary/30">
@@ -697,7 +695,6 @@ export default function MushafViewer() {
             >
               {/* Mushaf Page Frame */}
               <div className="bg-card border border-border rounded-2xl p-6 sm:p-10 page-flip relative overflow-hidden">
-                <MushafFrame readingMode={readingMode} isDark={theme === "dark"} />
                 {/* Page Header */}
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-border/50">
                   <span className="text-xs text-muted-foreground font-medium">
