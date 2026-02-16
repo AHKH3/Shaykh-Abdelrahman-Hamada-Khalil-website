@@ -507,7 +507,7 @@ export default function MushafViewer() {
                                 className={`inline-flex items-center justify-center ${getFontSizeClass(fontSize)} text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer`}
                                 onClick={(e) => handleVerseNumberClick(verse, e)}
                               >
-                                ﴿{verse.verse_number.toLocaleString("ar-EG")}﴾
+                                ۝{verse.verse_number.toLocaleString("ar-EG")}
                               </span>{" "}
                             </span>
                           ))}
@@ -550,7 +550,7 @@ export default function MushafViewer() {
                                     className={`inline-flex items-center justify-center ${getFontSizeClass(fontSize)} text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer`}
                                     onClick={(e) => handleVerseNumberClick(verse, e)}
                                   >
-                                    ﴿{verse.verse_number.toLocaleString("ar-EG")}﴾
+                                    ۝{verse.verse_number.toLocaleString("ar-EG")}
                                   </span>{" "}
                                 </span>
                               ))}
@@ -597,7 +597,7 @@ export default function MushafViewer() {
                               className={`inline-flex items-center justify-center ${getFontSizeClass(fontSize)} text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer`}
                               onClick={(e) => handleVerseNumberClick(verse, e)}
                             >
-                              ﴿{verse.verse_number.toLocaleString("ar-EG")}﴾
+                              ۝{verse.verse_number.toLocaleString("ar-EG")}
                             </span>{" "}
                           </span>
                         ))}
