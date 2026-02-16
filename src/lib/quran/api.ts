@@ -221,6 +221,8 @@ export async function searchQuran(
   };
 }
 
+
+
 // Advanced search with filters (now using hybrid search engine)
 export async function searchQuranAdvanced(
   options: AdvancedSearchOptions

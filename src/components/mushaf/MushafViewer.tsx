@@ -38,6 +38,8 @@ import {
   type Verse,
   type Chapter,
 } from "@/lib/quran/api";
+import { useTheme } from "@/lib/theme/context";
+import MushafFrame from "./MushafFrame";
 import VerseOptionsMenu from "./VerseOptionsMenu";
 import TafsirPanel from "./TafsirPanel";
 import DisplaySettings from "./DisplaySettings";
@@ -47,6 +49,7 @@ import { isBookmarked, addBookmark, removeBookmarkByVerseKey, getBookmarks } fro
 import { copyVerseToClipboard, shareVerse } from "@/lib/quran/export";
 
 export default function MushafViewer() {
+  const { theme } = useTheme();
   const { t, locale, dir } = useI18n();
   const [currentPage, setCurrentPage] = useState(1);
   const [verses, setVerses] = useState<Verse[]>([]);
@@ -83,7 +86,7 @@ export default function MushafViewer() {
   const [pageWidth, setPageWidth] = useState<"normal" | "wide" | "full">("normal");
   const [displayMode, setDisplayMode] = useState<"single" | "double">("single");
   const [showDisplaySettings, setShowDisplaySettings] = useState(false);
-  const [readingMode, setReadingMode] = useState<"normal" | "sepia" | "green" | "purple" | "red" | "pink" | "highContrast">("normal");
+  const [readingMode, setReadingMode] = useState<"normal" | "sepia" | "green" | "purple" | "blue" | "red" | "pink" | "highContrast">("normal");
   const [screenMode, setScreenMode] = useState<"normal" | "focus" | "fullscreen">("normal");
 
   // Additional features
@@ -153,6 +156,7 @@ export default function MushafViewer() {
       case "sepia": return "mushaf-reading-mode-sepia";
       case "green": return "mushaf-reading-mode-green";
       case "purple": return "mushaf-reading-mode-purple";
+      case "blue": return "mushaf-reading-mode-blue";
       case "red": return "mushaf-reading-mode-red";
       case "pink": return "mushaf-reading-mode-pink";
       case "highContrast": return "mushaf-reading-mode-high-contrast";
@@ -631,8 +635,9 @@ export default function MushafViewer() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-card border border-border rounded-2xl p-6 sm:p-10 quran-border-decoration"
+              className="bg-card border border-border rounded-2xl p-6 sm:p-10 relative overflow-hidden"
             >
+              <MushafFrame readingMode={readingMode} isDark={theme === "dark"} />
               {/* Range Header */}
               <div className="text-center mb-8">
                 <div className="inline-block px-8 py-3 bg-primary/10 rounded-2xl border border-primary/30">
@@ -691,7 +696,8 @@ export default function MushafViewer() {
               style={{ transformStyle: "preserve-3d", perspective: "1500px" }}
             >
               {/* Mushaf Page Frame */}
-              <div className="bg-card border border-border rounded-2xl p-6 sm:p-10 page-flip quran-border-decoration">
+              <div className="bg-card border border-border rounded-2xl p-6 sm:p-10 page-flip relative overflow-hidden">
+                <MushafFrame readingMode={readingMode} isDark={theme === "dark"} />
                 {/* Page Header */}
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-border/50">
                   <span className="text-xs text-muted-foreground font-medium">

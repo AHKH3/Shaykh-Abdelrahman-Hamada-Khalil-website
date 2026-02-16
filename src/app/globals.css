@@ -576,112 +576,167 @@
     color: var(--foreground);
   }
 
-  /* Purple Mode - Amethyst */
+
+
+  /* Purple Mode - Amethyst (Refined: Distinct Deep Purple) */
   .mushaf-reading-mode-purple {
-    --background: #F3F0F8;
-    --foreground: #4A2B5E;
-    --card: #FCFAFF;
-    --card-foreground: #4A2B5E;
-    --muted: #E6E0F0;
-    --muted-foreground: #8C7599;
-    --border: #DBCDE6;
-    --input: #DBCDE6;
-    --primary: #4A2B5E;
-    --primary-foreground: #F3F0F8;
-    --accent: #E6E0F0;
-    --accent-foreground: #4A2B5E;
+    --background: #F8F0FF;
+    /* Very pale lavender */
+    --foreground: #4B0082;
+    /* Indigo/Deep Purple */
+    --card: #FCF5FF;
+    --card-foreground: #4B0082;
+    --muted: #E6D9F2;
+    --muted-foreground: #7B4B94;
+    --border: #D1B3E2;
+    --input: #D1B3E2;
+    --primary: #4B0082;
+    --primary-foreground: #F8F0FF;
+    --accent: #E6D9F2;
+    --accent-foreground: #4B0082;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
   .dark .mushaf-reading-mode-purple {
-    --background: #181021;
-    --foreground: #DCCAE3;
-    --card: #23192E;
-    --card-foreground: #DCCAE3;
-    --muted: #2F223D;
-    --muted-foreground: #9686A3;
-    --border: #3A2B4A;
-    --input: #3A2B4A;
-    --primary: #DCCAE3;
-    --primary-foreground: #181021;
-    --accent: #2F223D;
-    --accent-foreground: #DCCAE3;
+    --background: #120024;
+    /* Deep Void Purple */
+    --foreground: #E0B0FF;
+    /* Mauve/Bright Violet */
+    --card: #1A0033;
+    --card-foreground: #E0B0FF;
+    --muted: #2D0052;
+    --muted-foreground: #B57EDC;
+    --border: #4D0085;
+    --input: #4D0085;
+    --primary: #E0B0FF;
+    --primary-foreground: #120024;
+    --accent: #2D0052;
+    --accent-foreground: #E0B0FF;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
-  /* Red Mode - Burgundy/Rose */
+  /* Blue Mode - Sapphire (NEW: Distinct Blue) */
+  .mushaf-reading-mode-blue {
+    --background: #F0F8FF;
+    /* Alice Blue */
+    --foreground: #000080;
+    /* Navy Blue */
+    --card: #F5FBFF;
+    --card-foreground: #000080;
+    --muted: #D9EAF7;
+    --muted-foreground: #4682B4;
+    --border: #B0C4DE;
+    --input: #B0C4DE;
+    --primary: #000080;
+    --primary-foreground: #F0F8FF;
+    --accent: #D9EAF7;
+    --accent-foreground: #000080;
+
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  .dark .mushaf-reading-mode-blue {
+    --background: #020C1B;
+    /* Very Dark Blue */
+    --foreground: #ADD8E6;
+    /* Light Blue */
+    --card: #05162B;
+    --card-foreground: #ADD8E6;
+    --muted: #0A2540;
+    --muted-foreground: #5F9EA0;
+    --border: #1B3A57;
+    --input: #1B3A57;
+    --primary: #ADD8E6;
+    --primary-foreground: #020C1B;
+    --accent: #0A2540;
+    --accent-foreground: #ADD8E6;
+
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  /* Red Mode - Ruby (Refined: True Red, not Pink) */
   .mushaf-reading-mode-red {
-    --background: #F8F0F0;
-    --foreground: #5E2B2B;
+    --background: #FFF5F5;
+    /* Very pale red/rose without being pink */
+    --foreground: #8B0000;
+    /* Dark Red */
     --card: #FFFAFA;
-    --card-foreground: #5E2B2B;
-    --muted: #F0E0E0;
-    --muted-foreground: #997575;
-    --border: #E6CDBD;
-    --input: #E6CDBD;
-    --primary: #5E2B2B;
-    --primary-foreground: #F8F0F0;
-    --accent: #F0E0E0;
-    --accent-foreground: #5E2B2B;
+    --card-foreground: #8B0000;
+    --muted: #FFE0E0;
+    --muted-foreground: #B22222;
+    --border: #F0A0A0;
+    --input: #F0A0A0;
+    --primary: #8B0000;
+    --primary-foreground: #FFF5F5;
+    --accent: #FFE0E0;
+    --accent-foreground: #8B0000;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
   .dark .mushaf-reading-mode-red {
-    --background: #211010;
-    --foreground: #E3CACA;
-    --card: #2E1919;
-    --card-foreground: #E3CACA;
-    --muted: #3D2222;
-    --muted-foreground: #A38686;
-    --border: #4A2B2B;
-    --input: #4A2B2B;
-    --primary: #E3CACA;
-    --primary-foreground: #211010;
-    --accent: #3D2222;
-    --accent-foreground: #E3CACA;
+    --background: #240000;
+    /* Deep Dark Red */
+    --foreground: #FF6B6B;
+    /* Light Red/Salmon */
+    --card: #330000;
+    --card-foreground: #FF6B6B;
+    --muted: #4D0000;
+    --muted-foreground: #CD5C5C;
+    --border: #660000;
+    --input: #660000;
+    --primary: #FF6B6B;
+    --primary-foreground: #240000;
+    --accent: #4D0000;
+    --accent-foreground: #FF6B6B;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
-  /* Pink Mode - Blossom */
+  /* Pink Mode - Blossom (Reverted to Vibrant) */
   .mushaf-reading-mode-pink {
-    --background: #F8F0F4;
-    --foreground: #5E2B45;
-    --card: #FFFAFC;
-    --card-foreground: #5E2B45;
-    --muted: #F0E0E8;
-    --muted-foreground: #997585;
-    --border: #E6CDD9;
-    --input: #E6CDD9;
-    --primary: #5E2B45;
-    --primary-foreground: #F8F0F4;
-    --accent: #F0E0E8;
-    --accent-foreground: #5E2B45;
+    --background: #FFF0F5;
+    /* Lavender Blush */
+    --foreground: #C71585;
+    /* Medium Violet Red */
+    --card: #FFF5F8;
+    --card-foreground: #C71585;
+    --muted: #FFE4E1;
+    --muted-foreground: #DB7093;
+    --border: #FFB6C1;
+    --input: #FFB6C1;
+    --primary: #C71585;
+    --primary-foreground: #FFF0F5;
+    --accent: #FFE4E1;
+    --accent-foreground: #C71585;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
   .dark .mushaf-reading-mode-pink {
-    --background: #211018;
-    --foreground: #E3CAD4;
-    --card: #2E1921;
-    --card-foreground: #E3CAD4;
-    --muted: #3D222C;
-    --muted-foreground: #A38691;
-    --border: #4A2B37;
-    --input: #4A2B37;
-    --primary: #E3CAD4;
-    --primary-foreground: #211018;
-    --accent: #3D222C;
-    --accent-foreground: #E3CAD4;
+    --background: #1F0010;
+    /* Dark Plum */
+    --foreground: #FF69B4;
+    /* Hot Pink */
+    --card: #2E0018;
+    --card-foreground: #FF69B4;
+    --muted: #450024;
+    --muted-foreground: #FF1493;
+    --border: #660036;
+    --input: #660036;
+    --primary: #FF69B4;
+    --primary-foreground: #1F0010;
+    --accent: #450024;
+    --accent-foreground: #FF69B4;
 
     background-color: var(--background);
     color: var(--foreground);
@@ -693,8 +748,8 @@
     --foreground: #000000;
     --card: #FFFFFF;
     --card-foreground: #000000;
-    --muted: #F0F0F0;
-    --muted-foreground: #404040;
+    --muted: #EEEEEE;
+    --muted-foreground: #000000;
     --border: #000000;
     --input: #000000;
     --primary: #000000;
@@ -711,53 +766,20 @@
     --foreground: #FFFFFF;
     --card: #000000;
     --card-foreground: #FFFFFF;
-    --muted: #1A1A1A;
-    --muted-foreground: #D4D4D4;
+    --muted: #111111;
+    --muted-foreground: #FFFFFF;
     --border: #FFFFFF;
     --input: #FFFFFF;
     --primary: #FFFFFF;
     --primary-foreground: #000000;
-    --accent: #333333;
+    --accent: #222222;
     --accent-foreground: #FFFFFF;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
-  /* Quranic Border Decoration */
-  .quran-border-decoration {
-    position: relative;
-    border: 3px double var(--border);
-    margin: 4px;
-  }
 
-  .quran-border-decoration::before {
-    content: "";
-    position: absolute;
-    inset: -8px;
-    border: 2px solid var(--border);
-    border-radius: 20px;
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0.5;
-  }
-
-  /* Corner decorations */
-  .quran-border-decoration::after {
-    content: "";
-    position: absolute;
-    inset: -4px;
-    z-index: -1;
-    pointer-events: none;
-    background-image:
-      radial-gradient(circle at 0 0, transparent 10px, var(--border) 11px, transparent 12px),
-      radial-gradient(circle at 100% 0, transparent 10px, var(--border) 11px, transparent 12px),
-      radial-gradient(circle at 100% 100%, transparent 10px, var(--border) 11px, transparent 12px),
-      radial-gradient(circle at 0 100%, transparent 10px, var(--border) 11px, transparent 12px);
-    background-size: 20px 20px;
-    background-position: top left, top right, bottom right, bottom left;
-    background-repeat: no-repeat;
-  }
 
   /* Apply variables to common elements within reading modes */
   .mushaf-reading-mode-sepia .card,
@@ -766,6 +788,8 @@
   .mushaf-reading-mode-green .bg-card,
   .mushaf-reading-mode-purple .card,
   .mushaf-reading-mode-purple .bg-card,
+  .mushaf-reading-mode-blue .card,
+  .mushaf-reading-mode-blue .bg-card,
   .mushaf-reading-mode-red .card,
   .mushaf-reading-mode-red .bg-card,
   .mushaf-reading-mode-pink .card,
@@ -780,6 +804,7 @@
   .mushaf-reading-mode-sepia .text-muted-foreground,
   .mushaf-reading-mode-green .text-muted-foreground,
   .mushaf-reading-mode-purple .text-muted-foreground,
+  .mushaf-reading-mode-blue .text-muted-foreground,
   .mushaf-reading-mode-red .text-muted-foreground,
   .mushaf-reading-mode-pink .text-muted-foreground,
   .mushaf-reading-mode-high-contrast .text-muted-foreground {
@@ -789,6 +814,7 @@
   .mushaf-reading-mode-sepia .border-border,
   .mushaf-reading-mode-green .border-border,
   .mushaf-reading-mode-purple .border-border,
+  .mushaf-reading-mode-blue .border-border,
   .mushaf-reading-mode-red .border-border,
   .mushaf-reading-mode-pink .border-border,
   .mushaf-reading-mode-high-contrast .border-border {
@@ -799,6 +825,7 @@
   .mushaf-reading-mode-sepia button:hover,
   .mushaf-reading-mode-green button:hover,
   .mushaf-reading-mode-purple button:hover,
+  .mushaf-reading-mode-blue button:hover,
   .mushaf-reading-mode-red button:hover,
   .mushaf-reading-mode-pink button:hover,
   .mushaf-reading-mode-high-contrast button:hover {
@@ -811,6 +838,8 @@
   .mushaf-reading-mode-green select,
   .mushaf-reading-mode-purple input,
   .mushaf-reading-mode-purple select,
+  .mushaf-reading-mode-blue input,
+  .mushaf-reading-mode-blue select,
   .mushaf-reading-mode-red input,
   .mushaf-reading-mode-red select,
   .mushaf-reading-mode-pink input,
@@ -880,12 +909,14 @@
   .screen-mode-fullscreen.mushaf-reading-mode-sepia:fullscreen,
   .screen-mode-fullscreen.mushaf-reading-mode-green:fullscreen,
   .screen-mode-fullscreen.mushaf-reading-mode-purple:fullscreen,
+  .screen-mode-fullscreen.mushaf-reading-mode-blue:fullscreen,
   .screen-mode-fullscreen.mushaf-reading-mode-red:fullscreen,
   .screen-mode-fullscreen.mushaf-reading-mode-pink:fullscreen,
   .screen-mode-fullscreen.mushaf-reading-mode-high-contrast:fullscreen,
   .dark .screen-mode-fullscreen.mushaf-reading-mode-sepia:fullscreen,
   .dark .screen-mode-fullscreen.mushaf-reading-mode-green:fullscreen,
   .dark .screen-mode-fullscreen.mushaf-reading-mode-purple:fullscreen,
+  .dark .screen-mode-fullscreen.mushaf-reading-mode-blue:fullscreen,
   .dark .screen-mode-fullscreen.mushaf-reading-mode-red:fullscreen,
   .dark .screen-mode-fullscreen.mushaf-reading-mode-pink:fullscreen,
   .dark .screen-mode-fullscreen.mushaf-reading-mode-high-contrast:fullscreen {

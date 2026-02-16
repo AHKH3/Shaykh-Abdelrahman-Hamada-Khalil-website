@@ -1,5 +1,5 @@
 import type { UnifiedSearchResult } from './api';
-import { searchQuran as searchQuranCom } from './api';
+import { fetchQuranComSearch } from './api-quran-com';
 import { searchAlQuranCloud } from './api-alquran';
 import { searchVersesLocally, isLocalSearchReady } from './local-search';
 import { isIndexAvailable, fetchAndCacheVerses } from './verse-index';
@@ -83,7 +83,7 @@ async function tryQuranComAPI(options: SearchEngineOptions): Promise<SearchEngin
     try {
         options.onProgress?.('Searching with Quran.com API...');
 
-        const data = await searchQuranCom(query, language, page);
+        const data = await fetchQuranComSearch(query, language, page);
 
         // Filter by chapter or juz if specified
         let filteredResults = data.search.results;
