@@ -632,12 +632,16 @@
   /* Focus Mode - Only hides site header, keeps internal bars visible */
 
   /* Fullscreen Mode - Hides all UI including internal bars */
-  .screen-mode-fullscreen .mushaf-progress-bar,
-  .screen-mode-fullscreen .mushaf-top-bar,
-  .screen-mode-fullscreen .mushaf-bottom-nav {
+  .screen-mode-fullscreen .mushaf-progress-bar {
+    height: 0 !important;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
+  }
+
+  .screen-mode-fullscreen .mushaf-top-bar,
+  .screen-mode-fullscreen .mushaf-bottom-nav {
+    display: none !important;
   }
 
   /* Hide site header when in focus mode */
@@ -655,7 +659,8 @@
   }
 
   .screen-mode-fullscreen:fullscreen .page-flip {
-    max-height: 100vh;
+    max-height: none !important;
+    height: auto !important;
     border-radius: 0;
   }
 
