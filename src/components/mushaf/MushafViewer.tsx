@@ -34,12 +34,15 @@ import {
   SURAH_PAGES,
   TOTAL_PAGES,
   getAudioUrl,
+  getVersesByRange,
   type Verse,
   type Chapter,
 } from "@/lib/quran/api";
 import VerseOptionsMenu from "./VerseOptionsMenu";
 import TafsirPanel from "./TafsirPanel";
 import DisplaySettings from "./DisplaySettings";
+import AdvancedSearch from "./AdvancedSearch";
+import QuickVerseRangePanel from "./QuickVerseRangePanel";
 import { isBookmarked, addBookmark, removeBookmarkByVerseKey, getBookmarks } from "@/lib/quran/bookmarks";
 import { copyVerseToClipboard, shareVerse } from "@/lib/quran/export";
 
@@ -90,6 +93,18 @@ export default function MushafViewer() {
   const [scrollSpeed, setScrollSpeed] = useState(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
+
+  // Verse range mode
+  const [viewMode, setViewMode] = useState<"pages" | "range">("pages");
+  const [showVerseRangePanel, setShowVerseRangePanel] = useState(false);
+  const [rangeData, setRangeData] = useState<{
+    chapterId: number;
+    fromVerse: number;
+    toVerse: number;
+    verses: Verse[];
+    chapterInfo?: Chapter;
+  } | null>(null);
+  const [lastPageBeforeRange, setLastPageBeforeRange] = useState(1);
 
   // Reset reading mode to normal when site theme changes
   useEffect(() => {
@@ -260,6 +275,60 @@ export default function MushafViewer() {
       setTafsirText(locale === "ar" ? "لم يتم العثور على التفسير" : "Tafsir not found");
     } finally {
       setTafsirLoading(false);
+    }
+  };
+
+  // Verse range handlers
+  const handleSelectRange = async (chapterId: number, fromVerse: number, toVerse: number) => {
+    setLoading(true);
+    try {
+      // Save current page before switching to range mode
+      setLastPageBeforeRange(currentPage);
+
+      // Fetch verses in range
+      const result = await getVersesByRange(chapterId, fromVerse, toVerse);
+      const chapter = chapters.find((c) => c.id === chapterId);
+
+      setRangeData({
+        chapterId,
+        fromVerse,
+        toVerse,
+        verses: result.verses,
+        chapterInfo: chapter,
+      });
+
+      setViewMode("range");
+      setShowVerseRangePanel(false);
+    } catch (error) {
+      console.error("Failed to load verse range:", error);
+      showToast(locale === "ar" ? "فشل تحميل المدى" : "Failed to load range", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBackToPages = () => {
+    setViewMode("pages");
+    setRangeData(null);
+    // Return to last page before range mode
+    if (lastPageBeforeRange !== currentPage) {
+      goToPage(lastPageBeforeRange);
+    }
+  };
+
+  const handleNavigateFromSearch = (pageNumber: number, verseKey?: string) => {
+    // If in range mode, switch back to pages first
+    if (viewMode === "range") {
+      setViewMode("pages");
+      setRangeData(null);
+    }
+
+    goToPage(pageNumber);
+
+    if (verseKey) {
+      setHighlightedVerse(verseKey);
+      // Clear highlight after 3 seconds
+      setTimeout(() => setHighlightedVerse(null), 3000);
     }
   };
 
@@ -476,6 +545,15 @@ export default function MushafViewer() {
               {currentSurah?.name_arabic || ""}
             </span>
           </button>
+          {viewMode === "range" && rangeData && (
+            <button
+              onClick={handleBackToPages}
+              className="px-3 py-1.5 text-xs bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-1"
+            >
+              <ChevronLeft size={14} />
+              {t.mushaf.backToPages}
+            </button>
+          )}
         </div>
 
         <div className="flex items-center gap-1">
@@ -485,6 +563,13 @@ export default function MushafViewer() {
             title={t.mushaf.search}
           >
             <Search size={16} />
+          </button>
+          <button
+            onClick={() => setShowVerseRangePanel(true)}
+            className="p-2 rounded-lg hover:bg-muted transition-colors"
+            title={t.mushaf.verseRange}
+          >
+            <BookOpen size={16} />
           </button>
           <button
             onClick={() => setShowBookmarks(true)}
@@ -546,7 +631,63 @@ export default function MushafViewer() {
             <div className="flex items-center justify-center h-64">
               <div className="w-8 h-8 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
             </div>
+          ) : viewMode === "range" && rangeData ? (
+            // Range Mode View
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-card border border-border rounded-2xl p-6 sm:p-10"
+            >
+              {/* Range Header */}
+              <div className="text-center mb-8">
+                <div className="inline-block px-8 py-3 bg-primary/10 rounded-2xl border border-primary/30">
+                  <h2 className="text-xl font-bold font-['Amiri',serif] text-primary">
+                    {rangeData.chapterInfo?.name_arabic || `سورة ${rangeData.chapterId}`}
+                  </h2>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {locale === "ar"
+                      ? `الآيات ${rangeData.fromVerse} - ${rangeData.toVerse}`
+                      : `Verses ${rangeData.fromVerse} - ${rangeData.toVerse}`}
+                  </p>
+                </div>
+
+                {/* Bismillah if first verse and not Surah 1 or 9 */}
+                {rangeData.fromVerse === 1 &&
+                 rangeData.chapterId !== 1 &&
+                 rangeData.chapterId !== 9 && (
+                  <p className={`mt-6 ${getFontSizeClass(fontSize)} font-['Amiri',serif] text-muted-foreground`}>
+                    بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
+                  </p>
+                )}
+              </div>
+
+              {/* Range Verses */}
+              <div className={`quran-text text-center leading-[2.5] ${getFontSizeClass(fontSize)}`} dir="rtl">
+                {rangeData.verses.map((verse) => (
+                  <span
+                    key={verse.verse_key}
+                    className={`cursor-pointer transition-colors inline ${
+                      currentAudioVerse === verse.verse_key
+                        ? "verse-highlight"
+                        : highlightedVerse === verse.verse_key
+                          ? "bg-yellow-200/30 dark:bg-yellow-500/20"
+                          : "hover:text-foreground/70"
+                    }`}
+                    onClick={() => handleVerseClick(verse.verse_key)}
+                  >
+                    {verse.text_uthmani}{" "}
+                    <span
+                      className={`inline-flex items-center justify-center ${getFontSizeClass(fontSize)} text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer`}
+                      onClick={(e) => handleVerseNumberClick(verse, e)}
+                    >
+                      ۝{verse.verse_number.toLocaleString("ar-EG")}
+                    </span>{" "}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
           ) : (
+            // Normal Pages Mode
             <motion.div
               key={currentPage}
               initial={{ opacity: 0, rotateY: -90 }}
@@ -709,111 +850,48 @@ export default function MushafViewer() {
 
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="mushaf-bottom-nav flex items-center justify-center gap-3 px-4 py-3 bg-card border-t border-border">
-        <button
-          onClick={prevPage}
-          disabled={currentPage <= 1}
-          className="flex items-center gap-2 px-4 py-2 text-base font-medium hover:bg-muted rounded-lg transition-colors disabled:opacity-30"
-        >
-          <SkipForward size={18} />
-          {t.mushaf.prevPage}
-        </button>
-
-        <span className="text-lg font-bold px-4 py-2 bg-muted/50 rounded-lg min-w-[100px] text-center">
-          {currentPage} / {TOTAL_PAGES}
-        </span>
-
-        <button
-          onClick={nextPage}
-          disabled={currentPage >= TOTAL_PAGES}
-          className="flex items-center gap-2 px-4 py-2 text-base font-medium hover:bg-muted rounded-lg transition-colors disabled:opacity-30"
-        >
-          {t.mushaf.nextPage}
-          <SkipBack size={18} />
-        </button>
-      </div>
-
-      {/* Search Modal */}
-      <AnimatePresence>
-        {showSearch && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-20"
-            onClick={() => setShowSearch(false)}
+      {/* Bottom Navigation - Hide in range mode */}
+      {viewMode === "pages" && (
+        <div className="mushaf-bottom-nav flex items-center justify-center gap-3 px-4 py-3 bg-card border-t border-border">
+          <button
+            onClick={prevPage}
+            disabled={currentPage <= 1}
+            className="flex items-center gap-2 px-4 py-2 text-base font-medium hover:bg-muted rounded-lg transition-colors disabled:opacity-30"
           >
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="bg-card border border-border rounded-2xl w-full max-w-lg mx-4 shadow-lg overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-4 border-b border-border flex items-center gap-3">
-                <Search size={18} className="text-muted-foreground shrink-0" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  placeholder={t.mushaf.searchPlaceholder}
-                  className="flex-1 bg-transparent text-sm focus:outline-none"
-                  autoFocus
-                  dir="rtl"
-                />
-                <button
-                  onClick={handleSearchSurah}
-                  className="px-3 py-1.5 text-xs bg-muted hover:bg-muted/80 rounded-lg transition-colors"
-                  title={t.mushaf.searchSurah}
-                >
-                  {t.mushaf.searchSurah}
-                </button>
-                <button onClick={() => setShowSearch(false)}>
-                  <X size={18} className="text-muted-foreground" />
-                </button>
-              </div>
+            <SkipForward size={18} />
+            {t.mushaf.prevPage}
+          </button>
 
-              <div className="max-h-96 overflow-auto">
-                {searchLoading ? (
-                  <div className="flex items-center justify-center p-8">
-                    <div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
-                  </div>
-                ) : searchResults.length > 0 ? (
-                  <div className="divide-y divide-border">
-                    {searchResults.map((result) => (
-                      <button
-                        key={result.verse_key}
-                        className="w-full text-start p-4 hover:bg-muted/50 transition-colors"
-                        onClick={() => {
-                          const [surahId] = result.verse_key.split(":").map(Number);
-                          const page = SURAH_PAGES[surahId];
-                          if (page) goToPage(page);
-                          setShowSearch(false);
-                        }}
-                      >
-                        <p className="text-xs text-muted-foreground mb-1">
-                          {result.verse_key}
-                        </p>
-                        <p
-                          className="text-sm font-['Amiri',serif] leading-relaxed"
-                          dir="rtl"
-                          dangerouslySetInnerHTML={{ __html: result.highlighted || result.text }}
-                        />
-                      </button>
-                    ))}
-                  </div>
-                ) : searchQuery ? (
-                  <p className="text-center text-muted-foreground text-sm p-8">
-                    {locale === "ar" ? "لا توجد نتائج" : "No results"}
-                  </p>
-                ) : null}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          <span className="text-lg font-bold px-4 py-2 bg-muted/50 rounded-lg min-w-[100px] text-center">
+            {currentPage} / {TOTAL_PAGES}
+          </span>
+
+          <button
+            onClick={nextPage}
+            disabled={currentPage >= TOTAL_PAGES}
+            className="flex items-center gap-2 px-4 py-2 text-base font-medium hover:bg-muted rounded-lg transition-colors disabled:opacity-30"
+          >
+            {t.mushaf.nextPage}
+            <SkipBack size={18} />
+          </button>
+        </div>
+      )}
+
+      {/* Advanced Search - New Component */}
+      <AdvancedSearch
+        isOpen={showSearch}
+        onClose={() => setShowSearch(false)}
+        chapters={chapters}
+        onNavigate={handleNavigateFromSearch}
+      />
+
+      {/* Quick Verse Range Panel - New Component */}
+      <QuickVerseRangePanel
+        isOpen={showVerseRangePanel}
+        onClose={() => setShowVerseRangePanel(false)}
+        chapters={chapters}
+        onSelectRange={handleSelectRange}
+      />
 
       {/* Surah/Juz Navigation Modal */}
       <AnimatePresence>

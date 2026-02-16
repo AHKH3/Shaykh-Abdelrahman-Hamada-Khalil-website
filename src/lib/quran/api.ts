@@ -86,6 +86,30 @@ export interface SearchResult {
   };
 }
 
+// Advanced search options
+export interface AdvancedSearchOptions {
+  query: string;
+  language?: string;
+  page?: number;
+  size?: number;
+  chapterId?: number;
+  juzNumber?: number;
+}
+
+// Unified search result (combines verse and surah results)
+export interface UnifiedSearchResult {
+  type: 'verse' | 'surah';
+  verseKey?: string;
+  verseId?: number;
+  text?: string;
+  highlighted?: string;
+  surahId?: number;
+  surahName?: string;
+  surahNameArabic?: string;
+  pageNumber?: number;
+  matchScore?: number;
+}
+
 export interface Tafsir {
   id: number;
   resource_id: number;
@@ -197,6 +221,186 @@ export async function searchQuran(
     console.error("Failed to parse search response:", error);
     throw new Error("Invalid search response");
   }
+}
+
+// Advanced search with filters
+export async function searchQuranAdvanced(
+  options: AdvancedSearchOptions
+): Promise<{
+  results: UnifiedSearchResult[];
+  totalResults: number;
+  currentPage: number;
+  totalPages: number;
+}> {
+  const {
+    query,
+    language = "ar",
+    page = 1,
+    size = 50,
+    chapterId,
+    juzNumber,
+  } = options;
+
+  const params = new URLSearchParams({
+    q: query,
+    size: size.toString(),
+    page: page.toString(),
+    language,
+  });
+
+  const res = await fetch(`${BASE_URL}/search?${params}`);
+  if (!res.ok) throw new Error("Failed to search");
+
+  const text = await res.text();
+  if (!text || text.trim() === "") {
+    return {
+      results: [],
+      totalResults: 0,
+      currentPage: 1,
+      totalPages: 1,
+    };
+  }
+
+  const data: SearchResult = JSON.parse(text);
+
+  // Filter results by chapter or juz if specified
+  let filteredResults = data.search.results;
+
+  if (chapterId) {
+    filteredResults = filteredResults.filter((result) => {
+      const [chapter] = result.verse_key.split(":").map(Number);
+      return chapter === chapterId;
+    });
+  }
+
+  if (juzNumber) {
+    // Note: We would need verse data to filter by juz
+    // For now, we'll skip juz filtering on the API level
+    // This can be improved by fetching additional verse data
+  }
+
+  // Convert to UnifiedSearchResult format
+  const results: UnifiedSearchResult[] = filteredResults.map((result) => ({
+    type: 'verse' as const,
+    verseKey: result.verse_key,
+    verseId: result.verse_id,
+    text: result.text,
+    highlighted: result.highlighted,
+    matchScore: 50, // Lower priority than surahs
+  }));
+
+  return {
+    results,
+    totalResults: chapterId ? filteredResults.length : data.search.total_results,
+    currentPage: data.search.current_page,
+    totalPages: data.search.total_pages,
+  };
+}
+
+// Search in surah names locally
+export function searchSurahs(
+  query: string,
+  chapters: Chapter[],
+  locale: string
+): UnifiedSearchResult[] {
+  const normalizedQuery = query.trim().toLowerCase();
+
+  if (!normalizedQuery) return [];
+
+  return chapters
+    .filter((chapter) => {
+      const arabicName = chapter.name_arabic?.toLowerCase() || "";
+      const englishName = chapter.name_simple?.toLowerCase() || "";
+      const translatedName = chapter.translated_name?.name?.toLowerCase() || "";
+      const chapterNum = chapter.id.toString();
+
+      return (
+        arabicName.includes(normalizedQuery) ||
+        englishName.includes(normalizedQuery) ||
+        translatedName.includes(normalizedQuery) ||
+        chapterNum === normalizedQuery
+      );
+    })
+    .map((chapter) => ({
+      type: 'surah' as const,
+      surahId: chapter.id,
+      surahName: locale === 'ar' ? chapter.name_arabic : chapter.name_simple,
+      surahNameArabic: chapter.name_arabic,
+      pageNumber: SURAH_PAGES[chapter.id],
+      matchScore: 100, // Highest priority for surah matches
+    }));
+}
+
+// Get verses by range (e.g., Al-Baqarah 1-10)
+export async function getVersesByRange(
+  chapterId: number,
+  fromVerse: number,
+  toVerse: number
+): Promise<{ verses: Verse[]; chapterInfo?: Chapter }> {
+  try {
+    // Fetch all verses for the chapter
+    let allVerses: Verse[] = [];
+    let currentPage = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await getVersesByChapter(chapterId, currentPage);
+      allVerses = allVerses.concat(response.verses);
+
+      // Check if we've loaded all verses we need
+      const lastVerse = response.verses[response.verses.length - 1];
+      if (!lastVerse || lastVerse.verse_number >= toVerse || currentPage >= response.pagination.total_pages) {
+        hasMore = false;
+      }
+      currentPage++;
+    }
+
+    // Filter to the requested range
+    const filteredVerses = allVerses.filter(
+      (verse) => verse.verse_number >= fromVerse && verse.verse_number <= toVerse
+    );
+
+    return { verses: filteredVerses };
+  } catch (error) {
+    console.error("Failed to fetch verse range:", error);
+    throw error;
+  }
+}
+
+// Validate verse range
+export function validateVerseRange(
+  chapterId: number,
+  fromVerse: number,
+  toVerse: number,
+  chapters: Chapter[]
+): { valid: boolean; error?: string; errorEn?: string } {
+  const chapter = chapters.find((c) => c.id === chapterId);
+
+  if (!chapter) {
+    return {
+      valid: false,
+      error: "السورة غير موجودة",
+      errorEn: "Chapter not found"
+    };
+  }
+
+  if (fromVerse < 1 || toVerse > chapter.verses_count) {
+    return {
+      valid: false,
+      error: `السورة تحتوي على ${chapter.verses_count} آية فقط`,
+      errorEn: `Chapter has only ${chapter.verses_count} verses`
+    };
+  }
+
+  if (fromVerse > toVerse) {
+    return {
+      valid: false,
+      error: "رقم الآية الأولى يجب أن يكون أقل من الآية الأخيرة",
+      errorEn: "From verse must be less than to verse"
+    };
+  }
+
+  return { valid: true };
 }
 
 export async function getJuzs(): Promise<Juz[]> {
