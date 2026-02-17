@@ -79,7 +79,14 @@ export default function MushafViewer() {
   const [audioProgress, setAudioProgress] = useState(0);
   const [audioDuration, setAudioDuration] = useState(0);
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
+  const [audioVolume, setAudioVolume] = useState(1);
+  const [audioSpeed, setAudioSpeed] = useState(1);
+  const [repeatMode, setRepeatMode] = useState<"none" | "one" | "all">("none");
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  // Refs for use inside audio callbacks (avoid stale closures)
+  const audioVolumeRef = useRef(1);
+  const audioSpeedRef = useRef(1);
+  const repeatModeRef = useRef<"none" | "one" | "all">("none");
 
   // Verse options menu
   const [verseMenuPosition, setVerseMenuPosition] = useState<{ x: number; y: number } | null>(null);
@@ -431,6 +438,7 @@ export default function MushafViewer() {
       audioRef.current.pause();
       audioRef.current.ontimeupdate = null;
       audioRef.current.onloadedmetadata = null;
+      audioRef.current.onended = null;
     }
 
     const [chapter, verse] = verseKey.split(":").map(Number);
@@ -438,6 +446,8 @@ export default function MushafViewer() {
 
     const audio = new Audio(url);
     audioRef.current = audio;
+    audio.volume = audioVolumeRef.current;
+    audio.playbackRate = audioSpeedRef.current;
     setCurrentAudioVerse(verseKey);
     setIsPlaying(true);
     setAudioCurrentTime(0);
@@ -456,11 +466,19 @@ export default function MushafViewer() {
 
     audio.play().catch(console.error);
     audio.onended = () => {
-      // Play next verse on same page
+      const mode = repeatModeRef.current;
+      if (mode === "one") {
+        // Replay the same verse
+        playVerse(verseKey);
+        return;
+      }
       const allVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
       const currentIndex = allVerses.findIndex((v) => v.verse_key === verseKey);
       if (currentIndex >= 0 && currentIndex < allVerses.length - 1) {
         playVerse(allVerses[currentIndex + 1].verse_key);
+      } else if (mode === "all" && allVerses.length > 0) {
+        // Wrap around to the first verse
+        playVerse(allVerses[0].verse_key);
       } else {
         setIsPlaying(false);
         setCurrentAudioVerse(null);
@@ -524,6 +542,23 @@ export default function MushafViewer() {
       audioRef.current.currentTime = time;
       setAudioCurrentTime(time);
     }
+  };
+
+  const handleSetVolume = (vol: number) => {
+    audioVolumeRef.current = vol;
+    setAudioVolume(vol);
+    if (audioRef.current) audioRef.current.volume = vol;
+  };
+
+  const handleSetSpeed = (speed: number) => {
+    audioSpeedRef.current = speed;
+    setAudioSpeed(speed);
+    if (audioRef.current) audioRef.current.playbackRate = speed;
+  };
+
+  const handleSetRepeatMode = (mode: "none" | "one" | "all") => {
+    repeatModeRef.current = mode;
+    setRepeatMode(mode);
   };
 
   // Auto-scroll
@@ -1015,6 +1050,12 @@ export default function MushafViewer() {
         audioDuration={audioDuration}
         audioCurrentTime={audioCurrentTime}
         onSeek={handleAudioSeek}
+        audioVolume={audioVolume}
+        onSetVolume={handleSetVolume}
+        audioSpeed={audioSpeed}
+        onSetSpeed={handleSetSpeed}
+        repeatMode={repeatMode}
+        onSetRepeatMode={handleSetRepeatMode}
       />
 
       {/* Surah/Juz Navigation Modal */}
