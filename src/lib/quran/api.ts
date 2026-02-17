@@ -1,6 +1,6 @@
 const BASE_URL = "https://api.quran.com/api/v4";
 
-// Import the hybrid search engine
+// Import the local search engine
 import { searchWithFallback, type SearchEngineOptions } from './search-engine';
 
 export interface Chapter {

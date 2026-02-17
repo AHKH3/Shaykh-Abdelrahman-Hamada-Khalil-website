@@ -1,5 +1,9 @@
-import Fuse from 'fuse.js';
-import { VerseIndex, loadVerseIndex, getVersesByChapter, getVersesByJuz } from './verse-index';
+/**
+ * Local Quran search engine — Arabic-aware exact substring matching.
+ * 100% client-side, zero network calls after initial data load.
+ */
+
+import { loadVerseIndex, getVersesByChapter, getVersesByJuz, getCachedVerses, isIndexAvailable, clearVerseIndex, type VerseIndex } from './verse-index';
 
 export interface LocalSearchOptions {
     query: string;
@@ -19,96 +23,92 @@ export interface LocalSearchResult {
     juz_number: number;
 }
 
-// Fuse.js configuration for Arabic text search
-const fuseOptions = {
-    keys: [
-        { name: 'text_uthmani', weight: 0.7 },
-        { name: 'text_imlaei', weight: 0.3 }
-    ],
-    threshold: 0.4, // Lower threshold = stricter matching
-    distance: 100,
-    minMatchCharLength: 2,
-    includeScore: true,
-    includeMatches: true,
-    ignoreLocation: true,
-    useExtendedSearch: false,
-};
-
-let fuseInstance: Fuse<VerseIndex> | null = null;
-let cachedVerses: VerseIndex[] = [];
+// Arabic diacritics (tashkeel) regex — same as in the generator script
+const TASHKEEL_RE = /[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u08D3-\u08E1\u08E3-\u08FF]/g;
+const QURAN_MARKS_RE = /[\u06D6-\u06ED\u0615-\u061A]/g;
 
 /**
- * Initialize Fuse.js with all verses
+ * Normalize Arabic text for search matching.
+ * Strips diacritics, normalizes alef/hamza variants, taa marbuta, alef maqsura.
  */
-async function initializeFuse(verses?: VerseIndex[]): Promise<Fuse<VerseIndex>> {
-    if (fuseInstance && (!verses || verses.length === 0)) {
-        return fuseInstance;
-    }
-
-    const versesToIndex = verses || cachedVerses;
-
-    if (versesToIndex.length === 0) {
-        console.log('Loading verses for local search...');
-        cachedVerses = await loadVerseIndex();
-    } else {
-        cachedVerses = versesToIndex;
-    }
-
-    fuseInstance = new Fuse(cachedVerses, fuseOptions);
-    return fuseInstance;
+function normalizeArabic(text: string): string {
+    return text
+        .replace(TASHKEEL_RE, '')
+        .replace(QURAN_MARKS_RE, '')
+        .replace(/[إأآٱ]/g, 'ا')  // Alef variants → Alef
+        .replace(/ة/g, 'ه')        // Taa marbuta → Haa
+        .replace(/ى/g, 'ي')        // Alef maqsura → Yaa
+        .replace(/\s+/g, ' ')      // Collapse whitespace
+        .trim();
 }
 
 /**
- * Highlight matching text in the verse
+ * Highlight matching text in a verse.
+ * Finds all occurrences of the query in the original text (with diacritics)
+ * by comparing normalized positions.
  */
-function highlightMatch(text: string, matches: any[]): string {
-    if (!matches || matches.length === 0) {
-        return text;
+function highlightMatch(originalText: string, normalizedQuery: string): string {
+    const normalizedText = normalizeArabic(originalText);
+
+    // Build a mapping from normalized index to original index
+    // We need to find where the match is in the original text
+    const matchPositions: Array<[number, number]> = [];
+    let searchFrom = 0;
+
+    while (true) {
+        const idx = normalizedText.indexOf(normalizedQuery, searchFrom);
+        if (idx === -1) break;
+
+        // Map normalized positions back to original text positions
+        const origStart = mapNormalizedToOriginal(originalText, idx);
+        const origEnd = mapNormalizedToOriginal(originalText, idx + normalizedQuery.length);
+
+        matchPositions.push([origStart, origEnd]);
+        searchFrom = idx + 1;
+
+        // Safety: avoid infinite loops
+        if (matchPositions.length > 10) break;
     }
 
-    // Filter out matches without valid indices
-    const validMatches = matches.filter(match =>
-        match.indices && match.indices.length > 0 && match.indices[0] && Array.isArray(match.indices[0])
-    );
+    if (matchPositions.length === 0) return originalText;
 
-    if (validMatches.length === 0) {
-        return text;
+    // Build highlighted string (process from end to avoid offset issues)
+    let result = originalText;
+    for (let i = matchPositions.length - 1; i >= 0; i--) {
+        const [start, end] = matchPositions[i];
+        const before = result.slice(0, start);
+        const match = result.slice(start, end);
+        const after = result.slice(end);
+        result = `${before}<mark>${match}</mark>${after}`;
     }
 
-    // Sort matches by position (descending) to avoid offset issues
-    const sortedMatches = [...validMatches].sort((a, b) => b.indices[0][0] - a.indices[0][0]);
-
-    let highlighted = text;
-    for (const match of sortedMatches) {
-        const [start, end] = match.indices[0];
-        const before = highlighted.slice(0, start);
-        const matchText = highlighted.slice(start, end + 1);
-        const after = highlighted.slice(end + 1);
-        highlighted = `${before}<mark>${matchText}</mark>${after}`;
-    }
-
-    return highlighted;
+    return result;
 }
 
 /**
- * Apply filters (chapter, juz) to search results
+ * Map a position in normalized text back to the original text position.
  */
-function applyFilters(results: LocalSearchResult[], chapterId?: number, juzNumber?: number): LocalSearchResult[] {
-    let filtered = results;
+function mapNormalizedToOriginal(original: string, normalizedPos: number): number {
+    let normIdx = 0;
+    let origIdx = 0;
+    const normalized = normalizeArabic(original);
 
-    if (chapterId) {
-        filtered = filtered.filter(r => r.chapter_id === chapterId);
+    // Walk through original text character by character
+    while (origIdx < original.length && normIdx < normalizedPos) {
+        const origChar = original[origIdx];
+        // Check if this character survives normalization
+        const normalizedChar = normalizeArabic(origChar);
+        if (normalizedChar.length > 0) {
+            normIdx++;
+        }
+        origIdx++;
     }
 
-    if (juzNumber) {
-        filtered = filtered.filter(r => r.juz_number === juzNumber);
-    }
-
-    return filtered;
+    return origIdx;
 }
 
 /**
- * Search verses locally using Fuse.js
+ * Search verses locally using exact substring matching on normalized Arabic text.
  */
 export async function searchVersesLocally(options: LocalSearchOptions): Promise<{
     results: LocalSearchResult[];
@@ -121,41 +121,62 @@ export async function searchVersesLocally(options: LocalSearchOptions): Promise<
     }
 
     try {
-        // Initialize Fuse.js if not already done
-        const fuse = await initializeFuse();
+        // Ensure data is loaded
+        await loadVerseIndex();
 
-        // Perform search
-        const fuseResults = fuse.search(query.trim());
-
-        // Convert to LocalSearchResult format
-        const results: LocalSearchResult[] = fuseResults.map(result => {
-            const verse = result.item;
-            const matches = result.matches?.find(m => m.key === 'text_uthmani')?.indices || [];
-
-            return {
-                verse_key: verse.id,
-                text: verse.text_uthmani,
-                highlighted: highlightMatch(verse.text_uthmani, [{ indices: matches }]),
-                score: result.score || 0,
-                chapter_id: verse.chapter_id,
-                verse_number: verse.verse_number,
-                page_number: verse.page_number,
-                juz_number: verse.juz_number,
-            };
-        });
-
-        // Apply filters
-        let filteredResults = results;
-        if (chapterId || juzNumber) {
-            filteredResults = applyFilters(results, chapterId, juzNumber);
+        // Get the search scope
+        let verses: VerseIndex[];
+        if (chapterId) {
+            verses = getVersesByChapter(chapterId);
+        } else if (juzNumber) {
+            verses = getVersesByJuz(juzNumber);
+        } else {
+            verses = getCachedVerses();
         }
 
+        // Normalize the search query
+        const normalizedQuery = normalizeArabic(query.trim());
+
+        if (!normalizedQuery) {
+            return { results: [], totalResults: 0 };
+        }
+
+        // Exact substring matching on pre-normalized text
+        const matchingVerses: LocalSearchResult[] = [];
+
+        for (const verse of verses) {
+            // Search in pre-normalized text (tn field) for speed
+            const idx = verse.tn.indexOf(normalizedQuery);
+            if (idx !== -1) {
+                // Calculate a relevance score:
+                // - Shorter verses with matches are more relevant
+                // - Matches at the start score higher
+                const positionScore = idx === 0 ? 100 : Math.max(50, 90 - (idx / verse.tn.length) * 40);
+                const lengthScore = Math.max(10, 100 - verse.tn.length / 5);
+                const score = (positionScore * 0.6) + (lengthScore * 0.4);
+
+                matchingVerses.push({
+                    verse_key: verse.id,
+                    text: verse.t,
+                    highlighted: highlightMatch(verse.t, normalizedQuery),
+                    score,
+                    chapter_id: verse.c,
+                    verse_number: verse.v,
+                    page_number: verse.p,
+                    juz_number: verse.j,
+                });
+            }
+        }
+
+        // Sort by score (descending)
+        matchingVerses.sort((a, b) => b.score - a.score);
+
         // Limit results
-        const limitedResults = filteredResults.slice(0, limit);
+        const limitedResults = matchingVerses.slice(0, limit);
 
         return {
             results: limitedResults,
-            totalResults: filteredResults.length,
+            totalResults: matchingVerses.length,
         };
     } catch (error) {
         console.error('Error in local search:', error);
@@ -164,130 +185,15 @@ export async function searchVersesLocally(options: LocalSearchOptions): Promise<
 }
 
 /**
- * Search verses locally within a specific chapter
- */
-export async function searchVersesInChapter(
-    chapterId: number,
-    query: string,
-    limit: number = 50
-): Promise<{
-    results: LocalSearchResult[];
-    totalResults: number;
-}> {
-    if (!query || query.trim().length < 2) {
-        return { results: [], totalResults: 0 };
-    }
-
-    try {
-        // Get verses for the chapter
-        const chapterVerses = await getVersesByChapter(chapterId);
-
-        if (chapterVerses.length === 0) {
-            return { results: [], totalResults: 0 };
-        }
-
-        // Create a new Fuse instance for this chapter
-        const fuse = new Fuse(chapterVerses, fuseOptions);
-        const fuseResults = fuse.search(query.trim());
-
-        // Convert to LocalSearchResult format
-        const results: LocalSearchResult[] = fuseResults.map(result => {
-            const verse = result.item;
-            const matches = result.matches?.find(m => m.key === 'text_uthmani')?.indices || [];
-
-            return {
-                verse_key: verse.id,
-                text: verse.text_uthmani,
-                highlighted: highlightMatch(verse.text_uthmani, [{ indices: matches }]),
-                score: result.score || 0,
-                chapter_id: verse.chapter_id,
-                verse_number: verse.verse_number,
-                page_number: verse.page_number,
-                juz_number: verse.juz_number,
-            };
-        });
-
-        // Limit results
-        const limitedResults = results.slice(0, limit);
-
-        return {
-            results: limitedResults,
-            totalResults: results.length,
-        };
-    } catch (error) {
-        console.error('Error searching in chapter:', error);
-        return { results: [], totalResults: 0 };
-    }
-}
-
-/**
- * Search verses locally within a specific juz
- */
-export async function searchVersesInJuz(
-    juzNumber: number,
-    query: string,
-    limit: number = 50
-): Promise<{
-    results: LocalSearchResult[];
-    totalResults: number;
-}> {
-    if (!query || query.trim().length < 2) {
-        return { results: [], totalResults: 0 };
-    }
-
-    try {
-        // Get verses for the juz
-        const juzVerses = await getVersesByJuz(juzNumber);
-
-        if (juzVerses.length === 0) {
-            return { results: [], totalResults: 0 };
-        }
-
-        // Create a new Fuse instance for this juz
-        const fuse = new Fuse(juzVerses, fuseOptions);
-        const fuseResults = fuse.search(query.trim());
-
-        // Convert to LocalSearchResult format
-        const results: LocalSearchResult[] = fuseResults.map(result => {
-            const verse = result.item;
-            const matches = result.matches?.find(m => m.key === 'text_uthmani')?.indices || [];
-
-            return {
-                verse_key: verse.id,
-                text: verse.text_uthmani,
-                highlighted: highlightMatch(verse.text_uthmani, [{ indices: matches }]),
-                score: result.score || 0,
-                chapter_id: verse.chapter_id,
-                verse_number: verse.verse_number,
-                page_number: verse.page_number,
-                juz_number: verse.juz_number,
-            };
-        });
-
-        // Limit results
-        const limitedResults = results.slice(0, limit);
-
-        return {
-            results: limitedResults,
-            totalResults: results.length,
-        };
-    } catch (error) {
-        console.error('Error searching in juz:', error);
-        return { results: [], totalResults: 0 };
-    }
-}
-
-/**
- * Reset the local search cache
- */
-export function resetLocalSearchCache(): void {
-    fuseInstance = null;
-    cachedVerses = [];
-}
-
-/**
- * Check if local search is ready
+ * Check if local search is ready (data is loaded).
  */
 export function isLocalSearchReady(): boolean {
-    return fuseInstance !== null && cachedVerses.length > 0;
+    return isIndexAvailable();
+}
+
+/**
+ * Reset the local search cache.
+ */
+export function resetLocalSearchCache(): void {
+    clearVerseIndex();
 }

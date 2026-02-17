@@ -12,7 +12,6 @@ import {
   searchSurahs,
   SURAH_PAGES,
 } from "@/lib/quran/api";
-import { getSearchSourceLabel } from "@/lib/quran/search-engine";
 import { useI18n } from "@/lib/i18n/context";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 
@@ -42,10 +41,8 @@ export default function AdvancedSearch({
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
-  // Search source and progress
-  const [searchSource, setSearchSource] = useState<'quran-com' | 'alquran-cloud' | 'local' | null>(null);
-  const [progressMessage, setProgressMessage] = useState<string>("");
-  const [progressPercent, setProgressPercent] = useState<number>(0);
+  // Error message for display
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   // Debounce query for automatic search
   const debouncedQuery = useDebounce(query, 500);
@@ -66,14 +63,12 @@ export default function AdvancedSearch({
   const handleSearch = async (page: number = 1) => {
     if (!query.trim()) {
       setResults([]);
-      setProgressMessage("");
-      setProgressPercent(0);
+      setErrorMessage("");
       return;
     }
 
     setLoading(true);
-    setProgressMessage("");
-    setProgressPercent(0);
+    setErrorMessage("");
 
     try {
       // 1. Local search in surah names (only on first page and if no surah filter)
@@ -82,7 +77,7 @@ export default function AdvancedSearch({
         surahResults = searchSurahs(query, chapters, locale);
       }
 
-      // 2. Search in verse text via hybrid search engine
+      // 2. Search in verse text (fully local, instant)
       const apiResults = await searchQuranAdvanced({
         query,
         language: locale === "ar" ? "ar" : "en",
@@ -101,16 +96,18 @@ export default function AdvancedSearch({
       setResults(unified);
       setTotalPages(apiResults.totalPages);
       setTotalResults(apiResults.totalResults + surahResults.length);
-      setSearchSource(null); // Reset search source display
     } catch (error) {
       console.error("Search failed:", error);
       setResults([]);
       setTotalResults(0);
-      setSearchSource(null);
+
+      setErrorMessage(
+        locale === 'ar'
+          ? 'حدث خطأ أثناء البحث. يرجى المحاولة مرة أخرى.'
+          : 'An error occurred while searching. Please try again.'
+      );
     } finally {
       setLoading(false);
-      setProgressMessage("");
-      setProgressPercent(0);
     }
   };
 
@@ -133,9 +130,7 @@ export default function AdvancedSearch({
   // Reset state when component closes
   useEffect(() => {
     if (!isOpen) {
-      setSearchSource(null);
-      setProgressMessage("");
-      setProgressPercent(0);
+      setErrorMessage("");
     }
   }, [isOpen]);
 
@@ -259,30 +254,16 @@ export default function AdvancedSearch({
             {loading ? (
               <div className="flex flex-col justify-center items-center p-8 gap-3">
                 <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                {progressMessage && (
-                  <div className="text-sm text-muted-foreground">
-                    {progressMessage}
-                  </div>
-                )}
-                {progressPercent > 0 && (
-                  <div className="w-full max-w-xs bg-muted rounded-full h-2">
-                    <div
-                      className="bg-primary h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${progressPercent}%` }}
-                    />
-                  </div>
-                )}
               </div>
+            ) : errorMessage ? (
+              <p className="text-center text-destructive p-8 text-sm">
+                {errorMessage}
+              </p>
             ) : results.length > 0 ? (
               <div>
-                {/* Results count and source */}
-                <div className="px-4 py-2 bg-muted/20 border-b border-border text-xs text-muted-foreground flex items-center justify-between">
+                {/* Results count */}
+                <div className="px-4 py-2 bg-muted/20 border-b border-border text-xs text-muted-foreground">
                   <span>{totalResults} {t.mushaf.resultsCount}</span>
-                  {searchSource && (
-                    <span className="text-primary/70">
-                      {getSearchSourceLabel(searchSource, locale)}
-                    </span>
-                  )}
                 </div>
 
                 {/* Results list */}

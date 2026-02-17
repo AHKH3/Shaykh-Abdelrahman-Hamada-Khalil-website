@@ -23,6 +23,9 @@ import {
   HelpCircle,
   Scroll,
   Monitor,
+  Maximize2,
+  Scan,
+  ChevronDown,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import {
@@ -87,6 +90,7 @@ export default function MushafViewer() {
   const [showDisplaySettings, setShowDisplaySettings] = useState(false);
   const [readingMode, setReadingMode] = useState<"normal" | "sepia" | "green" | "purple" | "blue" | "red" | "pink" | "highContrast">("normal");
   const [screenMode, setScreenMode] = useState<"normal" | "focus" | "fullscreen">("normal");
+  const [showScreenModeMenu, setShowScreenModeMenu] = useState(false);
 
   // Additional features
   const [showBookmarks, setShowBookmarks] = useState(false);
@@ -605,20 +609,38 @@ export default function MushafViewer() {
             <Settings size={16} />
           </button>
           <div className="w-px h-6 bg-border mx-1" />
-          <button
-            onClick={() => handleScreenModeChange(screenMode === "focus" ? "normal" : "focus")}
-            className={`p-2 rounded-lg transition-colors ${screenMode === "focus" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-            title={t.mushaf.screenModeFocus}
-          >
-            <Layers size={16} />
-          </button>
-          <button
-            onClick={() => handleScreenModeChange(screenMode === "fullscreen" ? "normal" : "fullscreen")}
-            className={`p-2 rounded-lg transition-colors ${screenMode === "fullscreen" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-            title={t.mushaf.screenModeFullscreen}
-          >
-            <Monitor size={16} />
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowScreenModeMenu(!showScreenModeMenu)}
+              className={`p-2 rounded-lg transition-colors flex items-center gap-1 ${screenMode !== "normal" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+              title={t.mushaf.screenMode}
+            >
+              {screenMode === "focus" ? <Scan size={16} /> : screenMode === "fullscreen" ? <Maximize2 size={16} /> : <Monitor size={16} />}
+              <ChevronDown size={12} />
+            </button>
+            {showScreenModeMenu && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowScreenModeMenu(false)} />
+                <div className="absolute end-0 top-full mt-1 z-50 bg-card border border-border rounded-lg shadow-lg py-1 min-w-[140px]">
+                  {[
+                    { value: "normal" as const, label: t.mushaf.screenModeNormal, icon: <Monitor size={14} /> },
+                    { value: "focus" as const, label: t.mushaf.screenModeFocus, icon: <Scan size={14} /> },
+                    { value: "fullscreen" as const, label: t.mushaf.screenModeFullscreen, icon: <Maximize2 size={14} /> },
+                  ].map((mode) => (
+                    <button
+                      key={mode.value}
+                      onClick={() => { handleScreenModeChange(mode.value); setShowScreenModeMenu(false); }}
+                      className={`w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-muted ${screenMode === mode.value ? "text-primary font-medium" : ""}`}
+                    >
+                      {mode.icon}
+                      {mode.label}
+                      {screenMode === mode.value && <Check size={12} className="ms-auto" />}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -1181,8 +1203,6 @@ export default function MushafViewer() {
         goToPage={goToPage}
         readingMode={readingMode}
         setReadingMode={setReadingMode}
-        screenMode={screenMode}
-        setScreenMode={handleScreenModeChange}
       />
 
       {/* Hidden audio element */}

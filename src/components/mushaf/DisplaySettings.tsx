@@ -21,8 +21,6 @@ interface DisplaySettingsProps {
     goToPage: (page: number) => void;
     readingMode: "normal" | "sepia" | "green" | "purple" | "blue" | "red" | "pink" | "highContrast";
     setReadingMode: (mode: "normal" | "sepia" | "green" | "purple" | "blue" | "red" | "pink" | "highContrast") => void;
-    screenMode: "normal" | "focus" | "fullscreen";
-    setScreenMode: (mode: "normal" | "focus" | "fullscreen") => void;
 }
 
 export default function DisplaySettings({
@@ -41,8 +39,6 @@ export default function DisplaySettings({
     goToPage,
     readingMode,
     setReadingMode,
-    screenMode,
-    setScreenMode,
 }: DisplaySettingsProps) {
     const { t, locale, dir } = useI18n();
 
@@ -73,12 +69,6 @@ export default function DisplaySettings({
         { value: "red" as const, label: t.mushaf.red },
         { value: "pink" as const, label: t.mushaf.pink },
         { value: "highContrast" as const, label: t.mushaf.highContrast },
-    ];
-
-    const screenModes = [
-        { value: "normal" as const, label: t.mushaf.screenModeNormal },
-        { value: "focus" as const, label: t.mushaf.screenModeFocus },
-        { value: "fullscreen" as const, label: t.mushaf.screenModeFullscreen },
     ];
 
     if (!isOpen) return null;
@@ -259,27 +249,6 @@ export default function DisplaySettings({
                             </div>
                         </div>
 
-                        {/* Screen Mode */}
-                        <div>
-                            <label className="flex items-center gap-2 text-sm font-medium mb-3">
-                                <Monitor size={16} className="text-muted-foreground" />
-                                {t.mushaf.screenMode}
-                            </label>
-                            <div className="grid grid-cols-3 gap-2">
-                                {screenModes.map((mode) => (
-                                    <button
-                                        key={mode.value}
-                                        onClick={() => setScreenMode(mode.value)}
-                                        className={`p-3 rounded-lg text-sm font-medium transition-colors ${screenMode === mode.value
-                                            ? "bg-foreground text-background"
-                                            : "bg-muted hover:bg-muted/80"
-                                            }`}
-                                    >
-                                        {mode.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
                     </div>
                 </motion.div>
             </motion.div>
