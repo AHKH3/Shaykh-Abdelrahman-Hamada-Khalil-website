@@ -46,7 +46,8 @@ import VerseOptionsMenu from "./VerseOptionsMenu";
 import TafsirPanel from "./TafsirPanel";
 import DisplaySettings from "./DisplaySettings";
 import AdvancedSearch from "./AdvancedSearch";
-import QuickVerseRangePanel from "./QuickVerseRangePanel";
+import FloatingVerseRangePanel from "./FloatingVerseRangePanel";
+import FloatingAudioPlayer from "./FloatingAudioPlayer";
 import { isBookmarked, addBookmark, removeBookmarkByVerseKey, getBookmarks } from "@/lib/quran/bookmarks";
 import { copyVerseToClipboard, shareVerse } from "@/lib/quran/export";
 
@@ -72,8 +73,12 @@ export default function MushafViewer() {
   const [searchLoading, setSearchLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentAudioVerse, setCurrentAudioVerse] = useState<string | null>(null);
-  const [selectedReciter, setSelectedReciter] = useState(7);
+  const [selectedReciter, setSelectedReciter] = useState(1);
   const [pageInput, setPageInput] = useState("");
+  const [showAudioPlayer, setShowAudioPlayer] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [audioDuration, setAudioDuration] = useState(0);
+  const [audioCurrentTime, setAudioCurrentTime] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Verse options menu
@@ -424,6 +429,8 @@ export default function MushafViewer() {
   const playVerse = (verseKey: string) => {
     if (audioRef.current) {
       audioRef.current.pause();
+      audioRef.current.ontimeupdate = null;
+      audioRef.current.onloadedmetadata = null;
     }
 
     const [chapter, verse] = verseKey.split(":").map(Number);
@@ -433,16 +440,32 @@ export default function MushafViewer() {
     audioRef.current = audio;
     setCurrentAudioVerse(verseKey);
     setIsPlaying(true);
+    setAudioCurrentTime(0);
+    setAudioProgress(0);
+
+    audio.onloadedmetadata = () => {
+      setAudioDuration(audio.duration);
+    };
+
+    audio.ontimeupdate = () => {
+      setAudioCurrentTime(audio.currentTime);
+      if (audio.duration) {
+        setAudioProgress((audio.currentTime / audio.duration) * 100);
+      }
+    };
 
     audio.play().catch(console.error);
     audio.onended = () => {
       // Play next verse on same page
-      const currentIndex = verses.findIndex((v) => v.verse_key === verseKey);
-      if (currentIndex < verses.length - 1) {
-        playVerse(verses[currentIndex + 1].verse_key);
+      const allVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
+      const currentIndex = allVerses.findIndex((v) => v.verse_key === verseKey);
+      if (currentIndex >= 0 && currentIndex < allVerses.length - 1) {
+        playVerse(allVerses[currentIndex + 1].verse_key);
       } else {
         setIsPlaying(false);
         setCurrentAudioVerse(null);
+        setAudioProgress(0);
+        setAudioCurrentTime(0);
       }
     };
   };
@@ -453,13 +476,54 @@ export default function MushafViewer() {
     }
   };
 
+  const pauseAudio = () => {
+    if (audioRef.current) audioRef.current.pause();
+    setIsPlaying(false);
+  };
+
+  const resumeAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.play().catch(console.error);
+      setIsPlaying(true);
+    }
+  };
+
   const stopAudio = () => {
     if (audioRef.current) {
       audioRef.current.pause();
+      audioRef.current.ontimeupdate = null;
       audioRef.current = null;
     }
     setIsPlaying(false);
     setCurrentAudioVerse(null);
+    setAudioProgress(0);
+    setAudioCurrentTime(0);
+    setAudioDuration(0);
+  };
+
+  const handleNextVerse = () => {
+    if (!currentAudioVerse) return;
+    const allVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
+    const idx = allVerses.findIndex((v) => v.verse_key === currentAudioVerse);
+    if (idx >= 0 && idx < allVerses.length - 1) {
+      playVerse(allVerses[idx + 1].verse_key);
+    }
+  };
+
+  const handlePrevVerse = () => {
+    if (!currentAudioVerse) return;
+    const allVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
+    const idx = allVerses.findIndex((v) => v.verse_key === currentAudioVerse);
+    if (idx > 0) {
+      playVerse(allVerses[idx - 1].verse_key);
+    }
+  };
+
+  const handleAudioSeek = (time: number) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+      setAudioCurrentTime(time);
+    }
   };
 
   // Auto-scroll
@@ -495,13 +559,16 @@ export default function MushafViewer() {
       if (e.key === "?") setShowShortcuts(true);
       if (e.key === " ") {
         e.preventDefault();
-        isPlaying ? stopAudio() : playPage();
+        if (showAudioPlayer && isPlaying) pauseAudio();
+        else if (showAudioPlayer && !isPlaying && currentAudioVerse) resumeAudio();
+        else if (showAudioPlayer && !isPlaying) playPage();
+        else { setShowAudioPlayer(true); }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, isPlaying]);
+  }, [currentPage, isPlaying, showAudioPlayer, currentAudioVerse]);
 
   const currentSurah = getCurrentSurah();
   const currentJuz = getCurrentJuz();
@@ -567,8 +634,12 @@ export default function MushafViewer() {
             <Search size={16} />
           </button>
           <button
-            onClick={() => setShowVerseRangePanel(true)}
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
+            onClick={() => {
+              const newState = !showVerseRangePanel;
+              setShowVerseRangePanel(newState);
+              if (!newState && viewMode === "range") handleBackToPages();
+            }}
+            className={`p-2 rounded-lg transition-colors ${showVerseRangePanel ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
             title={t.mushaf.verseRange}
           >
             <BookOpen size={16} />
@@ -581,11 +652,11 @@ export default function MushafViewer() {
             <Bookmark size={16} />
           </button>
           <button
-            onClick={isPlaying ? stopAudio : playPage}
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
-            title={isPlaying ? t.mushaf.pause : t.mushaf.audio}
+            onClick={() => setShowAudioPlayer((v) => !v)}
+            className={`p-2 rounded-lg transition-colors ${showAudioPlayer ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+            title={locale === "ar" ? t.mushaf.audioPlayer : t.mushaf.audioPlayer}
           >
-            {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+            <Volume2 size={16} />
           </button>
           <button
             onClick={() => setAutoScroll(!autoScroll)}
@@ -904,12 +975,46 @@ export default function MushafViewer() {
         onNavigate={handleNavigateFromSearch}
       />
 
-      {/* Quick Verse Range Panel - New Component */}
-      <QuickVerseRangePanel
+      {/* Floating Verse Range Panel */}
+      <FloatingVerseRangePanel
         isOpen={showVerseRangePanel}
-        onClose={() => setShowVerseRangePanel(false)}
+        onClose={() => {
+          setShowVerseRangePanel(false);
+          if (viewMode === "range") handleBackToPages();
+        }}
         chapters={chapters}
         onSelectRange={handleSelectRange}
+      />
+
+      {/* Floating Audio Player */}
+      <FloatingAudioPlayer
+        isOpen={showAudioPlayer}
+        onClose={() => {
+          setShowAudioPlayer(false);
+          stopAudio();
+        }}
+        isPlaying={isPlaying}
+        currentVerseKey={currentAudioVerse}
+        currentVerseText={
+          currentAudioVerse
+            ? (viewMode === "range" && rangeData ? rangeData.verses : verses).find(
+                (v) => v.verse_key === currentAudioVerse
+              )?.text_uthmani
+            : undefined
+        }
+        selectedReciter={selectedReciter}
+        onSetReciter={(id) => {
+          setSelectedReciter(id);
+          if (currentAudioVerse) playVerse(currentAudioVerse);
+        }}
+        onPlay={playPage}
+        onPause={pauseAudio}
+        onNextVerse={handleNextVerse}
+        onPrevVerse={handlePrevVerse}
+        audioProgress={audioProgress}
+        audioDuration={audioDuration}
+        audioCurrentTime={audioCurrentTime}
+        onSeek={handleAudioSeek}
       />
 
       {/* Surah/Juz Navigation Modal */}
@@ -1196,8 +1301,6 @@ export default function MushafViewer() {
         setPageWidth={setPageWidth}
         displayMode={displayMode}
         setDisplayMode={setDisplayMode}
-        selectedReciter={selectedReciter}
-        setSelectedReciter={setSelectedReciter}
         pageInput={pageInput}
         setPageInput={setPageInput}
         goToPage={goToPage}

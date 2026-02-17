@@ -7,7 +7,7 @@ import { useTheme } from "@/lib/theme/context";
 
 export default function Footer() {
   const { t, locale } = useI18n();
-  const { theme } = useTheme();
+  const { theme, mounted } = useTheme();
   const year = new Date().getFullYear();
 
   return (
@@ -17,7 +17,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Image
-              src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
+              src={!mounted || theme === "light" ? "/logo-light.png" : "/logo-dark.png"}
               alt={locale === "ar" ? "الشيخ عبد الرحمن حماده خليل" : "Shaykh Abdelrahman Hamada Khalil"}
               width={160}
               height={64}

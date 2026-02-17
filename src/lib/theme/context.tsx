@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 
 type Theme = "light" | "dark";
 
@@ -8,25 +8,26 @@ interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
   setTheme: (theme: Theme) => void;
+  mounted: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    // Initialize from localStorage during render to avoid setState in useEffect
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("theme") as Theme | null;
-      if (saved) {
-        document.documentElement.classList.toggle("dark", saved === "dark");
-        return saved;
-      } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        document.documentElement.classList.add("dark");
-        return "dark";
-      }
+  const [mounted, setMounted] = useState(false);
+  const [theme, setThemeState] = useState<Theme>("light");
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem("theme") as Theme | null;
+    if (saved) {
+      setThemeState(saved);
+      document.documentElement.classList.toggle("dark", saved === "dark");
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setThemeState("dark");
+      document.documentElement.classList.add("dark");
     }
-    return "light";
-  });
+  }, []);
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
@@ -39,7 +40,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [theme, setTheme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme, mounted }}>
       {children}
     </ThemeContext.Provider>
   );

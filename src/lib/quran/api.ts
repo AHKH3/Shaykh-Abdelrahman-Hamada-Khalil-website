@@ -376,11 +376,14 @@ export async function getJuzs(): Promise<Juz[]> {
   return data.juzs;
 }
 
-// Every Ayah API reciters mapping
-export const RECITERS_EVERYAYAH: Record<number, string> = {
-  7: "Alafasy_128kbps",
-  1: "Abdul_Basit_Mujawwad_128kbps",
-};
+export interface Reciter {
+  id: number;
+  name: string;
+  nameEn: string;
+  slug: string;
+  style: "مرتل" | "مجود" | "معلم";
+  styleEn: "Murattal" | "Mujawwad" | "Muallim";
+}
 
 export function getAudioUrl(
   reciterId: number,
@@ -389,9 +392,8 @@ export function getAudioUrl(
 ): string {
   const paddedChapter = chapterId.toString().padStart(3, "0");
   const paddedVerse = verseNumber.toString().padStart(3, "0");
-
-  const reciterSlug = RECITERS_EVERYAYAH[reciterId] || RECITERS_EVERYAYAH[7];
-  return `https://everyayah.com/data/${reciterSlug}/${paddedChapter}${paddedVerse}.mp3`;
+  const reciter = RECITERS.find((r) => r.id === reciterId) || RECITERS[0];
+  return `https://everyayah.com/data/${reciter.slug}/${paddedChapter}${paddedVerse}.mp3`;
 }
 
 export function getPageAudioUrl(reciterId: number, pageNumber: number): string {
@@ -434,10 +436,19 @@ export async function getTafsir(
   return data.tafsir;
 }
 
-// Reciters
-export const RECITERS = [
-  { id: 7, name: "مشاري العفاسي", nameEn: "Mishary Alafasy" },
-  { id: 1, name: "عبد الباسط عبد الصمد", nameEn: "Abdul Basit" },
+// Reciters — everyayah.com slugs
+export const RECITERS: Reciter[] = [
+  { id: 1,  name: "مشاري العفاسي",           nameEn: "Mishary Alafasy",        slug: "Alafasy_128kbps",                       style: "مرتل",  styleEn: "Murattal" },
+  { id: 2,  name: "عبد الباسط - مرتل",       nameEn: "Abdul Basit (Murattal)", slug: "AbdulBaset_Murattal_128kbps",           style: "مرتل",  styleEn: "Murattal" },
+  { id: 3,  name: "عبد الباسط - مجود",       nameEn: "Abdul Basit (Mujawwad)", slug: "Abdul_Basit_Mujawwad_128kbps",          style: "مجود",  styleEn: "Mujawwad" },
+  { id: 4,  name: "المنشاوي - مرتل",         nameEn: "Al-Minshawi (Murattal)", slug: "Minshawi_Murattal_128kbps",             style: "مرتل",  styleEn: "Murattal" },
+  { id: 5,  name: "المنشاوي - مجود",         nameEn: "Al-Minshawi (Mujawwad)", slug: "Minshawi_Mujawwad_128kbps",             style: "مجود",  styleEn: "Mujawwad" },
+  { id: 6,  name: "الحصري - مرتل",           nameEn: "Al-Husary (Murattal)",   slug: "Husary_128kbps",                        style: "مرتل",  styleEn: "Murattal" },
+  { id: 7,  name: "الحصري - مجود",           nameEn: "Al-Husary (Mujawwad)",   slug: "Husary_Mujawwad_128kbps",               style: "مجود",  styleEn: "Mujawwad" },
+  { id: 8,  name: "الحصري - معلم",           nameEn: "Al-Husary (Muallim)",    slug: "Husary_Muallim_128kbps",                style: "معلم",  styleEn: "Muallim"  },
+  { id: 9,  name: "محمود البنا",             nameEn: "Mahmoud Al-Banna",       slug: "mahmoud_ali_al_banna_128kbps",          style: "مرتل",  styleEn: "Murattal" },
+  { id: 10, name: "فارس عباد",              nameEn: "Fares Abbad",            slug: "Fares_Abbad_128kbps",                   style: "مرتل",  styleEn: "Murattal" },
+  { id: 11, name: "عبد الرحمن السديس",       nameEn: "Abdul Rahman Al-Sudais", slug: "Abdurrahmaan_As-Sudais_192kbps",        style: "مرتل",  styleEn: "Murattal" },
 ];
 
 // Surah page mapping (first page of each surah)

@@ -1,9 +1,8 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Type, Monitor, Layout, Settings, Volume2, BookOpen, Palette } from "lucide-react";
+import { X, Type, Monitor, Layout, Settings, BookOpen, Palette } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
-import { RECITERS } from "@/lib/quran/api";
 
 interface DisplaySettingsProps {
     isOpen: boolean;
@@ -14,8 +13,6 @@ interface DisplaySettingsProps {
     setPageWidth: (width: "normal" | "wide" | "full") => void;
     displayMode: "single" | "double";
     setDisplayMode: (mode: "single" | "double") => void;
-    selectedReciter: number;
-    setSelectedReciter: (reciter: number) => void;
     pageInput: string;
     setPageInput: (input: string) => void;
     goToPage: (page: number) => void;
@@ -32,15 +29,13 @@ export default function DisplaySettings({
     setPageWidth,
     displayMode,
     setDisplayMode,
-    selectedReciter,
-    setSelectedReciter,
     pageInput,
     setPageInput,
     goToPage,
     readingMode,
     setReadingMode,
 }: DisplaySettingsProps) {
-    const { t, locale, dir } = useI18n();
+    const { t, locale } = useI18n();
 
     const fontSizes = [
         { value: 24, label: locale === "ar" ? "صغير" : "Small" },
@@ -107,25 +102,6 @@ export default function DisplaySettings({
 
                     {/* Content */}
                     <div className="p-4 space-y-6">
-                        {/* Reciter Selection */}
-                        <div>
-                            <label className="flex items-center gap-2 text-sm font-medium mb-3">
-                                <Volume2 size={16} className="text-muted-foreground" />
-                                {t.mushaf.reciter}
-                            </label>
-                            <select
-                                value={selectedReciter}
-                                onChange={(e) => setSelectedReciter(Number(e.target.value))}
-                                className="w-full text-sm bg-muted border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                            >
-                                {RECITERS.map((r) => (
-                                    <option key={r.id} value={r.id}>
-                                        {locale === "ar" ? r.name : r.nameEn}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
                         {/* Go to Page */}
                         <div>
                             <label className="flex items-center gap-2 text-sm font-medium mb-3">

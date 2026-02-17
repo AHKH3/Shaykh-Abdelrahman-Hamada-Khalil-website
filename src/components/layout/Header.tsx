@@ -13,7 +13,7 @@ import type { User } from "@supabase/supabase-js";
 
 export default function Header() {
   const { t, locale, toggleLocale } = useI18n();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, mounted } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -81,7 +81,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
             <Image
-              src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
+              src={!mounted || theme === "light" ? "/logo-light.png" : "/logo-dark.png"}
               alt={locale === "ar" ? "الشيخ عبد الرحمن حماده خليل" : "Shaykh Abdelrahman Hamada Khalil"}
               width={180}
               height={72}
@@ -127,7 +127,13 @@ export default function Header() {
               className="p-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               aria-label="Toggle theme"
             >
-              {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+              {!mounted ? (
+                <div className="w-5 h-5" /> // Placeholder to prevent layout shift
+              ) : theme === "dark" ? (
+                <Sun size={20} />
+              ) : (
+                <Moon size={20} />
+              )}
             </button>
             <button
               onClick={handleAuth}
