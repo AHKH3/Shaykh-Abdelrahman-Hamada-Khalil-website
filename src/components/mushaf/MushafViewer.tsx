@@ -81,12 +81,21 @@ export default function MushafViewer() {
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
   const [audioVolume, setAudioVolume] = useState(1);
   const [audioSpeed, setAudioSpeed] = useState(1);
-  const [repeatMode, setRepeatMode] = useState<"none" | "one" | "all">("none");
+  const [repeatMode, setRepeatMode] = useState<"none" | "one" | "all" | "verse" | "range">("none");
+  // Advanced repeat features for self-memorization
+  const [verseRepeatCount, setVerseRepeatCount] = useState(3);
+  const [rangeRepeatCount, setRangeRepeatCount] = useState(3);
+  const [pauseBetweenVerses, setPauseBetweenVerses] = useState(2);
+  const [currentVerseRepeat, setCurrentVerseRepeat] = useState(0);
+  const [currentRangeRepeat, setCurrentRangeRepeat] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   // Refs for use inside audio callbacks (avoid stale closures)
   const audioVolumeRef = useRef(1);
   const audioSpeedRef = useRef(1);
-  const repeatModeRef = useRef<"none" | "one" | "all">("none");
+  const repeatModeRef = useRef<"none" | "one" | "all" | "verse" | "range">("none");
+  const verseRepeatCountRef = useRef(3);
+  const rangeRepeatCountRef = useRef(3);
+  const pauseBetweenVersesRef = useRef(2);
 
   // Verse options menu
   const [verseMenuPosition, setVerseMenuPosition] = useState<{ x: number; y: number } | null>(null);
@@ -312,7 +321,7 @@ export default function MushafViewer() {
       });
 
       setViewMode("range");
-      setShowVerseRangePanel(false);
+      // Don't auto-close the panel - let user keep it open for quick adjustments
     } catch (error) {
       console.error("Failed to load verse range:", error);
       showToast(locale === "ar" ? "فشل تحميل المدى" : "Failed to load range", "error");
@@ -467,23 +476,56 @@ export default function MushafViewer() {
     audio.play().catch(console.error);
     audio.onended = () => {
       const mode = repeatModeRef.current;
+      const verseRepeatCount = verseRepeatCountRef.current;
+      const rangeRepeatCount = rangeRepeatCountRef.current;
+      const pauseBetweenVerses = pauseBetweenVersesRef.current;
+
+      const allVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
+      const currentIndex = allVerses.findIndex((v) => v.verse_key === verseKey);
+
+      // Handle verse repeat mode
+      if (mode === "verse") {
+        if (currentVerseRepeat < verseRepeatCount - 1) {
+          setCurrentVerseRepeat((c) => c + 1);
+          playVerse(verseKey);
+          return;
+        }
+        setCurrentVerseRepeat(0);
+      }
+
+      // Handle single verse repeat
       if (mode === "one") {
-        // Replay the same verse
         playVerse(verseKey);
         return;
       }
-      const allVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
-      const currentIndex = allVerses.findIndex((v) => v.verse_key === verseKey);
+
+      // Move to next verse
       if (currentIndex >= 0 && currentIndex < allVerses.length - 1) {
-        playVerse(allVerses[currentIndex + 1].verse_key);
-      } else if (mode === "all" && allVerses.length > 0) {
-        // Wrap around to the first verse
-        playVerse(allVerses[0].verse_key);
+        const nextVerse = allVerses[currentIndex + 1];
+        if (pauseBetweenVerses > 0 && (mode === "verse" || mode === "range")) {
+          setTimeout(() => {
+            playVerse(nextVerse.verse_key);
+          }, pauseBetweenVerses * 1000);
+        } else {
+          playVerse(nextVerse.verse_key);
+        }
       } else {
-        setIsPlaying(false);
-        setCurrentAudioVerse(null);
-        setAudioProgress(0);
-        setAudioCurrentTime(0);
+        // End of range
+        if (mode === "range" && currentRangeRepeat < rangeRepeatCount - 1) {
+          setCurrentRangeRepeat((c) => c + 1);
+          setCurrentVerseRepeat(0);
+          playVerse(allVerses[0].verse_key);
+        } else if (mode === "all" && allVerses.length > 0) {
+          // Wrap around to the first verse
+          playVerse(allVerses[0].verse_key);
+        } else {
+          setIsPlaying(false);
+          setCurrentAudioVerse(null);
+          setAudioProgress(0);
+          setAudioCurrentTime(0);
+          setCurrentRangeRepeat(0);
+          setCurrentVerseRepeat(0);
+        }
       }
     };
   };
@@ -509,6 +551,7 @@ export default function MushafViewer() {
   const stopAudio = () => {
     if (audioRef.current) {
       audioRef.current.pause();
+      audioRef.current.currentTime = 0;
       audioRef.current.ontimeupdate = null;
       audioRef.current = null;
     }
@@ -517,6 +560,8 @@ export default function MushafViewer() {
     setAudioProgress(0);
     setAudioCurrentTime(0);
     setAudioDuration(0);
+    setCurrentRangeRepeat(0);
+    setCurrentVerseRepeat(0);
   };
 
   const handleNextVerse = () => {
@@ -556,9 +601,29 @@ export default function MushafViewer() {
     if (audioRef.current) audioRef.current.playbackRate = speed;
   };
 
-  const handleSetRepeatMode = (mode: "none" | "one" | "all") => {
+  const handleSetRepeatMode = (mode: "none" | "one" | "all" | "verse" | "range") => {
     repeatModeRef.current = mode;
     setRepeatMode(mode);
+    // Reset counters when mode changes
+    setCurrentRangeRepeat(0);
+    setCurrentVerseRepeat(0);
+  };
+
+  const handleSetVerseRepeatCount = (count: number) => {
+    verseRepeatCountRef.current = count;
+    setVerseRepeatCount(count);
+    setCurrentVerseRepeat(0);
+  };
+
+  const handleSetRangeRepeatCount = (count: number) => {
+    rangeRepeatCountRef.current = count;
+    setRangeRepeatCount(count);
+    setCurrentRangeRepeat(0);
+  };
+
+  const handleSetPauseBetweenVerses = (seconds: number) => {
+    pauseBetweenVersesRef.current = seconds;
+    setPauseBetweenVerses(seconds);
   };
 
   // Auto-scroll
@@ -599,11 +664,109 @@ export default function MushafViewer() {
         else if (showAudioPlayer && !isPlaying) playPage();
         else { setShowAudioPlayer(true); }
       }
+
+      // Phase 3: Keyboard shortcuts for verse range panel
+      // Toggle verse range panel: V or Alt+V
+      if ((e.key === "v" || e.key === "V") && !e.altKey) {
+        setShowVerseRangePanel(prev => !prev);
+      }
+      if (e.key === "V" && e.altKey) {
+        e.preventDefault();
+        setShowVerseRangePanel(prev => !prev);
+      }
+
+      // Focus range selection: R or Alt+R (when panel is open)
+      if ((e.key === "r" || e.key === "R") && !e.altKey && showVerseRangePanel) {
+        // Focus on the verse range inputs
+        const fromInput = document.querySelector('input[type="number"][placeholder="1"]') as HTMLInputElement;
+        const toInput = document.querySelector('input[type="number"]:not([placeholder="1"])') as HTMLInputElement;
+        if (fromInput) fromInput.focus();
+        else if (toInput) toInput.focus();
+      }
+      if (e.key === "R" && e.altKey) {
+        e.preventDefault();
+        const fromInput = document.querySelector('input[type="number"][placeholder="1"]') as HTMLInputElement;
+        const toInput = document.querySelector('input[type="number"]:not([placeholder="1"])') as HTMLInputElement;
+        if (fromInput) fromInput.focus();
+        else if (toInput) toInput.focus();
+      }
+
+      // Next range: N or Alt+N (when in range mode)
+      if ((e.key === "n" || e.key === "N") && !e.altKey && viewMode === "range" && rangeData) {
+        const nextChapter = chapters.find(c => c.id === rangeData.chapterId + 1);
+        if (nextChapter) {
+          handleSelectRange(nextChapter.id, 1, Math.min(10, nextChapter.verses_count));
+        }
+      }
+      if (e.key === "N" && e.altKey && viewMode === "range" && rangeData) {
+        e.preventDefault();
+        const nextChapter = chapters.find(c => c.id === rangeData.chapterId + 1);
+        if (nextChapter) {
+          handleSelectRange(nextChapter.id, 1, Math.min(10, nextChapter.verses_count));
+        }
+      }
+
+      // Previous range: P or Alt+P (when in range mode)
+      if ((e.key === "p" || e.key === "P") && !e.altKey && viewMode === "range" && rangeData) {
+        const prevChapter = chapters.find(c => c.id === rangeData.chapterId - 1);
+        if (prevChapter) {
+          handleSelectRange(prevChapter.id, 1, Math.min(10, prevChapter.verses_count));
+        }
+      }
+      if (e.key === "P" && e.altKey && viewMode === "range" && rangeData) {
+        e.preventDefault();
+        const prevChapter = chapters.find(c => c.id === rangeData.chapterId - 1);
+        if (prevChapter) {
+          handleSelectRange(prevChapter.id, 1, Math.min(10, prevChapter.verses_count));
+        }
+      }
+
+      // Toggle memorization mode: M or Alt+M
+      if ((e.key === "m" || e.key === "M") && !e.altKey) {
+        // This would toggle the memorization tab
+        const memButton = document.querySelector('button[title*="Memorization"]') as HTMLButtonElement;
+        if (memButton) memButton.click();
+      }
+      if (e.key === "M" && e.altKey) {
+        e.preventDefault();
+        const memButton = document.querySelector('button[title*="Memorization"]') as HTMLButtonElement;
+        if (memButton) memButton.click();
+      }
+
+      // Show/Hide all verses: S or Alt+S
+      if ((e.key === "s" || e.key === "S") && !e.altKey && viewMode === "range") {
+        // Toggle visibility of verses in range mode
+        const versesContainer = document.querySelector('.quran-text');
+        if (versesContainer) {
+          const isHidden = versesContainer.classList.contains('verses-hidden');
+          if (isHidden) {
+            versesContainer.classList.remove('verses-hidden');
+            versesContainer.classList.add('verses-visible');
+          } else {
+            versesContainer.classList.remove('verses-visible');
+            versesContainer.classList.add('verses-hidden');
+          }
+        }
+      }
+      if (e.key === "S" && e.altKey && viewMode === "range") {
+        e.preventDefault();
+        const versesContainer = document.querySelector('.quran-text');
+        if (versesContainer) {
+          const isHidden = versesContainer.classList.contains('verses-hidden');
+          if (isHidden) {
+            versesContainer.classList.remove('verses-hidden');
+            versesContainer.classList.add('verses-visible');
+          } else {
+            versesContainer.classList.remove('verses-visible');
+            versesContainer.classList.add('verses-hidden');
+          }
+        }
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, isPlaying, showAudioPlayer, currentAudioVerse]);
+  }, [currentPage, isPlaying, showAudioPlayer, currentAudioVerse, showVerseRangePanel, viewMode, rangeData, chapters]);
 
   const currentSurah = getCurrentSurah();
   const currentJuz = getCurrentJuz();
@@ -670,9 +833,7 @@ export default function MushafViewer() {
           </button>
           <button
             onClick={() => {
-              const newState = !showVerseRangePanel;
-              setShowVerseRangePanel(newState);
-              if (!newState && viewMode === "range") handleBackToPages();
+              setShowVerseRangePanel(!showVerseRangePanel);
             }}
             className={`p-2 rounded-lg transition-colors ${showVerseRangePanel ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
             title={t.mushaf.verseRange}
@@ -1015,10 +1176,23 @@ export default function MushafViewer() {
         isOpen={showVerseRangePanel}
         onClose={() => {
           setShowVerseRangePanel(false);
-          if (viewMode === "range") handleBackToPages();
         }}
         chapters={chapters}
         onSelectRange={handleSelectRange}
+        initialChapterId={rangeData?.chapterId}
+        initialFromVerse={rangeData?.fromVerse}
+        initialToVerse={rangeData?.toVerse}
+        currentVerses={viewMode === "range" && rangeData ? rangeData.verses : verses}
+        currentPage={currentPage}
+        currentAudioVerse={currentAudioVerse}
+        isPlaying={isPlaying}
+        onPlayVerse={playVerse}
+        onPauseAudio={pauseAudio}
+        onResumeAudio={resumeAudio}
+        rangeData={rangeData}
+        activeMode="range"
+        currentVerse={viewMode === "range" && rangeData && rangeData.verses.length > 0 ? rangeData.verses[0] : (verses.length > 0 ? verses[0] : null)}
+        onTogglePanel={() => setShowVerseRangePanel(prev => !prev)}
       />
 
       {/* Floating Audio Player */}
@@ -1028,13 +1202,19 @@ export default function MushafViewer() {
           setShowAudioPlayer(false);
           stopAudio();
         }}
+        verseRepeatCount={verseRepeatCount}
+        onSetVerseRepeatCount={handleSetVerseRepeatCount}
+        rangeRepeatCount={rangeRepeatCount}
+        onSetRangeRepeatCount={handleSetRangeRepeatCount}
+        pauseBetweenVerses={pauseBetweenVerses}
+        onSetPauseBetweenVerses={handleSetPauseBetweenVerses}
         isPlaying={isPlaying}
         currentVerseKey={currentAudioVerse}
         currentVerseText={
           currentAudioVerse
             ? (viewMode === "range" && rangeData ? rangeData.verses : verses).find(
-                (v) => v.verse_key === currentAudioVerse
-              )?.text_uthmani
+              (v) => v.verse_key === currentAudioVerse
+            )?.text_uthmani
             : undefined
         }
         selectedReciter={selectedReciter}

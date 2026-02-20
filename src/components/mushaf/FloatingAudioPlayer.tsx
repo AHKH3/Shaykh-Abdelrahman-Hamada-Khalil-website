@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Volume2,
   Volume1,
@@ -12,10 +14,15 @@ import {
   Repeat,
   Repeat1,
   Music2,
+  Timer,
+  Settings2,
+  ChevronUp,
 } from "lucide-react";
 import FloatingPanel from "./FloatingPanel";
 import { RECITERS } from "@/lib/quran/api";
 import { useI18n } from "@/lib/i18n/context";
+
+export type AudioRepeatMode = "none" | "one" | "all" | "verse" | "range";
 
 interface FloatingAudioPlayerProps {
   isOpen: boolean;
@@ -37,8 +44,15 @@ interface FloatingAudioPlayerProps {
   onSetVolume: (vol: number) => void;
   audioSpeed: number;
   onSetSpeed: (speed: number) => void;
-  repeatMode: "none" | "one" | "all";
-  onSetRepeatMode: (mode: "none" | "one" | "all") => void;
+  repeatMode: AudioRepeatMode;
+  onSetRepeatMode: (mode: AudioRepeatMode) => void;
+  // Advanced repeat options for self-memorization
+  verseRepeatCount?: number;
+  onSetVerseRepeatCount?: (count: number) => void;
+  rangeRepeatCount?: number;
+  onSetRangeRepeatCount?: (count: number) => void;
+  pauseBetweenVerses?: number; // seconds
+  onSetPauseBetweenVerses?: (seconds: number) => void;
 }
 
 function formatTime(seconds: number): string {
@@ -72,19 +86,24 @@ export default function FloatingAudioPlayer({
   onSetSpeed,
   repeatMode,
   onSetRepeatMode,
+  verseRepeatCount = 3,
+  onSetVerseRepeatCount,
+  rangeRepeatCount = 3,
+  onSetRangeRepeatCount,
+  pauseBetweenVerses = 2,
+  onSetPauseBetweenVerses,
 }: FloatingAudioPlayerProps) {
   const { t, locale } = useI18n();
+  const [showAdvancedRepeat, setShowAdvancedRepeat] = useState(false);
 
   const currentReciter = RECITERS.find((r) => r.id === selectedReciter) || RECITERS[0];
   const isRtl = locale === "ar";
 
   const cycleRepeat = () => {
-    const next: Record<"none" | "one" | "all", "none" | "one" | "all"> = {
-      none: "all",
-      all: "one",
-      one: "none",
-    };
-    onSetRepeatMode(next[repeatMode]);
+    const modes: AudioRepeatMode[] = ["none", "all", "one", "verse", "range"];
+    const currentIndex = modes.indexOf(repeatMode);
+    const nextIndex = (currentIndex + 1) % modes.length;
+    onSetRepeatMode(modes[nextIndex]);
   };
 
   const RepeatIcon = repeatMode === "one" ? Repeat1 : Repeat;
@@ -183,9 +202,8 @@ export default function FloatingAudioPlayer({
 
           <button
             onClick={isPlaying ? onPause : onPlay}
-            className={`w-12 h-12 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all ${
-              isPlaying ? "ring-2 ring-primary/30 ring-offset-2 ring-offset-card scale-105" : ""
-            }`}
+            className={`w-12 h-12 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all ${isPlaying ? "ring-2 ring-primary/30 ring-offset-2 ring-offset-card scale-105" : ""
+              }`}
             title={isPlaying ? t.mushaf.pause : t.mushaf.audio}
           >
             {isPlaying ? <Pause size={22} fill="currentColor" /> : <Play size={22} fill="currentColor" className="translate-x-0.5" />}
@@ -201,22 +219,25 @@ export default function FloatingAudioPlayer({
           </button>
         </div>
 
-        {/* Secondary Controls: Repeat + Speed */}
+        {/* Secondary Controls: Repeat + Speed + Advanced */}
         <div className="flex items-center justify-between gap-2">
           {/* Repeat toggle */}
           <button
             onClick={cycleRepeat}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              repeatMode !== "none"
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${repeatMode !== "none"
                 ? "bg-primary/15 text-primary"
                 : "text-muted-foreground hover:text-foreground hover:bg-accent"
-            }`}
+              }`}
             title={
               repeatMode === "none"
                 ? t.mushaf.repeatNone
                 : repeatMode === "one"
-                ? t.mushaf.repeatOne
-                : t.mushaf.repeatAll
+                  ? t.mushaf.repeatOne
+                  : repeatMode === "all"
+                    ? t.mushaf.repeatAll
+                    : repeatMode === "verse"
+                      ? locale === "ar" ? "تكرار كل آية" : "Repeat each verse"
+                      : locale === "ar" ? "تكرار المدى" : "Repeat range"
             }
           >
             <RepeatIcon size={14} />
@@ -224,8 +245,12 @@ export default function FloatingAudioPlayer({
               {repeatMode === "none"
                 ? t.mushaf.repeatNone
                 : repeatMode === "one"
-                ? t.mushaf.repeatOne
-                : t.mushaf.repeatAll}
+                  ? t.mushaf.repeatOne
+                  : repeatMode === "all"
+                    ? t.mushaf.repeatAll
+                    : repeatMode === "verse"
+                      ? locale === "ar" ? "كل آية" : "Each verse"
+                      : locale === "ar" ? "المدى" : "Range"}
             </span>
           </button>
 
@@ -235,17 +260,114 @@ export default function FloatingAudioPlayer({
               <button
                 key={s}
                 onClick={() => onSetSpeed(s)}
-                className={`px-2 py-1 rounded-md text-[11px] font-medium transition-all ${
-                  audioSpeed === s
+                className={`px-2 py-1 rounded-md text-[11px] font-medium transition-all ${audioSpeed === s
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
-                }`}
+                  }`}
               >
                 {s}×
               </button>
             ))}
           </div>
+
+          {/* Advanced repeat toggle */}
+          {(repeatMode === "verse" || repeatMode === "range") && onSetVerseRepeatCount && (
+            <button
+              onClick={() => setShowAdvancedRepeat(!showAdvancedRepeat)}
+              className={`p-1.5 rounded-lg transition-all ${showAdvancedRepeat
+                  ? "bg-primary/15 text-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
+              title={locale === "ar" ? "إعدادات التكرار المتقدمة" : "Advanced repeat settings"}
+            >
+              {showAdvancedRepeat ? <ChevronUp size={14} /> : <Settings2 size={14} />}
+            </button>
+          )}
         </div>
+
+        {/* Advanced Repeat Settings for Self-Memorization */}
+        <AnimatePresence>
+          {showAdvancedRepeat && (repeatMode === "verse" || repeatMode === "range") && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="space-y-3 overflow-hidden border-t border-border pt-3"
+            >
+              {/* Verse Repeat Count */}
+              {repeatMode === "verse" && onSetVerseRepeatCount && (
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Repeat size={12} />
+                    {locale === "ar" ? "تكرار كل آية" : "Repeat each verse"} ({locale === "ar" ? "مرات" : "times"})
+                  </label>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 5, 10].map((count) => (
+                      <button
+                        key={count}
+                        onClick={() => onSetVerseRepeatCount(count)}
+                        className={`flex-1 px-2 py-1.5 text-xs rounded-lg border transition-colors ${verseRepeatCount === count
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-muted hover:bg-muted/80 border-border"
+                          }`}
+                      >
+                        {count}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Range Repeat Count */}
+              {repeatMode === "range" && onSetRangeRepeatCount && (
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Repeat size={12} />
+                    {locale === "ar" ? "تكرار المدى" : "Repeat range"} ({locale === "ar" ? "مرات" : "times"})
+                  </label>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 5, 10].map((count) => (
+                      <button
+                        key={count}
+                        onClick={() => onSetRangeRepeatCount(count)}
+                        className={`flex-1 px-2 py-1.5 text-xs rounded-lg border transition-colors ${rangeRepeatCount === count
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-muted hover:bg-muted/80 border-border"
+                          }`}
+                      >
+                        {count}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Pause Between Verses */}
+              {onSetPauseBetweenVerses && (
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Timer size={12} />
+                    {locale === "ar" ? "وقفة بين الآيات" : "Pause between verses"} ({locale === "ar" ? "ثانية" : "sec"})
+                  </label>
+                  <div className="flex gap-2">
+                    {[0, 1, 2, 3, 5].map((seconds) => (
+                      <button
+                        key={seconds}
+                        onClick={() => onSetPauseBetweenVerses(seconds)}
+                        className={`flex-1 px-2 py-1.5 text-xs rounded-lg border transition-colors ${pauseBetweenVerses === seconds
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-muted hover:bg-muted/80 border-border"
+                          }`}
+                      >
+                        {seconds === 0 ? (locale === "ar" ? "بدون" : "None") : `${seconds}s`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Volume */}
         <div className="flex items-center gap-2.5">
@@ -298,9 +420,8 @@ export default function FloatingAudioPlayer({
             </select>
             <ChevronDown
               size={13}
-              className={`absolute top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground ${
-                isRtl ? "left-2.5" : "right-2.5"
-              }`}
+              className={`absolute top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground ${isRtl ? "left-2.5" : "right-2.5"
+                }`}
             />
           </div>
         </div>

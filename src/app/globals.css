@@ -181,6 +181,23 @@
     padding: 2px 4px;
   }
 
+  /* Phase 3: Verses visibility toggle */
+  .verses-hidden span {
+    filter: blur(8px);
+    user-select: none;
+    opacity: 0.3;
+  }
+
+  .verses-hidden span:hover {
+    filter: blur(0);
+    opacity: 1;
+  }
+
+  .verses-visible span {
+    filter: blur(0);
+    opacity: 1;
+  }
+
   .annotation-permanent {
     background: rgba(239, 68, 68, 0.2);
     border-bottom: 2px solid #ef4444;
@@ -919,7 +936,106 @@
   .dark .screen-mode-fullscreen.mushaf-reading-mode-blue:fullscreen,
   .dark .screen-mode-fullscreen.mushaf-reading-mode-red:fullscreen,
   .dark .screen-mode-fullscreen.mushaf-reading-mode-pink:fullscreen,
-  .dark .screen-mode-fullscreen.mushaf-reading-mode-high-contrast:fullscreen {
+  .dark  .screen-mode-fullscreen.mushaf-reading-mode-high-contrast:fullscreen {
     background-color: var(--background);
+  }
+
+  /* Verse Range Panel Animations */
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideOutRight {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes scaleOut {
+    from {
+      transform: scale(1);
+      opacity: 1;
+    }
+    to {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+  }
+
+  @keyframes progressPulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 6px rgba(var(--color-primary-rgb), 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0);
+    }
+  }
+
+  /* Verse range panel specific styles */
+  .verse-range-panel-enter {
+    animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .verse-range-panel-exit {
+    animation: scaleOut 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .verse-range-pill-enter {
+    animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .verse-range-pill-exit {
+    animation: slideOutRight 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .verse-range-progress-active {
+    animation: progressPulse 2s infinite;
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .verse-range-panel-enter,
+    .verse-range-panel-exit,
+    .verse-range-pill-enter,
+    .verse-range-pill-exit,
+    .verse-range-progress-active {
+      animation: none !important;
+      transition: none !important;
+    }
   }
 }
