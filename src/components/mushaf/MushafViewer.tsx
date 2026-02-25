@@ -1174,25 +1174,12 @@ export default function MushafViewer() {
       {/* Floating Verse Range Panel */}
       <FloatingVerseRangePanel
         isOpen={showVerseRangePanel}
-        onClose={() => {
-          setShowVerseRangePanel(false);
-        }}
+        onClose={() => setShowVerseRangePanel(false)}
         chapters={chapters}
         onSelectRange={handleSelectRange}
         initialChapterId={rangeData?.chapterId}
         initialFromVerse={rangeData?.fromVerse}
         initialToVerse={rangeData?.toVerse}
-        currentVerses={viewMode === "range" && rangeData ? rangeData.verses : verses}
-        currentPage={currentPage}
-        currentAudioVerse={currentAudioVerse}
-        isPlaying={isPlaying}
-        onPlayVerse={playVerse}
-        onPauseAudio={pauseAudio}
-        onResumeAudio={resumeAudio}
-        rangeData={rangeData}
-        activeMode="range"
-        currentVerse={viewMode === "range" && rangeData && rangeData.verses.length > 0 ? rangeData.verses[0] : (verses.length > 0 ? verses[0] : null)}
-        onTogglePanel={() => setShowVerseRangePanel(prev => !prev)}
       />
 
       {/* Floating Audio Player */}

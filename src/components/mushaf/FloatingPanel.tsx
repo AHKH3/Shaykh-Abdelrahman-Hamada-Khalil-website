@@ -26,6 +26,7 @@ interface FloatingPanelProps {
   collapsedInfo?: CollapsedInfo;
   autoCollapseDelay?: number;
   onExpandChange?: (isExpanded: boolean) => void;
+  allowOverflow?: boolean;
 }
 
 // Mode colors for visual feedback
@@ -54,6 +55,7 @@ export default function FloatingPanel({
   collapsedInfo,
   autoCollapseDelay = 0,
   onExpandChange,
+  allowOverflow = false,
 }: FloatingPanelProps) {
   const dragControls = useDragControls();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -378,7 +380,7 @@ export default function FloatingPanel({
         const newY = position.y + info.offset.y;
         onDragEnd(newX, newY);
       }}
-      className="bg-card border border-border/80 rounded-2xl shadow-2xl shadow-black/15 overflow-hidden"
+      className={`bg-card border border-border/80 rounded-2xl shadow-2xl shadow-black/15 ${allowOverflow ? "overflow-visible" : "overflow-hidden"}`}
     >
       {/* Active range indicator border */}
       {collapsedInfo?.rangeReference && (
@@ -447,7 +449,7 @@ export default function FloatingPanel({
       </div>
 
       {/* Content */}
-      <div className="max-h-[calc(100vh-120px)] overflow-y-auto">{children}</div>
+      <div className={allowOverflow ? "overflow-visible" : "max-h-[calc(100vh-120px)] overflow-y-auto"}>{children}</div>
     </motion.div>
   );
 }
