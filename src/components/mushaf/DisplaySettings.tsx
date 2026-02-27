@@ -78,25 +78,21 @@ export default function DisplaySettings({
                 onClick={onClose}
             >
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    transition={{ type: "spring", bounce: 0.3, duration: 0.4 }}
-                    className="bg-card border border-border rounded-2xl shadow-2xl overflow-hidden max-w-lg w-full mx-auto max-h-[90vh] overflow-y-auto"
+                    className="bg-card/95 backdrop-blur-2xl border border-border/40 rounded-t-3xl sm:rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden max-w-lg w-full mx-auto max-h-[90vh] overflow-y-auto"
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Header */}
-                    <div className="flex items-center justify-between p-4 border-b border-border bg-muted/50 sticky top-0 z-10">
-                        <h3 className="font-semibold text-sm flex items-center gap-2">
-                            <Settings size={18} />
+                    <div className="flex items-center justify-between p-5 border-b border-border/40 bg-primary/5 backdrop-blur-md sticky top-0 z-10">
+                        <h3 className="font-bold text-sm flex items-center gap-2.5 text-primary">
+                            <Settings size={20} className="animate-spin-slow" />
                             {t.mushaf.displaySettings}
                         </h3>
                         <button
                             onClick={onClose}
-                            className="p-2 rounded-lg hover:bg-muted transition-colors"
+                            className="p-2 rounded-xl hover:bg-muted/80 transition-all hover:rotate-90 duration-300"
                             aria-label={t.common.close}
                         >
-                            <X size={18} />
+                            <X size={20} />
                         </button>
                     </div>
 
@@ -121,7 +117,7 @@ export default function DisplaySettings({
                                             setPageInput("");
                                         }
                                     }}
-                                    className="flex-1 text-sm bg-muted border border-border rounded-lg px-3 py-2 text-center focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                    className="flex-1 text-sm bg-muted/50 backdrop-blur-sm border border-border/40 rounded-xl px-4 py-3 text-center focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
                                     dir="ltr"
                                     placeholder="1-604"
                                 />
@@ -130,7 +126,7 @@ export default function DisplaySettings({
                                         goToPage(Number(pageInput));
                                         setPageInput("");
                                     }}
-                                    className="px-4 py-2 text-sm bg-foreground text-background rounded-lg hover:bg-foreground/90 transition-colors"
+                                    className="px-6 py-3 text-sm font-bold bg-primary text-white rounded-xl hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all active:scale-95"
                                 >
                                     {locale === "ar" ? "انتقال" : "Go"}
                                 </button>
@@ -148,9 +144,9 @@ export default function DisplaySettings({
                                     <button
                                         key={size.value}
                                         onClick={() => setFontSize(size.value)}
-                                        className={`p-3 rounded-lg text-sm font-medium transition-colors ${fontSize === size.value
-                                            ? "bg-foreground text-background"
-                                            : "bg-muted hover:bg-muted/80"
+                                        className={`p-3.5 rounded-xl text-sm font-bold transition-all duration-300 ${fontSize === size.value
+                                            ? "bg-primary text-white shadow-lg shadow-primary/20 ring-2 ring-primary/20"
+                                            : "bg-muted/50 hover:bg-primary/10 hover:text-primary"
                                             }`}
                                     >
                                         {size.label}

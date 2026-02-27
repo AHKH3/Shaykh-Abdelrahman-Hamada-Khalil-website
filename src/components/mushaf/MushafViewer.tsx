@@ -59,8 +59,7 @@ export default function MushafViewer() {
   const [nextPageVerses, setNextPageVerses] = useState<Verse[]>([]);
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showSearch, setShowSearch] = useState(false);
-  const [showNav, setShowNav] = useState(false);
+  const [showIndex, setShowIndex] = useState(false);
   const [showTafsir, setShowTafsir] = useState(false);
   const [selectedVerse, setSelectedVerse] = useState<string | null>(null);
   const [highlightedVerse, setHighlightedVerse] = useState<string | null>(null);
@@ -160,9 +159,9 @@ export default function MushafViewer() {
 
   const getPageWidthClass = (width: string) => {
     switch (width) {
-      case "normal": return "max-w-3xl";
-      case "wide": return "max-w-5xl";
-      case "full": return "max-w-7xl";
+      case "normal": return displayMode === "double" ? "max-w-6xl" : "max-w-3xl";
+      case "wide": return displayMode === "double" ? "max-w-7xl" : "max-w-5xl";
+      case "full": return "max-w-full px-6";
       default: return "max-w-3xl";
     }
   };
@@ -339,7 +338,8 @@ export default function MushafViewer() {
     }
   };
 
-  const handleNavigateFromSearch = (pageNumber: number, verseKey?: string) => {
+  // Navigation mapping from search/index
+  const handleNavigateFromIndex = (pageNumber: number, verseKey?: string) => {
     // If in range mode, switch back to pages first
     if (viewMode === "range") {
       setViewMode("pages");
@@ -367,78 +367,9 @@ export default function MushafViewer() {
     setVerseMenuPosition({ x: event.clientX, y: event.clientY });
   };
 
-  const handleCloseVerseMenu = () => {
-    setVerseMenuPosition(null);
-    setSelectedVerseForMenu(null);
-  };
-
-  const handleCopyVerse = async () => {
-    if (!selectedVerseForMenu) return;
-    const success = await copyVerseToClipboard(selectedVerseForMenu.verse_key, selectedVerseForMenu.text_uthmani);
-    showToast(success ? t.mushaf.copied : t.common.error, success ? "success" : "error");
-  };
-
-  const handleShareVerse = async () => {
-    if (!selectedVerseForMenu) return;
-    const success = await shareVerse(selectedVerseForMenu.verse_key, selectedVerseForMenu.text_uthmani);
-    if (!success) {
-      showToast(locale === "ar" ? "المشاركة غير مدعومة" : "Sharing not supported", "error");
-    }
-  };
-
-  const handleBookmarkVerse = () => {
-    if (!selectedVerseForMenu) return;
-    const verseKey = selectedVerseForMenu.verse_key;
-    if (isBookmarked(verseKey)) {
-      removeBookmarkByVerseKey(verseKey);
-      showToast(locale === "ar" ? "تم إزالة العلامة المرجعية" : "Bookmark removed", "success");
-    } else {
-      addBookmark(verseKey, selectedVerseForMenu.chapter_id, selectedVerseForMenu.page_number);
-      showToast(locale === "ar" ? "تمت إضافة علامة مرجعية" : "Bookmark added", "success");
-    }
-  };
-
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
-  };
-
-  // Search
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) return;
-    setSearchLoading(true);
-    try {
-      const data = await searchQuran(searchQuery, locale === "ar" ? "ar" : "en");
-      setSearchResults(data.search.results);
-    } catch {
-      setSearchResults([]);
-    } finally {
-      setSearchLoading(false);
-    }
-  };
-
-  // Search for surah by name
-  const handleSearchSurah = () => {
-    if (!searchQuery.trim()) return;
-    const query = searchQuery.trim().toLowerCase();
-    const matchedChapter = chapters.find((chapter) => {
-      const arabicName = chapter.name_arabic?.toLowerCase() || "";
-      const englishName = chapter.name_simple?.toLowerCase() || "";
-      const translatedName = chapter.translated_name?.name?.toLowerCase() || "";
-      return (
-        arabicName.includes(query) ||
-        englishName.includes(query) ||
-        translatedName.includes(query)
-      );
-    });
-
-    if (matchedChapter) {
-      const page = SURAH_PAGES[matchedChapter.id];
-      if (page) {
-        goToPage(page);
-        setShowSearch(false);
-      }
-    }
   };
 
   // Audio
@@ -648,14 +579,13 @@ export default function MushafViewer() {
       if (e.key === "ArrowLeft") nextPage();
       if (e.key === "ArrowRight") prevPage();
       if (e.key === "Escape") {
-        setShowSearch(false);
-        setShowNav(false);
+        setShowIndex(false);
         setShowTafsir(false);
         setShowDisplaySettings(false);
         setShowBookmarks(false);
         setShowShortcuts(false);
       }
-      if (e.key === "f" || e.key === "F") setShowSearch(true);
+      if (e.key === "f" || e.key === "F") setShowIndex(true);
       if (e.key === "?") setShowShortcuts(true);
       if (e.key === " ") {
         e.preventDefault();
@@ -802,20 +732,27 @@ export default function MushafViewer() {
 
       {/* Top Bar */}
       <div className="mushaf-top-bar flex items-center justify-between px-4 py-2 bg-card border-b border-border">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
-            onClick={() => setShowNav(true)}
-            className="p-2 rounded-lg hover:bg-muted transition-colors text-sm flex items-center gap-2"
+            onClick={() => setShowIndex(true)}
+            className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-primary/5 hover:bg-primary/10 border border-primary/10 transition-all duration-300"
           >
-            <Layers size={16} />
-            <span className="hidden sm:inline">
-              {currentSurah?.name_arabic || ""}
-            </span>
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+              <Layers size={18} />
+            </div>
+            <div className="flex flex-col items-start leading-none">
+              <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">{t.mushaf.surah}</span>
+              <span className="text-sm font-bold font-['Amiri',serif]">
+                {currentSurah?.name_arabic || ""}
+              </span>
+            </div>
+            <ChevronDown size={14} className="text-muted-foreground group-hover:text-primary transition-colors" />
           </button>
+
           {viewMode === "range" && rangeData && (
             <button
               onClick={handleBackToPages}
-              className="px-3 py-1.5 text-xs bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-1"
+              className="px-3 py-1.5 text-xs bg-primary text-white rounded-xl hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all flex items-center gap-1"
             >
               <ChevronLeft size={14} />
               {t.mushaf.backToPages}
@@ -823,13 +760,13 @@ export default function MushafViewer() {
           )}
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <button
-            onClick={() => setShowSearch(true)}
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
+            onClick={() => setShowIndex(true)}
+            className="p-2.5 rounded-xl hover:bg-muted/50 transition-colors text-muted-foreground hover:text-primary"
             title={t.mushaf.search}
           >
-            <Search size={16} />
+            <Search size={18} />
           </button>
           <button
             onClick={() => {
@@ -879,32 +816,36 @@ export default function MushafViewer() {
           <div className="relative">
             <button
               onClick={() => setShowScreenModeMenu(!showScreenModeMenu)}
-              className={`p-2 rounded-lg transition-colors flex items-center gap-1 ${screenMode !== "normal" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+              className={`p-2.5 rounded-xl transition-all duration-300 flex items-center gap-1.5 border ${screenMode !== "normal" ? "bg-primary text-primary-foreground border-primary" : "hover:bg-muted/80 border-transparent text-muted-foreground"}`}
               title={t.mushaf.screenMode}
             >
-              {screenMode === "focus" ? <Scan size={16} /> : screenMode === "fullscreen" ? <Maximize2 size={16} /> : <Monitor size={16} />}
-              <ChevronDown size={12} />
+              {screenMode === "focus" ? <Scan size={18} /> : screenMode === "fullscreen" ? <Maximize2 size={18} /> : <Monitor size={18} />}
+              <ChevronDown size={14} className={`transition-transform duration-300 ${showScreenModeMenu ? "rotate-180" : ""}`} />
             </button>
             {showScreenModeMenu && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setShowScreenModeMenu(false)} />
-                <div className="absolute end-0 top-full mt-1 z-50 bg-card border border-border rounded-lg shadow-lg py-1 min-w-[140px]">
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  className="absolute end-0 top-full mt-2 z-50 bg-card/90 backdrop-blur-xl border border-border/40 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] py-2 min-w-[180px] overflow-hidden"
+                >
                   {[
-                    { value: "normal" as const, label: t.mushaf.screenModeNormal, icon: <Monitor size={14} /> },
-                    { value: "focus" as const, label: t.mushaf.screenModeFocus, icon: <Scan size={14} /> },
-                    { value: "fullscreen" as const, label: t.mushaf.screenModeFullscreen, icon: <Maximize2 size={14} /> },
+                    { value: "normal" as const, label: t.mushaf.screenModeNormal, icon: <Monitor size={16} /> },
+                    { value: "focus" as const, label: t.mushaf.screenModeFocus, icon: <Scan size={16} /> },
+                    { value: "fullscreen" as const, label: t.mushaf.screenModeFullscreen, icon: <Maximize2 size={16} /> },
                   ].map((mode) => (
                     <button
                       key={mode.value}
                       onClick={() => { handleScreenModeChange(mode.value); setShowScreenModeMenu(false); }}
-                      className={`w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-muted ${screenMode === mode.value ? "text-primary font-medium" : ""}`}
+                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-all hover:bg-primary/10 ${screenMode === mode.value ? "text-primary font-bold bg-primary/5" : "text-foreground/70"}`}
                     >
                       {mode.icon}
                       {mode.label}
-                      {screenMode === mode.value && <Check size={12} className="ms-auto" />}
+                      {screenMode === mode.value && <div className="ms-auto w-1.5 h-1.5 rounded-full bg-primary" />}
                     </button>
                   ))}
-                </div>
+                </motion.div>
               </>
             )}
           </div>
@@ -912,8 +853,8 @@ export default function MushafViewer() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto relative" ref={scrollContainerRef}>
-        <div className={`${getPageWidthClass(pageWidth)} mx-auto px-4 py-8`}>
+      <div className="flex-1 overflow-auto relative custom-scrollbar bg-background/50" ref={scrollContainerRef}>
+        <div className={`${getPageWidthClass(pageWidth)} mx-auto px-4 sm:px-8 py-10`}>
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <div className="w-8 h-8 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
@@ -976,39 +917,167 @@ export default function MushafViewer() {
             // Normal Pages Mode
             <motion.div
               key={currentPage}
-              initial={{ opacity: 0, rotateY: -90 }}
-              animate={{ opacity: 1, rotateY: 0 }}
-              exit={{ opacity: 0, rotateY: 90 }}
-              transition={{ duration: 0.5, type: "spring" }}
-              style={{ transformStyle: "preserve-3d", perspective: "1500px" }}
+              initial={{ opacity: 0, x: locale === "ar" ? 50 : -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
             >
               {/* Mushaf Page Frame */}
-              <div className="bg-card border border-border rounded-2xl p-6 sm:p-10 page-flip relative overflow-hidden">
-                {/* Page Header */}
-                <div className="flex items-center justify-between mb-6 pb-4 border-b border-border/50">
-                  <span className="text-xs text-muted-foreground font-medium">
-                    {t.mushaf.juz} {currentJuz}
-                  </span>
-                </div>
-
-                {/* Verses */}
+              <div className={`relative ${displayMode === 'double' ? 'bg-transparent border-none' : 'bg-card shadow-[0_10px_50px_-15px_rgba(0,0,0,0.1)] border border-border/40 rounded-3xl p-8 sm:p-12'} overflow-hidden`}>
+                {/* Pages View */}
                 {displayMode === 'double' ? (
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Left Page */}
-                    <div className={`quran-text text-center leading-[2.5] ${getFontSizeClass(fontSize)}`} dir="rtl">
+                  <div className="grid grid-cols-2 gap-0.5 bg-border/20 rounded-3xl overflow-hidden shadow-[0_20px_70px_-20px_rgba(0,0,0,0.2)] border border-border/30 relative">
+                    {/* Center Spine */}
+                    <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-10 z-10 pointer-events-none bg-gradient-to-r from-transparent via-black/[0.07] to-transparent" />
+                    <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px z-10 pointer-events-none bg-border/30" />
+
+                    {/* Left Page (Standard Mushaf: Left is even Page) */}
+                    <div className="bg-card p-10 sm:p-16 relative overflow-hidden group">
+                      {/* Inner Shadow for depth near spine */}
+                      <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-black/[0.03] to-transparent pointer-events-none" />
+
+                      {/* Page Header */}
+                      <div className="flex items-center justify-between mb-8 opacity-40 hover:opacity-100 transition-opacity">
+                        <span className="text-[10px] font-bold uppercase tracking-widest">{t.mushaf.juz} {currentJuz}</span>
+                        <span className="text-[10px] font-bold">{currentPage}</span>
+                      </div>
+
+                      <div className={`quran-text text-center leading-[2.8] ${getFontSizeClass(fontSize)}`} dir="rtl">
+                        {groupedVerses.map((group, gi) => (
+                          <div key={gi}>
+                            {group.verses[0].verse_number === 1 && (
+                              <div className="my-10 text-center">
+                                <div className="inline-block px-14 py-4 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner">
+                                  <h3 className="text-2xl font-bold font-['Amiri',serif] text-foreground">
+                                    {group.chapterName}
+                                  </h3>
+                                </div>
+                                {group.chapterId !== 9 && group.chapterId !== 1 && (
+                                  <p className="mt-6 text-2xl font-['Amiri',serif] text-muted-foreground/80">
+                                    بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
+                                  </p>
+                                )}
+                              </div>
+                            )}
+
+                            {group.verses.map((verse) => (
+                              <span
+                                key={verse.verse_key}
+                                className={`cursor-pointer transition-all inline relative px-0.5 rounded ${currentAudioVerse === verse.verse_key
+                                  ? "bg-primary/20 text-primary ring-2 ring-primary/30"
+                                  : highlightedVerse === verse.verse_key
+                                    ? "bg-yellow-400/20 text-amber-900 dark:text-amber-100 ring-2 ring-yellow-400/30"
+                                    : "hover:bg-primary/5"
+                                  }`}
+                                onClick={() => handleVerseClick(verse.verse_key)}
+                              >
+                                {verse.text_uthmani}{" "}
+                                <span
+                                  className="inline-flex items-center justify-center text-muted-foreground/60 font-sans mx-1.5 transition-colors hover:text-primary"
+                                  onClick={(e) => handleVerseNumberClick(verse, e)}
+                                >
+                                  ۝{verse.verse_number.toLocaleString("ar-EG")}
+                                </span>{" "}
+                              </span>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Right Page (Next Page) */}
+                    <div className="bg-card p-10 sm:p-16 relative overflow-hidden group border-s border-border/10">
+                      {/* Inner Shadow for depth near spine */}
+                      <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-black/[0.03] to-transparent pointer-events-none" />
+
+                      {/* Page Header */}
+                      <div className="flex items-center justify-between mb-8 opacity-40 hover:opacity-100 transition-opacity">
+                        <span className="text-[10px] font-bold">{currentPage + 1}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest">
+                          {nextPageVerses.length > 0 ? (chapters.find(c => c.id === nextPageVerses[0].chapter_id)?.name_arabic || "") : ""}
+                        </span>
+                      </div>
+
+                      {nextPageVerses.length > 0 ? (
+                        <div className={`quran-text text-center leading-[2.8] ${getFontSizeClass(fontSize)}`} dir="rtl">
+                          {(() => {
+                            const nextGroupedVerses: Array<{ chapterId: number; chapterName: string; verses: Verse[] }> = [];
+                            nextPageVerses.forEach((verse) => {
+                              const last = nextGroupedVerses[nextGroupedVerses.length - 1];
+                              if (last && last.chapterId === verse.chapter_id) {
+                                last.verses.push(verse);
+                              } else {
+                                const chapter = chapters.find((c) => c.id === verse.chapter_id);
+                                nextGroupedVerses.push({
+                                  chapterId: verse.chapter_id,
+                                  chapterName: chapter?.name_arabic || `سورة ${verse.chapter_id}`,
+                                  verses: [verse],
+                                });
+                              }
+                            });
+                            return nextGroupedVerses.map((group, gi) => (
+                              <div key={gi}>
+                                {group.verses[0].verse_number === 1 && (
+                                  <div className="my-10 text-center">
+                                    <div className="inline-block px-14 py-4 bg-primary/5 rounded-2xl border border-primary/10">
+                                      <h3 className="text-2xl font-bold font-['Amiri',serif]">{group.chapterName}</h3>
+                                    </div>
+                                    {group.chapterId !== 9 && group.chapterId !== 1 && (
+                                      <p className="mt-6 text-2xl font-['Amiri',serif] text-muted-foreground/80">
+                                        بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+                                {group.verses.map((verse) => (
+                                  <span
+                                    key={verse.verse_key}
+                                    className={`cursor-pointer transition-all inline relative px-0.5 rounded ${currentAudioVerse === verse.verse_key
+                                      ? "bg-primary/20 text-primary ring-2 ring-primary/30"
+                                      : highlightedVerse === verse.verse_key
+                                        ? "bg-yellow-400/20 text-amber-900 dark:text-amber-100 ring-2 ring-yellow-400/30"
+                                        : "hover:bg-primary/5"
+                                      }`}
+                                    onClick={() => handleVerseClick(verse.verse_key)}
+                                  >
+                                    {verse.text_uthmani}{" "}
+                                    <span
+                                      className="inline-flex items-center justify-center text-muted-foreground/60 font-sans mx-1.5 transition-colors hover:text-primary"
+                                      onClick={(e) => handleVerseNumberClick(verse, e)}
+                                    >
+                                      ۝{verse.verse_number.toLocaleString("ar-EG")}
+                                    </span>{" "}
+                                  </span>
+                                ))}
+                              </div>
+                            ));
+                          })()}
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-muted-foreground italic text-sm">
+                          {locale === "ar" ? "نهاية المصحف" : "End of Mushaf"}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between mb-10 opacity-40 hover:opacity-100 transition-opacity">
+                      <span className="text-xs font-bold uppercase tracking-widest">{t.mushaf.juz} {currentJuz}</span>
+                      <span className="text-xs font-bold">{currentPage}</span>
+                    </div>
+
+                    <div className={`quran-text text-center leading-[2.8] ${getFontSizeClass(fontSize)}`} dir="rtl">
                       {groupedVerses.map((group, gi) => (
                         <div key={gi}>
-                          {/* Surah header if first verse is verse 1 */}
                           {group.verses[0].verse_number === 1 && (
-                            <div className="my-8 text-center">
-                              <div className="inline-block px-12 py-3 bg-muted/50 rounded-2xl border border-border/50">
-                                <h3 className="text-xl font-bold font-['Amiri',serif] text-foreground">
+                            <div className="my-10 text-center">
+                              <div className="inline-block px-16 py-5 bg-primary/5 rounded-3xl border border-primary/10 shadow-sm">
+                                <h3 className="text-3xl font-bold font-['Amiri',serif] text-foreground">
                                   {group.chapterName}
                                 </h3>
                               </div>
-                              {/* Bismillah - skip for Surah At-Tawbah (9) and Al-Fatiha (1) already has it */}
                               {group.chapterId !== 9 && group.chapterId !== 1 && (
-                                <p className={`mt-4 ${getFontSizeClass(fontSize)} font-['Amiri',serif] text-muted-foreground`}>
+                                <p className="mt-8 text-2xl font-['Amiri',serif] text-muted-foreground/80">
                                   بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
                                 </p>
                               )}
@@ -1018,17 +1087,17 @@ export default function MushafViewer() {
                           {group.verses.map((verse) => (
                             <span
                               key={verse.verse_key}
-                              className={`cursor-pointer transition-colors inline ${currentAudioVerse === verse.verse_key
-                                ? "verse-highlight"
+                              className={`cursor-pointer transition-all inline relative px-0.5 rounded-lg ${currentAudioVerse === verse.verse_key
+                                ? "bg-primary/20 text-primary ring-4 ring-primary/10"
                                 : highlightedVerse === verse.verse_key
-                                  ? "bg-yellow-200/30 dark:bg-yellow-500/20"
-                                  : "hover:text-foreground/70"
+                                  ? "bg-yellow-400/20 text-amber-900 dark:text-amber-100 ring-4 ring-yellow-400/10"
+                                  : "hover:bg-primary/5"
                                 }`}
                               onClick={() => handleVerseClick(verse.verse_key)}
                             >
                               {verse.text_uthmani}{" "}
                               <span
-                                className={`inline-flex items-center justify-center ${getFontSizeClass(fontSize)} text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer`}
+                                className="inline-flex items-center justify-center text-muted-foreground/50 font-sans mx-2 transition-colors hover:text-primary scale-110"
                                 onClick={(e) => handleVerseNumberClick(verse, e)}
                               >
                                 ۝{verse.verse_number.toLocaleString("ar-EG")}
@@ -1038,96 +1107,7 @@ export default function MushafViewer() {
                         </div>
                       ))}
                     </div>
-                    {/* Right Page */}
-                    {nextPageVerses.length > 0 && (
-                      <div className={`quran-text text-center leading-[2.5] ${getFontSizeClass(fontSize)}`} dir="rtl">
-                        {(() => {
-                          const nextGroupedVerses: Array<{ chapterId: number; chapterName: string; verses: Verse[] }> = [];
-                          nextPageVerses.forEach((verse) => {
-                            const last = nextGroupedVerses[nextGroupedVerses.length - 1];
-                            if (last && last.chapterId === verse.chapter_id) {
-                              last.verses.push(verse);
-                            } else {
-                              const chapter = chapters.find((c) => c.id === verse.chapter_id);
-                              nextGroupedVerses.push({
-                                chapterId: verse.chapter_id,
-                                chapterName: chapter?.name_arabic || `سورة ${verse.chapter_id}`,
-                                verses: [verse],
-                              });
-                            }
-                          });
-                          return nextGroupedVerses.map((group, gi) => (
-                            <div key={gi}>
-                              {group.verses.map((verse) => (
-                                <span
-                                  key={verse.verse_key}
-                                  className={`cursor-pointer transition-colors inline ${currentAudioVerse === verse.verse_key
-                                    ? "verse-highlight"
-                                    : highlightedVerse === verse.verse_key
-                                      ? "bg-yellow-200/30 dark:bg-yellow-500/20"
-                                      : "hover:text-foreground/70"
-                                    }`}
-                                  onClick={() => handleVerseClick(verse.verse_key)}
-                                >
-                                  {verse.text_uthmani}{" "}
-                                  <span
-                                    className={`inline-flex items-center justify-center ${getFontSizeClass(fontSize)} text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer`}
-                                    onClick={(e) => handleVerseNumberClick(verse, e)}
-                                  >
-                                    ۝{verse.verse_number.toLocaleString("ar-EG")}
-                                  </span>{" "}
-                                </span>
-                              ))}
-                            </div>
-                          ));
-                        })()}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className={`quran-text text-center leading-[2.5] ${getFontSizeClass(fontSize)}`} dir="rtl">
-                    {groupedVerses.map((group, gi) => (
-                      <div key={gi}>
-                        {/* Surah header if first verse is verse 1 */}
-                        {group.verses[0].verse_number === 1 && (
-                          <div className="my-8 text-center">
-                            <div className="inline-block px-12 py-3 bg-muted/50 rounded-2xl border border-border/50">
-                              <h3 className="text-xl font-bold font-['Amiri',serif] text-foreground">
-                                {group.chapterName}
-                              </h3>
-                            </div>
-                            {/* Bismillah - skip for Surah At-Tawbah (9) and Al-Fatiha (1) already has it */}
-                            {group.chapterId !== 9 && group.chapterId !== 1 && (
-                              <p className={`mt-4 ${getFontSizeClass(fontSize)} font-['Amiri',serif] text-muted-foreground`}>
-                                بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
-                              </p>
-                            )}
-                          </div>
-                        )}
-
-                        {group.verses.map((verse) => (
-                          <span
-                            key={verse.verse_key}
-                            className={`cursor-pointer transition-colors inline ${currentAudioVerse === verse.verse_key
-                              ? "verse-highlight"
-                              : highlightedVerse === verse.verse_key
-                                ? "bg-yellow-200/30 dark:bg-yellow-500/20"
-                                : "hover:text-foreground/70"
-                              }`}
-                            onClick={() => handleVerseClick(verse.verse_key)}
-                          >
-                            {verse.text_uthmani}{" "}
-                            <span
-                              className={`inline-flex items-center justify-center ${getFontSizeClass(fontSize)} text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer`}
-                              onClick={(e) => handleVerseNumberClick(verse, e)}
-                            >
-                              ۝{verse.verse_number.toLocaleString("ar-EG")}
-                            </span>{" "}
-                          </span>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
+                  </>
                 )}
               </div>
             </motion.div>
@@ -1138,37 +1118,42 @@ export default function MushafViewer() {
 
       {/* Bottom Navigation - Hide in range mode */}
       {viewMode === "pages" && (
-        <div className="mushaf-bottom-nav flex items-center justify-center gap-3 px-4 py-3 bg-card border-t border-border">
+        <div className="mushaf-bottom-nav flex items-center justify-center gap-6 px-6 py-4 bg-card/80 backdrop-blur-xl border-t border-border/40 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.1)]">
           <button
             onClick={prevPage}
             disabled={currentPage <= 1}
-            className="flex items-center gap-2 px-4 py-2 text-base font-medium hover:bg-muted rounded-lg transition-colors disabled:opacity-30"
+            className="flex items-center gap-3 px-7 py-3 text-sm font-black bg-muted/40 backdrop-blur-md hover:bg-primary hover:text-white rounded-2xl transition-all duration-300 disabled:opacity-10 disabled:cursor-not-allowed group shadow-sm hover:shadow-[0_10px_25px_-5px_rgba(var(--color-primary),0.3)] border border-border/30 hover:border-primary/50"
           >
-            <SkipForward size={18} />
-            {t.mushaf.prevPage}
+            <SkipForward size={18} className="transition-transform group-hover:scale-110 group-active:-translate-x-0.5" />
+            <span>{t.mushaf.prevPage}</span>
           </button>
 
-          <span className="text-lg font-bold px-4 py-2 bg-muted/50 rounded-lg min-w-[100px] text-center">
-            {currentPage} / {TOTAL_PAGES}
-          </span>
+          <div className="flex flex-col items-center">
+            <div className="relative px-5 py-2 rounded-xl bg-background border border-border/40 shadow-inner flex items-center gap-2 group cursor-pointer overflow-hidden">
+              <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <span className="text-lg font-black text-primary relative z-10">{currentPage}</span>
+              <span className="text-xs text-muted-foreground/60 relative z-10">/</span>
+              <span className="text-sm font-bold text-muted-foreground relative z-10">{TOTAL_PAGES}</span>
+            </div>
+          </div>
 
           <button
             onClick={nextPage}
             disabled={currentPage >= TOTAL_PAGES}
-            className="flex items-center gap-2 px-4 py-2 text-base font-medium hover:bg-muted rounded-lg transition-colors disabled:opacity-30"
+            className="flex items-center gap-3 px-7 py-3 text-sm font-black bg-muted/40 backdrop-blur-md hover:bg-primary hover:text-white rounded-2xl transition-all duration-300 disabled:opacity-10 disabled:cursor-not-allowed group shadow-sm hover:shadow-[0_10px_25px_-5px_rgba(var(--color-primary),0.3)] border border-border/30 hover:border-primary/50"
           >
-            {t.mushaf.nextPage}
-            <SkipBack size={18} />
+            <span>{t.mushaf.nextPage}</span>
+            <SkipBack size={18} className="transition-transform group-hover:scale-110 group-active:translate-x-0.5" />
           </button>
         </div>
       )}
 
-      {/* Advanced Search - New Component */}
+      {/* Unified Index & Search Panel */}
       <AdvancedSearch
-        isOpen={showSearch}
-        onClose={() => setShowSearch(false)}
+        isOpen={showIndex}
+        onClose={() => setShowIndex(false)}
         chapters={chapters}
-        onNavigate={handleNavigateFromSearch}
+        onNavigate={handleNavigateFromIndex}
       />
 
       {/* Floating Verse Range Panel */}
@@ -1225,248 +1210,6 @@ export default function MushafViewer() {
         onSetRepeatMode={handleSetRepeatMode}
       />
 
-      {/* Surah/Juz Navigation Modal */}
-      <AnimatePresence>
-        {showNav && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center"
-            onClick={() => setShowNav(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-card border border-border rounded-2xl w-full max-w-lg mx-4 shadow-lg overflow-hidden max-h-[80vh]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-4 border-b border-border flex items-center justify-between">
-                <h3 className="font-semibold font-['Amiri',serif]">
-                  {t.mushaf.surah}
-                </h3>
-                <button onClick={() => setShowNav(false)}>
-                  <X size={18} className="text-muted-foreground" />
-                </button>
-              </div>
-              <div className="overflow-auto max-h-[calc(80vh-60px)] divide-y divide-border">
-                {chapters.map((chapter) => (
-                  <button
-                    key={chapter.id}
-                    className="w-full flex items-center justify-between p-3 hover:bg-muted/50 transition-colors"
-                    onClick={() => {
-                      goToPage(SURAH_PAGES[chapter.id] || 1);
-                      setShowNav(false);
-                    }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="w-8 h-8 flex items-center justify-center bg-muted rounded-lg text-xs font-medium">
-                        {chapter.id}
-                      </span>
-                      <div className="text-start">
-                        <p className="text-sm font-medium">{chapter.name_arabic}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {chapter.translated_name.name} - {chapter.verses_count}{" "}
-                          {locale === "ar" ? "آية" : "verses"}
-                        </p>
-                      </div>
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      {t.mushaf.page} {SURAH_PAGES[chapter.id]}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Tafsir Panel */}
-      <AnimatePresence>
-        {showTafsir && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center"
-            onClick={() => setShowTafsir(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-              className="bg-card border border-border rounded-t-2xl sm:rounded-2xl w-full max-w-lg mx-0 sm:mx-4 shadow-lg overflow-hidden max-h-[70vh]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-4 border-b border-border flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold font-['Amiri',serif]">
-                    {t.mushaf.tafsir}
-                  </h3>
-                  <p className="text-xs text-muted-foreground">{selectedVerse}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  {selectedVerse && (
-                    <button
-                      onClick={() => playVerse(selectedVerse)}
-                      className="p-2 rounded-lg hover:bg-muted transition-colors"
-                    >
-                      <Play size={14} />
-                    </button>
-                  )}
-                  <button onClick={() => setShowTafsir(false)}>
-                    <X size={18} className="text-muted-foreground" />
-                  </button>
-                </div>
-              </div>
-              <div className="p-6 overflow-auto max-h-[calc(70vh-60px)]">
-                {tafsirLoading ? (
-                  <div className="flex items-center justify-center p-8">
-                    <div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
-                  </div>
-                ) : (
-                  <div
-                    className="text-sm leading-relaxed text-muted-foreground"
-                    dir="rtl"
-                    dangerouslySetInnerHTML={{ __html: tafsirText }}
-                  />
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Bookmarks Panel */}
-      <AnimatePresence>
-        {showBookmarks && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center"
-            onClick={() => setShowBookmarks(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-card border border-border rounded-2xl w-full max-w-lg mx-4 shadow-lg overflow-hidden max-h-[80vh]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-4 border-b border-border flex items-center justify-between">
-                <h3 className="font-semibold flex items-center gap-2">
-                  <Bookmark size={18} />
-                  {locale === "ar" ? "الإشارات المرجعية" : "Bookmarks"}
-                </h3>
-                <button onClick={() => setShowBookmarks(false)}>
-                  <X size={18} className="text-muted-foreground" />
-                </button>
-              </div>
-              <div className="overflow-auto max-h-[calc(80vh-60px)] divide-y divide-border">
-                {getBookmarks().length > 0 ? (
-                  getBookmarks().map((bookmark) => (
-                    <button
-                      key={bookmark.verseKey}
-                      className="w-full flex items-center justify-between p-3 hover:bg-muted/50 transition-colors"
-                      onClick={() => {
-                        goToPage(bookmark.pageNumber);
-                        setShowBookmarks(false);
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Bookmark size={16} className="text-primary fill-primary" />
-                        <div className="text-start">
-                          <p className="text-sm font-medium">{bookmark.verseKey}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {locale === "ar" ? "سورة" : "Surah"} {bookmark.chapterId} - {locale === "ar" ? "صفحة" : "Page"} {bookmark.pageNumber}
-                          </p>
-                        </div>
-                      </div>
-                    </button>
-                  ))
-                ) : (
-                  <p className="text-center text-muted-foreground text-sm p-8">
-                    {locale === "ar" ? "لا توجد إشارات مرجعية" : "No bookmarks"}
-                  </p>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Keyboard Shortcuts Modal */}
-      <AnimatePresence>
-        {showShortcuts && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center"
-            onClick={() => setShowShortcuts(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-card border border-border rounded-2xl w-full max-w-md mx-4 shadow-lg overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-4 border-b border-border flex items-center justify-between">
-                <h3 className="font-semibold flex items-center gap-2">
-                  <Keyboard size={18} />
-                  {locale === "ar" ? "اختصارات لوحة المفاتيح" : "Keyboard Shortcuts"}
-                </h3>
-                <button onClick={() => setShowShortcuts(false)}>
-                  <X size={18} className="text-muted-foreground" />
-                </button>
-              </div>
-              <div className="p-4 space-y-3">
-                {[
-                  { key: "← / →", action: locale === "ar" ? "التنقل بين الصفحات" : "Navigate pages" },
-                  { key: "Space", action: locale === "ar" ? "تشغيل / إيقاف الصوت" : "Play / Pause audio" },
-                  { key: "Escape", action: locale === "ar" ? "إغلاق جميع النوافذ" : "Close all panels" },
-                  { key: "F", action: locale === "ar" ? "فتح البحث" : "Open search" },
-                  { key: "?", action: locale === "ar" ? "عرض الاختصارات" : "Show shortcuts" },
-                ].map((shortcut) => (
-                  <div key={shortcut.key} className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">{shortcut.action}</span>
-                    <kbd className="px-2 py-1 bg-muted rounded text-xs font-mono">
-                      {shortcut.key}
-                    </kbd>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Verse Options Menu */}
-      <VerseOptionsMenu
-        position={verseMenuPosition}
-        verseKey={selectedVerseForMenu?.verse_key || ""}
-        verseText={selectedVerseForMenu?.text_uthmani || ""}
-        onTafsir={() => {
-          if (selectedVerseForMenu) {
-            handleTafsir(selectedVerseForMenu.verse_key);
-          }
-        }}
-        onPlay={() => {
-          if (selectedVerseForMenu) {
-            playVerse(selectedVerseForMenu.verse_key);
-          }
-        }}
-        onCopy={handleCopyVerse}
-        onShare={handleShareVerse}
-        onBookmark={handleBookmarkVerse}
-        isBookmarked={selectedVerseForMenu ? isBookmarked(selectedVerseForMenu.verse_key) : false}
-        onClose={handleCloseVerseMenu}
-      />
-
       {/* Tafsir Panel */}
       <TafsirPanel
         isOpen={showTafsir}
@@ -1479,21 +1222,20 @@ export default function MushafViewer() {
         }}
       />
 
-      {/* Toast Notification */}
       <AnimatePresence>
         {toast && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className={`fixed bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-lg shadow-lg text-sm font-medium z-50 ${toast.type === "success"
-              ? "bg-green-600 text-white"
-              : "bg-red-600 text-white"
+            initial={{ opacity: 0, y: 30, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className={`fixed bottom-10 left-1/2 -translate-x-1/2 px-6 py-3.5 rounded-2xl shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] text-sm font-bold z-[100] backdrop-blur-xl border ${toast.type === "success"
+              ? "bg-green-500/90 text-white border-green-400/30"
+              : "bg-red-500/90 text-white border-red-400/30"
               }`}
           >
-            <div className="flex items-center gap-2">
-              {toast.type === "success" && <Check size={16} />}
-              <span>{toast.message}</span>
+            <div className="flex items-center gap-3">
+              {toast.type === "success" ? <Check size={20} className="animate-in zoom-in duration-300" /> : <X size={20} className="animate-in zoom-in duration-300" />}
+              <span className="tracking-tight">{toast.message}</span>
             </div>
           </motion.div>
         )}

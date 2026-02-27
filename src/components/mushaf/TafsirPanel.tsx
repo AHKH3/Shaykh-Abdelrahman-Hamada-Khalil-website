@@ -67,15 +67,10 @@ export default function TafsirPanel({
                 onClick={onClose}
             >
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    transition={{ type: "spring", bounce: 0.3, duration: 0.4 }}
-                    className={`absolute bottom-0 left-0 right-0 sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 bg-card border border-border rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden max-h-[80vh] sm:max-w-2xl sm:w-full mx-auto`}
+                    className={`absolute bottom-0 left-0 right-0 sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 bg-card/95 backdrop-blur-2xl border border-border/40 rounded-t-3xl sm:rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden max-h-[85vh] sm:max-w-2xl sm:w-full mx-auto`}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    {/* Header */}
-                    <div className="flex items-center justify-between p-4 border-b border-border bg-muted/50">
+                    <div className="flex items-center justify-between p-5 border-b border-border/40 bg-primary/5 backdrop-blur-md">
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={onPlayVerse}

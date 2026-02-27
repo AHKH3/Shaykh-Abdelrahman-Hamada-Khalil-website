@@ -219,7 +219,7 @@ export function VerseRangeForm({
                     ? (isRtl ? selectedChapter.name_arabic : selectedChapter.name_simple)
                     : (isRtl ? "ابحث باسم السورة أو رقمها…" : "Search surah…")
                 }
-                className="w-full bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-muted/80 shadow-sm pe-10"
+                className="w-full bg-muted/30 backdrop-blur-md border border-border/40 rounded-xl px-4 py-3.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all hover:bg-muted/50 shadow-inner pe-10"
               />
               {searchQuery ? (
                 <button
@@ -239,11 +239,7 @@ export function VerseRangeForm({
             <AnimatePresence>
               {isDropdownOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: -8, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -4, scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  className="absolute z-[100] w-full mt-2 bg-card border border-border/80 rounded-2xl shadow-2xl overflow-hidden"
+                  className="absolute z-[100] w-full mt-2 bg-card/95 backdrop-blur-2xl border border-border/40 rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden"
                 >
                   <div className="max-h-[300px] overflow-y-auto">
                     {/* Recent */}
@@ -341,7 +337,7 @@ export function VerseRangeForm({
                       max={selectedChapter.verses_count}
                       value={fromVerse}
                       onChange={(e) => { setFromVerse(e.target.value); setError(""); }}
-                      className="flex-1 bg-muted/50 border border-border rounded-xl px-3 py-2.5 text-sm font-medium text-center focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-muted/80 shadow-sm"
+                      className="flex-1 bg-muted/30 backdrop-blur-md border border-border/40 rounded-xl px-3 py-3 text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all hover:bg-muted/50 shadow-inner"
                       placeholder="1"
                       dir="ltr"
                     />
@@ -373,7 +369,7 @@ export function VerseRangeForm({
                       max={selectedChapter.verses_count}
                       value={toVerse}
                       onChange={(e) => { setToVerse(e.target.value); setError(""); }}
-                      className="flex-1 bg-muted/50 border border-border rounded-xl px-3 py-2.5 text-sm font-medium text-center focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-muted/80 shadow-sm"
+                      className="flex-1 bg-muted/30 backdrop-blur-md border border-border/40 rounded-xl px-3 py-3 text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all hover:bg-muted/50 shadow-inner"
                       placeholder={selectedChapter.verses_count.toString()}
                       dir="ltr"
                     />
@@ -406,7 +402,7 @@ export function VerseRangeForm({
                         key={r.label}
                         {...buttonProps}
                         onClick={() => handleQuickRange(r.from, r.to)}
-                        className="px-4 py-2 text-xs bg-muted/80 hover:bg-muted rounded-xl border border-border transition-colors font-semibold shadow-sm text-foreground"
+                        className="px-4 py-2.5 text-xs bg-muted/40 backdrop-blur-sm hover:bg-primary/10 hover:text-primary rounded-xl border border-border/40 transition-all font-bold shadow-sm"
                       >
                         {r.label}
                       </motion.button>
@@ -443,7 +439,7 @@ export function VerseRangeForm({
                         key={delta}
                         {...buttonProps}
                         onClick={shift}
-                        className="px-3 py-2 text-xs bg-muted/80 hover:bg-muted rounded-xl border border-border transition-colors font-bold shadow-sm text-foreground flex items-center justify-center"
+                        className="px-3 py-2.5 text-xs bg-muted/40 backdrop-blur-sm hover:bg-muted rounded-xl border border-border/40 transition-all font-black shadow-sm text-foreground flex items-center justify-center active:bg-primary/5"
                       >
                         {delta > 0 ? `+${delta}` : delta}
                       </motion.button>

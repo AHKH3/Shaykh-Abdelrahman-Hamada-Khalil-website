@@ -144,7 +144,7 @@ export default function FloatingPanel({
           exit={{ y: "100%" }}
           transition={{ type: "spring", bounce: 0.2 }}
           style={{ zIndex }}
-          className="fixed bottom-0 left-0 right-0 bg-card border-t border-border/80 rounded-t-2xl shadow-2xl shadow-black/20"
+          className="fixed bottom-0 left-0 right-0 bg-card/90 backdrop-blur-2xl border-t border-border/40 rounded-t-3xl shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.2)]"
         >
           {/* Drag handle */}
           <div className="flex items-center justify-center pt-2">
@@ -156,11 +156,11 @@ export default function FloatingPanel({
             className="flex items-center justify-between px-4 py-3 border-b border-border/60 cursor-pointer select-none"
             onClick={isCollapsed ? handleExpand : undefined}
           >
-            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <span className="text-primary">{icon}</span>
+            <div className="flex items-center gap-3 text-sm font-bold text-foreground">
+              <span className="text-primary scale-110">{icon}</span>
               {title}
               {collapsedInfo?.rangeReference && isCollapsed && (
-                <span className="text-xs text-muted-foreground font-normal mr-2">
+                <span className="text-[10px] px-2 py-0.5 bg-primary/10 text-primary rounded-full font-bold mr-2">
                   {collapsedInfo.rangeReference}
                 </span>
               )}
@@ -177,9 +177,9 @@ export default function FloatingPanel({
                   </button>
                   <button
                     onClick={(e) => { e.stopPropagation(); handleCollapse(); }}
-                    className="p-1.5 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
+                    className="p-1.5 rounded-xl hover:bg-muted/80 transition-all text-muted-foreground hover:text-foreground"
                   >
-                    <ChevronDown size={15} />
+                    <ChevronDown size={18} />
                   </button>
                 </>
               )}
@@ -255,9 +255,9 @@ export default function FloatingPanel({
       >
         {/* Main collapsed pill */}
         <div
-          className={`flex items-center gap-2 bg-card border border-border/80 shadow-lg shadow-black/10 transition-all duration-200 hover:shadow-xl hover:bg-accent/50 ${isVerticalEdge
-            ? "flex-col py-3 px-2.5 rounded-e-xl"
-            : "flex-row px-4 py-2.5 rounded-b-xl"
+          className={`flex items-center gap-2.5 bg-card/90 backdrop-blur-xl border border-border/40 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 hover:shadow-2xl hover:bg-card hover:-translate-y-0.5 ${isVerticalEdge
+            ? "flex-col py-4 px-3 rounded-e-2xl"
+            : "flex-row px-5 py-3 rounded-b-2xl"
             }`}
         >
           {/* Icon with mode indicator */}
@@ -380,7 +380,7 @@ export default function FloatingPanel({
         const newY = position.y + info.offset.y;
         onDragEnd(newX, newY);
       }}
-      className={`bg-card border border-border/80 rounded-2xl shadow-2xl shadow-black/15 ${allowOverflow ? "overflow-visible" : "overflow-hidden"}`}
+      className={`bg-card/90 backdrop-blur-2xl border border-border/40 rounded-2xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.2)] ${allowOverflow ? "overflow-visible" : "overflow-hidden"}`}
     >
       {/* Active range indicator border */}
       {collapsedInfo?.rangeReference && (
@@ -397,7 +397,7 @@ export default function FloatingPanel({
 
       {/* Drag Handle / Title Bar */}
       <div
-        className="flex items-center justify-between px-4 py-2.5 border-b border-border/60 bg-muted/20 cursor-grab active:cursor-grabbing select-none"
+        className="flex items-center justify-between px-5 py-3.5 border-b border-border/40 bg-primary/5 backdrop-blur-md cursor-grab active:cursor-grabbing select-none"
         onPointerDown={(e) => dragControls.start(e)}
       >
         <div className="flex items-center gap-2 text-sm font-semibold text-foreground pointer-events-none">
