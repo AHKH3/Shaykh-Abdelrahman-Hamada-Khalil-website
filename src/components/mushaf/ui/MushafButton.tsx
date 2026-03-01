@@ -37,7 +37,9 @@ const MushafButton = forwardRef<HTMLButtonElement, MushafButtonProps>(
 
                 {/* Text wrapper */}
                 {children && (
-                    <span className="relative z-10 flex-1 text-start">{children}</span>
+                    <div className="relative z-10 flex min-w-0 flex-1 items-center gap-2.5 text-start">
+                        {children}
+                    </div>
                 )}
             </button>
         );

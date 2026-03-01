@@ -798,18 +798,20 @@ export default function MushafViewer() {
           <MushafButton
             variant="ghost"
             onClick={() => setShowIndex(true)}
-            className="group flex flex-row items-center gap-3 px-4 py-2 rounded-2xl bg-primary/5 hover:bg-primary/10 border border-primary/10 transition-all duration-500 font-normal shadow-none h-auto whitespace-nowrap overflow-hidden"
+            className="group px-4 py-2 rounded-2xl bg-primary/5 hover:bg-primary/10 border border-primary/10 transition-all duration-500 font-normal shadow-none h-auto whitespace-nowrap overflow-hidden"
           >
-            <div className="w-9 h-9 flex-shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-              <Layers size={18} />
-            </div>
-            <div className="flex items-center gap-2.5 leading-none whitespace-nowrap">
-              <span className="text-[10px] text-primary/70 uppercase font-black tracking-[0.1em] bg-primary/10 px-2 py-0.5 rounded-lg border border-primary/10 whitespace-nowrap">{t.mushaf.surah}</span>
-              <span className="text-lg font-bold font-['Amiri',serif] text-foreground drop-shadow-sm whitespace-nowrap">
-                {currentSurah?.name_arabic || ""}
+            <span className="flex w-full min-w-0 items-center gap-3 whitespace-nowrap">
+              <span className="w-9 h-9 flex-shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                <Layers size={18} />
               </span>
-            </div>
-            <ChevronDown size={14} className="text-muted-foreground/60 group-hover:text-primary transition-colors duration-500 ms-1 flex-shrink-0" />
+              <span className="flex min-w-0 items-center gap-2.5 leading-none whitespace-nowrap">
+                <span className="text-[10px] text-primary/70 uppercase font-black tracking-[0.1em] bg-primary/10 px-2 py-0.5 rounded-lg border border-primary/10 whitespace-nowrap">{t.mushaf.surah}</span>
+                <span className="text-lg font-bold font-['Amiri',serif] text-foreground drop-shadow-sm whitespace-nowrap truncate">
+                  {currentSurah?.name_arabic || ""}
+                </span>
+              </span>
+              <ChevronDown size={14} className="text-muted-foreground/60 group-hover:text-primary transition-colors duration-500 ms-1 flex-shrink-0" />
+            </span>
           </MushafButton>
 
           {viewMode === "range" && rangeData && (

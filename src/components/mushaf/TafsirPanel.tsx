@@ -98,12 +98,14 @@ export default function TafsirPanel({
                     <MushafButton
                         variant="ghost"
                         onClick={() => setShowDropdown(!showDropdown)}
-                        className="w-full flex items-center justify-between px-5 py-3.5 bg-card border border-primary/10 rounded-2xl hover:bg-primary/5 transition-all duration-300 text-sm font-bold shadow-sm"
+                        className="w-full px-5 py-3.5 bg-card border border-primary/10 rounded-2xl hover:bg-primary/5 transition-all duration-300 text-sm font-bold shadow-sm"
                     >
-                        <span className="text-foreground/90 font-['Inter',sans-serif] whitespace-nowrap">
-                            {TAFSIR_RESOURCES[selectedTafsirId]?.name || t.mushaf.selectTafsir}
+                        <span className="flex w-full min-w-0 items-center justify-between gap-2 whitespace-nowrap">
+                            <span className="text-foreground/90 font-['Inter',sans-serif] truncate">
+                                {TAFSIR_RESOURCES[selectedTafsirId]?.name || t.mushaf.selectTafsir}
+                            </span>
+                            <ChevronDown size={18} className={`flex-shrink-0 transition-transform duration-500 text-primary/70 ${showDropdown ? "rotate-180" : ""}`} />
                         </span>
-                        <ChevronDown size={18} className={`transition-transform duration-500 text-primary/70 ${showDropdown ? "rotate-180" : ""}`} />
                     </MushafButton>
 
                     <AnimatePresence>

@@ -392,9 +392,10 @@ export default function AdvancedSearch({
                           <span className="whitespace-nowrap">{ch.verses_count} {locale === "ar" ? "آية" : "v"}</span>
                         </div>
                       </div>
-                      <div className="text-end opacity-0 group-hover:opacity-100 transition-opacity">
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-tighter">{t.mushaf.page}</p>
-                        <p className="font-bold text-xs text-primary">{SURAH_PAGES[ch.id]}</p>
+                      <div className="text-end opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        <span className="font-bold text-xs text-primary">
+                          {t.mushaf.page} {SURAH_PAGES[ch.id]}
+                        </span>
                       </div>
                     </MushafButton>
                   ))}

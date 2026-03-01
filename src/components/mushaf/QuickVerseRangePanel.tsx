@@ -507,13 +507,15 @@ export function VerseRangeForm({
         <section className="rounded-2xl border border-border/40 bg-muted/15 p-3">
           <MushafButton
             onClick={() => setShowHistory((prev) => !prev)}
-            className="flex w-full items-center justify-between rounded-xl border border-border/40 bg-background/70 px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted/40"
+            className="w-full rounded-xl border border-border/40 bg-background/70 px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted/40"
           >
-            <span className="flex items-center gap-2 whitespace-nowrap">
-              <History size={15} className="text-primary flex-shrink-0" />
-              <span className="whitespace-nowrap">{locale === "ar" ? "السجل" : "History"}</span>
+            <span className="flex w-full min-w-0 items-center justify-between gap-2 whitespace-nowrap">
+              <span className="flex min-w-0 items-center gap-2">
+                <History size={15} className="text-primary flex-shrink-0" />
+                <span className="truncate whitespace-nowrap">{locale === "ar" ? "السجل" : "History"}</span>
+              </span>
+              <span className="text-xs text-muted-foreground flex-shrink-0">{showHistory ? "−" : "+"}</span>
             </span>
-            <span className="text-xs text-muted-foreground">{showHistory ? "−" : "+"}</span>
           </MushafButton>
 
           {showHistory ? (
