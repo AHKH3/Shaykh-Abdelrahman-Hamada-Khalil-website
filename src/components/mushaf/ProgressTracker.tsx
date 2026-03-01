@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Flame, Calendar } from "lucide-react";
+import { motion } from "framer-motion";
+import { BookOpen, Flame } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 
 interface ProgressTrackerProps {
@@ -28,8 +28,6 @@ export default function ProgressTracker({ currentPage }: ProgressTrackerProps) {
                 const data = localStorage.getItem(STORAGE_KEY);
                 if (data) {
                     const sessions: ReadingSession[] = JSON.parse(data);
-                    const today = new Date().toDateString();
-                    const todaySessions = sessions.filter((s) => s.date === today);
                     const totalPagesRead = new Set<number>();
 
                     // Get all pages read

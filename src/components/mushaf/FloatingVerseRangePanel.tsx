@@ -35,9 +35,9 @@ export default function FloatingVerseRangePanel({
       isOpen={isOpen}
       onClose={onClose}
       minWidth={340}
-      defaultPanelHeight={480}
+      defaultPanelHeight={620}
       zIndex={60}
-      allowOverflow={true}
+      contentHeight={540}
     >
       <VerseRangeForm
         chapters={chapters}

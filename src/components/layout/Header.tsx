@@ -9,7 +9,7 @@ import { Menu, X, Sun, Moon, Languages, LogIn, LogOut } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import { useTheme } from "@/lib/theme/context";
 import { createClient } from "@/lib/supabase/client";
-import type { User } from "@supabase/supabase-js";
+import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 
 export default function Header() {
   const { t, locale, toggleLocale } = useI18n();
@@ -30,7 +30,7 @@ export default function Header() {
     checkSession();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: string, session: any) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       setUser(session?.user ?? null);
     });
 
@@ -54,10 +54,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
-
   const links = [
     { href: "/", label: t.nav.home },
     { href: "/mushaf", label: t.nav.mushaf },
@@ -79,7 +75,7 @@ export default function Header() {
       <nav className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 w-full" role="navigation" aria-label="Main navigation">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group" onClick={() => setMobileMenuOpen(false)}>
             <Image
               src={!mounted || theme === "light" ? "/logo-light.png" : "/logo-dark.png"}
               alt={locale === "ar" ? "الشيخ عبد الرحمن حماده خليل" : "Shaykh Abdelrahman Hamada Khalil"}
@@ -96,6 +92,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
                 className={`relative px-5 py-2.5 text-base font-medium rounded-xl transition-colors ${isActive(link.href)
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground"
@@ -174,6 +171,7 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
                   className={`block px-5 py-4 rounded-xl text-base font-medium transition-colors ${isActive(link.href)
                     ? "bg-muted text-foreground"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"

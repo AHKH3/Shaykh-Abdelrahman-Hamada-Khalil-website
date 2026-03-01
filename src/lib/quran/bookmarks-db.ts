@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/client";
-import type { User } from "@supabase/supabase-js";
 
 export interface Bookmark {
   id: string;

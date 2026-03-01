@@ -1,8 +1,11 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Type, Monitor, Layout, Settings, BookOpen, Palette } from "lucide-react";
+import { useRef } from "react";
+import { Type, Monitor, Settings, BookOpen, Palette } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
+import ModalShell from "@/components/ui/ModalShell";
+import MushafButton from "./ui/MushafButton";
+import MushafCloseButton from "./ui/MushafCloseButton";
 
 interface DisplaySettingsProps {
     isOpen: boolean;
@@ -11,8 +14,6 @@ interface DisplaySettingsProps {
     setFontSize: (size: number) => void;
     pageWidth: "normal" | "wide" | "full";
     setPageWidth: (width: "normal" | "wide" | "full") => void;
-    displayMode: "single" | "double";
-    setDisplayMode: (mode: "single" | "double") => void;
     pageInput: string;
     setPageInput: (input: string) => void;
     goToPage: (page: number) => void;
@@ -27,8 +28,6 @@ export default function DisplaySettings({
     setFontSize,
     pageWidth,
     setPageWidth,
-    displayMode,
-    setDisplayMode,
     pageInput,
     setPageInput,
     goToPage,
@@ -36,6 +35,7 @@ export default function DisplaySettings({
     setReadingMode,
 }: DisplaySettingsProps) {
     const { t, locale } = useI18n();
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
 
     const fontSizes = [
         { value: 24, label: locale === "ar" ? "صغير" : "Small" },
@@ -50,11 +50,6 @@ export default function DisplaySettings({
         { value: "full" as const, label: t.mushaf.fullWidth },
     ];
 
-    const displayModes = [
-        { value: "single" as const, label: t.mushaf.singlePage },
-        { value: "double" as const, label: t.mushaf.doublePage },
-    ];
-
     const readingModes = [
         { value: "normal" as const, label: t.mushaf.normal },
         { value: "sepia" as const, label: t.mushaf.sepia },
@@ -66,164 +61,130 @@ export default function DisplaySettings({
         { value: "highContrast" as const, label: t.mushaf.highContrast },
     ];
 
-    if (!isOpen) return null;
-
     return (
-        <AnimatePresence>
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
-                onClick={onClose}
-            >
-                <motion.div
-                    className="bg-card/95 backdrop-blur-2xl border border-border/40 rounded-t-3xl sm:rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden max-w-lg w-full mx-auto max-h-[90vh] overflow-y-auto"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    {/* Header */}
-                    <div className="flex items-center justify-between p-5 border-b border-border/40 bg-primary/5 backdrop-blur-md sticky top-0 z-10">
-                        <h3 className="font-bold text-sm flex items-center gap-2.5 text-primary">
-                            <Settings size={20} className="animate-spin-slow" />
-                            {t.mushaf.displaySettings}
-                        </h3>
-                        <button
-                            onClick={onClose}
-                            className="p-2 rounded-xl hover:bg-muted/80 transition-all hover:rotate-90 duration-300"
-                            aria-label={t.common.close}
+        <ModalShell
+            isOpen={isOpen}
+            onClose={onClose}
+            titleId="display-settings-title"
+            initialFocusRef={closeButtonRef}
+            zIndex={70}
+            containerClassName="flex items-end sm:items-center justify-center p-0 sm:p-4"
+            panelClassName="bg-card/95 backdrop-blur-md border border-border/40 rounded-t-3xl sm:rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden max-w-lg w-full mx-auto max-h-[90vh] overflow-y-auto"
+        >
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-primary/10 bg-primary/5 backdrop-blur-xl sticky top-0 z-10 relative">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
+                <h3 id="display-settings-title" className="font-bold text-sm flex items-center gap-2.5 text-primary whitespace-nowrap">
+                    <Settings size={20} className="animate-spin-slow flex-shrink-0" />
+                    <span className="whitespace-nowrap">{t.mushaf.displaySettings}</span>
+                </h3>
+                <MushafCloseButton
+                    ref={closeButtonRef}
+                    onClick={onClose}
+                    iconSize={20}
+                    aria-label={t.common.close}
+                />
+            </div>
+
+            {/* Content */}
+            <div className="p-4 space-y-6">
+                {/* Go to Page */}
+                <div>
+                    <label className="flex items-center gap-2 text-sm font-medium mb-3">
+                        <BookOpen size={16} className="text-muted-foreground" />
+                        {t.mushaf.goToPage}
+                    </label>
+                    <div className="flex gap-2">
+                        <input
+                            type="number"
+                            min={1}
+                            max={604}
+                            value={pageInput}
+                            onChange={(e) => setPageInput(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    goToPage(Number(pageInput));
+                                    setPageInput("");
+                                }
+                            }}
+                            className="flex-1 text-sm bg-muted/50 backdrop-blur-sm border border-border/40 rounded-xl px-4 py-3 text-center focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
+                            dir="ltr"
+                            placeholder="1-604"
+                        />
+                        <MushafButton
+                            variant="primary"
+                            onClick={() => {
+                                goToPage(Number(pageInput));
+                                setPageInput("");
+                            }}
+                            className="px-6 py-3 text-sm"
                         >
-                            <X size={20} />
-                        </button>
+                            {locale === "ar" ? "انتقال" : "Go"}
+                        </MushafButton>
                     </div>
+                </div>
 
-                    {/* Content */}
-                    <div className="p-4 space-y-6">
-                        {/* Go to Page */}
-                        <div>
-                            <label className="flex items-center gap-2 text-sm font-medium mb-3">
-                                <BookOpen size={16} className="text-muted-foreground" />
-                                {t.mushaf.goToPage}
-                            </label>
-                            <div className="flex gap-2">
-                                <input
-                                    type="number"
-                                    min={1}
-                                    max={604}
-                                    value={pageInput}
-                                    onChange={(e) => setPageInput(e.target.value)}
-                                    onKeyDown={(e) => {
-                                        if (e.key === "Enter") {
-                                            goToPage(Number(pageInput));
-                                            setPageInput("");
-                                        }
-                                    }}
-                                    className="flex-1 text-sm bg-muted/50 backdrop-blur-sm border border-border/40 rounded-xl px-4 py-3 text-center focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
-                                    dir="ltr"
-                                    placeholder="1-604"
-                                />
-                                <button
-                                    onClick={() => {
-                                        goToPage(Number(pageInput));
-                                        setPageInput("");
-                                    }}
-                                    className="px-6 py-3 text-sm font-bold bg-primary text-white rounded-xl hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all active:scale-95"
-                                >
-                                    {locale === "ar" ? "انتقال" : "Go"}
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Font Size */}
-                        <div>
-                            <label className="flex items-center gap-2 text-sm font-medium mb-3">
-                                <Type size={16} className="text-muted-foreground" />
-                                {t.mushaf.fontSize}
-                            </label>
-                            <div className="grid grid-cols-2 gap-2">
-                                {fontSizes.map((size) => (
-                                    <button
-                                        key={size.value}
-                                        onClick={() => setFontSize(size.value)}
-                                        className={`p-3.5 rounded-xl text-sm font-bold transition-all duration-300 ${fontSize === size.value
-                                            ? "bg-primary text-white shadow-lg shadow-primary/20 ring-2 ring-primary/20"
-                                            : "bg-muted/50 hover:bg-primary/10 hover:text-primary"
-                                            }`}
-                                    >
-                                        {size.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Page Width */}
-                        <div>
-                            <label className="flex items-center gap-2 text-sm font-medium mb-3">
-                                <Monitor size={16} className="text-muted-foreground" />
-                                {t.mushaf.pageWidth}
-                            </label>
-                            <div className="grid grid-cols-3 gap-2">
-                                {pageWidths.map((width) => (
-                                    <button
-                                        key={width.value}
-                                        onClick={() => setPageWidth(width.value)}
-                                        className={`p-3 rounded-lg text-sm font-medium transition-colors ${pageWidth === width.value
-                                            ? "bg-foreground text-background"
-                                            : "bg-muted hover:bg-muted/80"
-                                            }`}
-                                    >
-                                        {width.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Display Mode */}
-                        <div>
-                            <label className="flex items-center gap-2 text-sm font-medium mb-3">
-                                <Layout size={16} className="text-muted-foreground" />
-                                {t.mushaf.displayMode}
-                            </label>
-                            <div className="grid grid-cols-2 gap-2">
-                                {displayModes.map((mode) => (
-                                    <button
-                                        key={mode.value}
-                                        onClick={() => setDisplayMode(mode.value)}
-                                        className={`p-3 rounded-lg text-sm font-medium transition-colors ${displayMode === mode.value
-                                            ? "bg-foreground text-background"
-                                            : "bg-muted hover:bg-muted/80"
-                                            }`}
-                                    >
-                                        {mode.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Reading Mode */}
-                        <div>
-                            <label className="flex items-center gap-2 text-sm font-medium mb-3">
-                                <Palette size={16} className="text-muted-foreground" />
-                                {t.mushaf.readingMode}
-                            </label>
-                            <div className="grid grid-cols-3 gap-2">
-                                {readingModes.map((mode) => (
-                                    <button
-                                        key={mode.value}
-                                        onClick={() => setReadingMode(mode.value)}
-                                        className={`p-3 rounded-lg text-sm font-medium transition-colors ${readingMode === mode.value
-                                            ? "bg-foreground text-background"
-                                            : "bg-muted hover:bg-muted/80"
-                                            }`}
-                                    >
-                                        {mode.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
+                {/* Font Size */}
+                <div>
+                    <label className="flex items-center gap-2 text-sm font-medium mb-3">
+                        <Type size={16} className="text-muted-foreground" />
+                        {t.mushaf.fontSize}
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                        {fontSizes.map((size) => (
+                            <MushafButton
+                                key={size.value}
+                                variant={fontSize === size.value ? "primary" : "ghost"}
+                                onClick={() => setFontSize(size.value)}
+                                className={`p-3.5 text-sm ${fontSize === size.value ? "ring-2 ring-primary/20" : "bg-muted/50"}`}
+                            >
+                                {size.label}
+                            </MushafButton>
+                        ))}
                     </div>
-                </motion.div>
-            </motion.div>
-        </AnimatePresence>
+                </div>
+
+                {/* Page Width */}
+                <div>
+                    <label className="flex items-center gap-2 text-sm font-medium mb-3">
+                        <Monitor size={16} className="text-muted-foreground" />
+                        {t.mushaf.pageWidth}
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                        {pageWidths.map((width) => (
+                            <MushafButton
+                                key={width.value}
+                                variant={pageWidth === width.value ? "primary" : "ghost"}
+                                onClick={() => setPageWidth(width.value)}
+                                className={`p-3 text-sm ${pageWidth !== width.value ? "bg-muted" : "bg-foreground text-background shadow-none hover:bg-foreground/90"}`}
+                            >
+                                <span className="whitespace-nowrap">{width.label}</span>
+                            </MushafButton>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Reading Mode */}
+                <div>
+                    <label className="flex items-center gap-2 text-sm font-medium mb-3">
+                        <Palette size={16} className="text-muted-foreground" />
+                        {t.mushaf.readingMode}
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                        {readingModes.map((mode) => (
+                            <MushafButton
+                                key={mode.value}
+                                variant={readingMode === mode.value ? "primary" : "ghost"}
+                                onClick={() => setReadingMode(mode.value)}
+                                className={`p-3 text-sm ${readingMode !== mode.value ? "bg-muted" : "bg-foreground text-background shadow-none hover:bg-foreground/90"}`}
+                            >
+                                <span className="whitespace-nowrap">{mode.label}</span>
+                            </MushafButton>
+                        ))}
+                    </div>
+                </div>
+
+            </div>
+        </ModalShell>
     );
 }

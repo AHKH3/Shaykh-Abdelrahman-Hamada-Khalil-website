@@ -105,6 +105,8 @@ export async function searchWithFallback(options: SearchEngineOptions): Promise<
             verseKey: result.verse_key,
             text: result.text,
             highlighted: result.highlighted,
+            surahId: result.chapter_id,
+            pageNumber: result.page_number,
             matchScore: result.score,
         }));
 

@@ -100,18 +100,27 @@ export interface AdvancedSearchOptions {
 }
 
 // Unified search result (combines verse and surah results)
-export interface UnifiedSearchResult {
-  type: 'verse' | 'surah';
-  verseKey?: string;
-  verseId?: number;
-  text?: string;
-  highlighted?: string;
-  surahId?: number;
-  surahName?: string;
-  surahNameArabic?: string;
-  pageNumber?: number;
-  matchScore?: number;
-}
+export type UnifiedSearchResult =
+  | {
+      type: "verse";
+      verseKey: string;
+      verseId?: number;
+      text?: string;
+      highlighted?: string;
+      surahId?: number;
+      surahName?: string;
+      surahNameArabic?: string;
+      pageNumber: number;
+      matchScore?: number;
+    }
+  | {
+      type: "surah";
+      surahId: number;
+      surahName: string;
+      surahNameArabic?: string;
+      pageNumber: number;
+      matchScore?: number;
+    };
 
 export interface Tafsir {
   id: number;
@@ -202,6 +211,9 @@ export async function searchQuran(
   };
 
   const result = await searchWithFallback(searchOptions);
+  const verseResults = result.results.filter(
+    (entry): entry is Extract<UnifiedSearchResult, { type: "verse" }> => entry.type === "verse"
+  );
 
   // Convert back to SearchResult format for backward compatibility
   return {
@@ -210,11 +222,11 @@ export async function searchQuran(
       total_results: result.totalResults,
       current_page: result.currentPage,
       total_pages: result.totalPages,
-      results: result.results.map(r => ({
-        verse_key: r.verseKey!,
-        verse_id: r.verseId!,
-        text: r.text!,
-        highlighted: r.highlighted!,
+      results: verseResults.map((entry) => ({
+        verse_key: entry.verseKey,
+        verse_id: entry.verseId ?? 0,
+        text: entry.text ?? "",
+        highlighted: entry.highlighted ?? entry.text ?? "",
         words: [],
       }))
     }
@@ -470,6 +482,14 @@ export const SURAH_PAGES: Record<number, number> = {
   100: 599, 101: 600, 102: 600, 103: 601, 104: 601, 105: 601,
   106: 602, 107: 602, 108: 602, 109: 603, 110: 603, 111: 603,
   112: 604, 113: 604, 114: 604,
+};
+
+// Juz page mapping (first page of each juz)
+export const JUZ_START_PAGES: Record<number, number> = {
+  1: 1, 2: 22, 3: 42, 4: 62, 5: 82, 6: 102, 7: 121, 8: 142,
+  9: 162, 10: 182, 11: 201, 12: 222, 13: 242, 14: 262, 15: 282, 16: 302,
+  17: 322, 18: 342, 19: 362, 20: 382, 21: 402, 22: 422, 23: 442, 24: 462,
+  25: 482, 26: 502, 27: 522, 28: 542, 29: 562, 30: 582,
 };
 
 export const TOTAL_PAGES = 604;

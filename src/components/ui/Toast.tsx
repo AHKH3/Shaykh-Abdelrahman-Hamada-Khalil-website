@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, AlertCircle, Info } from "lucide-react";
+import { Check, X, Info } from "lucide-react";
 
 export type ToastType = "success" | "error" | "info";
 

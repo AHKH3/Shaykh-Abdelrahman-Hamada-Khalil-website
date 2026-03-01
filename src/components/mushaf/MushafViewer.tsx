@@ -1,26 +1,17 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  ChevronRight,
   ChevronLeft,
-  Search,
   BookOpen,
-  Play,
-  Pause,
   SkipBack,
   SkipForward,
   Volume2,
   Settings,
   Layers,
-  X,
-  Check,
   Bookmark,
   Keyboard,
-  Moon,
-  Sun,
-  HelpCircle,
   Scroll,
   Monitor,
   Maximize2,
@@ -31,51 +22,44 @@ import { useI18n } from "@/lib/i18n/context";
 import {
   getVersesByPage,
   getChapters,
-  searchQuran,
-  getTafsir,
-  RECITERS,
-  SURAH_PAGES,
   TOTAL_PAGES,
   getAudioUrl,
   getVersesByRange,
   type Verse,
   type Chapter,
 } from "@/lib/quran/api";
-import { useTheme } from "@/lib/theme/context";
 import VerseOptionsMenu from "./VerseOptionsMenu";
 import TafsirPanel from "./TafsirPanel";
 import DisplaySettings from "./DisplaySettings";
 import AdvancedSearch from "./AdvancedSearch";
 import FloatingVerseRangePanel from "./FloatingVerseRangePanel";
 import FloatingAudioPlayer from "./FloatingAudioPlayer";
-import { isBookmarked, addBookmark, removeBookmarkByVerseKey, getBookmarks } from "@/lib/quran/bookmarks";
+import MushafPageView from "./MushafPageView";
+import MushafPageFrame from "./MushafPageFrame";
+import { isBookmarked, addBookmark, removeBookmarkByVerseKey } from "@/lib/quran/bookmarks";
 import { copyVerseToClipboard, shareVerse } from "@/lib/quran/export";
+import { ToastContainer, type ToastType } from "@/components/ui/Toast";
+import BookmarksPanel from "./BookmarksPanel";
+import KeyboardShortcutsPanel from "./KeyboardShortcutsPanel";
+import MushafButton from "./ui/MushafButton";
+
+const PRELOAD_RADIUS = 3;
 
 export default function MushafViewer() {
-  const { theme } = useTheme();
-  const { t, locale, dir } = useI18n();
+  const { t, locale } = useI18n();
   const [currentPage, setCurrentPage] = useState(1);
   const [verses, setVerses] = useState<Verse[]>([]);
-  const [nextPageVerses, setNextPageVerses] = useState<Verse[]>([]);
   const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showIndex, setShowIndex] = useState(false);
   const [showTafsir, setShowTafsir] = useState(false);
   const [selectedVerse, setSelectedVerse] = useState<string | null>(null);
   const [highlightedVerse, setHighlightedVerse] = useState<string | null>(null);
-  const [tafsirText, setTafsirText] = useState("");
-  const [tafsirLoading, setTafsirLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<
-    Array<{ verse_key: string; text: string; highlighted: string }>
-  >([]);
-  const [searchLoading, setSearchLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentAudioVerse, setCurrentAudioVerse] = useState<string | null>(null);
   const [selectedReciter, setSelectedReciter] = useState(1);
   const [pageInput, setPageInput] = useState("");
   const [showAudioPlayer, setShowAudioPlayer] = useState(false);
-  const [audioProgress, setAudioProgress] = useState(0);
   const [audioDuration, setAudioDuration] = useState(0);
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
   const [audioVolume, setAudioVolume] = useState(1);
@@ -101,12 +85,11 @@ export default function MushafViewer() {
   const [selectedVerseForMenu, setSelectedVerseForMenu] = useState<Verse | null>(null);
 
   // Toast notification
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [toasts, setToasts] = useState<Array<{ id: string; message: string; type: ToastType }>>([]);
 
   // Display settings
   const [fontSize, setFontSize] = useState(32);
   const [pageWidth, setPageWidth] = useState<"normal" | "wide" | "full">("normal");
-  const [displayMode, setDisplayMode] = useState<"single" | "double">("single");
   const [showDisplaySettings, setShowDisplaySettings] = useState(false);
   const [readingMode, setReadingMode] = useState<"normal" | "sepia" | "green" | "purple" | "blue" | "red" | "pink" | "highContrast">("normal");
   const [screenMode, setScreenMode] = useState<"normal" | "focus" | "fullscreen">("normal");
@@ -116,7 +99,7 @@ export default function MushafViewer() {
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [autoScroll, setAutoScroll] = useState(false);
-  const [scrollSpeed, setScrollSpeed] = useState(1);
+  const [scrollSpeed] = useState(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
 
@@ -131,6 +114,15 @@ export default function MushafViewer() {
     chapterInfo?: Chapter;
   } | null>(null);
   const [lastPageBeforeRange, setLastPageBeforeRange] = useState(1);
+  const [, setPageVersesCache] = useState<Record<number, Verse[]>>({});
+  const pageVersesCacheRef = useRef<Record<number, Verse[]>>({});
+  const activePageRequestIdRef = useRef(0);
+  const requestedPageRef = useRef(1);
+  const highlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [pendingVerseFocus, setPendingVerseFocus] = useState<{
+    verseKey: string;
+    fallbackTried: boolean;
+  } | null>(null);
 
 
 
@@ -159,8 +151,8 @@ export default function MushafViewer() {
 
   const getPageWidthClass = (width: string) => {
     switch (width) {
-      case "normal": return displayMode === "double" ? "max-w-6xl" : "max-w-3xl";
-      case "wide": return displayMode === "double" ? "max-w-7xl" : "max-w-5xl";
+      case "normal": return "max-w-3xl";
+      case "wide": return "max-w-5xl";
       case "full": return "max-w-full px-6";
       default: return "max-w-3xl";
     }
@@ -226,29 +218,96 @@ export default function MushafViewer() {
     getChapters(locale === "ar" ? "ar" : "en").then(setChapters).catch(console.error);
   }, [locale]);
 
-  // Load page verses
-  const loadPage = useCallback(async (page: number) => {
-    setLoading(true);
-    try {
-      const data = await getVersesByPage(page);
-      setVerses(data.verses);
-      // Load next page for double page mode
-      if (page < TOTAL_PAGES) {
-        const nextData = await getVersesByPage(page + 1);
-        setNextPageVerses(nextData.verses);
-      } else {
-        setNextPageVerses([]);
-      }
-    } catch (err) {
-      console.error("Failed to load page:", err);
-    } finally {
-      setLoading(false);
-    }
+  const mergeCache = useCallback((entries: Record<number, Verse[]>) => {
+    if (Object.keys(entries).length === 0) return pageVersesCacheRef.current;
+
+    const nextCache = { ...pageVersesCacheRef.current, ...entries };
+    pageVersesCacheRef.current = nextCache;
+    setPageVersesCache(nextCache);
+    return nextCache;
   }, []);
 
+  const fetchMissingPages = useCallback(async (pages: number[]) => {
+    const uniquePages = Array.from(new Set(pages)).filter(
+      (pageNumber) =>
+        pageNumber >= 1 &&
+        pageNumber <= TOTAL_PAGES &&
+        !pageVersesCacheRef.current[pageNumber]
+    );
+
+    if (uniquePages.length === 0) return {};
+
+    const fetchResults = await Promise.allSettled(
+      uniquePages.map(async (pageNumber) => {
+        const data = await getVersesByPage(pageNumber);
+        return { pageNumber, verses: data.verses };
+      })
+    );
+
+    const cacheUpdate: Record<number, Verse[]> = {};
+    fetchResults.forEach((result) => {
+      if (result.status === "fulfilled") {
+        cacheUpdate[result.value.pageNumber] = result.value.verses;
+      }
+    });
+
+    return cacheUpdate;
+  }, []);
+
+  const preloadNearbyPages = useCallback(async (centerPage: number) => {
+    const nearbyPages: number[] = [];
+
+    for (let offset = -PRELOAD_RADIUS; offset <= PRELOAD_RADIUS; offset += 1) {
+      if (offset === 0) continue;
+      const pageNumber = centerPage + offset;
+      if (pageNumber >= 1 && pageNumber <= TOTAL_PAGES) {
+        nearbyPages.push(pageNumber);
+      }
+    }
+
+    const cacheUpdate = await fetchMissingPages(nearbyPages);
+    mergeCache(cacheUpdate);
+  }, [fetchMissingPages, mergeCache]);
+
+  // Cache-first navigation: keep current page visible until target data is ready.
+  const loadPage = useCallback(async (page: number) => {
+    if (page < 1 || page > TOTAL_PAGES) return;
+
+    requestedPageRef.current = page;
+    const requestId = ++activePageRequestIdRef.current;
+    const cachedPage = pageVersesCacheRef.current[page];
+
+    if (cachedPage) {
+      setCurrentPage(page);
+      setVerses(cachedPage);
+      setSelectedVerse(null);
+      setShowTafsir(false);
+      void preloadNearbyPages(page);
+      return;
+    }
+
+    try {
+      const requiredPages = page < TOTAL_PAGES ? [page, page + 1] : [page];
+      const requiredUpdate = await fetchMissingPages(requiredPages);
+      const mergedCache = mergeCache(requiredUpdate);
+
+      if (requestId !== activePageRequestIdRef.current || requestedPageRef.current !== page) {
+        return;
+      }
+
+      setCurrentPage(page);
+      setVerses(mergedCache[page] || []);
+      setSelectedVerse(null);
+      setShowTafsir(false);
+      void preloadNearbyPages(page);
+    } catch (err) {
+      console.error("Failed to load page:", err);
+    }
+  }, [fetchMissingPages, mergeCache, preloadNearbyPages]);
+
   useEffect(() => {
-    loadPage(currentPage);
-  }, [currentPage, loadPage]);
+    void loadPage(1);
+  }, [loadPage]);
 
   // Listen for fullscreen changes
   useEffect(() => {
@@ -262,16 +321,32 @@ export default function MushafViewer() {
     return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, [screenMode]);
 
-  const goToPage = (page: number) => {
-    if (page >= 1 && page <= TOTAL_PAGES) {
-      setCurrentPage(page);
-      setSelectedVerse(null);
-      setShowTafsir(false);
-    }
-  };
+  const goToPage = useCallback((page: number) => {
+    void loadPage(page);
+  }, [loadPage]);
 
-  const nextPage = () => goToPage(currentPage + 1);
-  const prevPage = () => goToPage(currentPage - 1);
+  const pageStep = 1;
+  const nextPage = useCallback(() => goToPage(requestedPageRef.current + pageStep), [pageStep, goToPage]);
+  const prevPage = useCallback(() => goToPage(requestedPageRef.current - pageStep), [pageStep, goToPage]);
+
+  const applyTemporaryHighlight = useCallback((verseKey: string, duration = 4000) => {
+    if (highlightTimerRef.current) {
+      clearTimeout(highlightTimerRef.current);
+    }
+
+    setHighlightedVerse(verseKey);
+    highlightTimerRef.current = setTimeout(() => {
+      setHighlightedVerse((prev) => (prev === verseKey ? null : prev));
+    }, duration);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (highlightTimerRef.current) {
+        clearTimeout(highlightTimerRef.current);
+      }
+    };
+  }, []);
 
   // Get current surah info
   const getCurrentSurah = () => {
@@ -280,24 +355,10 @@ export default function MushafViewer() {
     return chapters.find((c) => c.id === chapterId);
   };
 
-  const getCurrentJuz = () => {
-    if (verses.length === 0) return null;
-    return verses[0].juz_number;
-  };
-
   // Tafsir
-  const handleTafsir = async (verseKey: string) => {
+  const handleTafsir = (verseKey: string) => {
     setSelectedVerse(verseKey);
     setShowTafsir(true);
-    setTafsirLoading(true);
-    try {
-      const data = await getTafsir(verseKey);
-      setTafsirText(data.text);
-    } catch {
-      setTafsirText(locale === "ar" ? "لم يتم العثور على التفسير" : "Tafsir not found");
-    } finally {
-      setTafsirLoading(false);
-    }
   };
 
   // Verse range handlers
@@ -339,37 +400,86 @@ export default function MushafViewer() {
   };
 
   // Navigation mapping from search/index
-  const handleNavigateFromIndex = (pageNumber: number, verseKey?: string) => {
-    // If in range mode, switch back to pages first
+  const handleNavigateFromIndex = useCallback((pageNumber: number, verseKey?: string) => {
     if (viewMode === "range") {
       setViewMode("pages");
       setRangeData(null);
     }
 
     goToPage(pageNumber);
-
     if (verseKey) {
-      setHighlightedVerse(verseKey);
-      // Clear highlight after 3 seconds
-      setTimeout(() => setHighlightedVerse(null), 3000);
+      setPendingVerseFocus({ verseKey, fallbackTried: false });
     }
-  };
+  }, [goToPage, viewMode]);
+
+  const handleNavigateToBookmark = useCallback((pageNumber: number, verseKey: string) => {
+    handleNavigateFromIndex(pageNumber, verseKey);
+  }, [handleNavigateFromIndex]);
+
+  useEffect(() => {
+    if (!pendingVerseFocus) return;
+
+    const frameId = window.requestAnimationFrame(() => {
+      const selector = `[data-verse-key=\"${pendingVerseFocus.verseKey}\"]`;
+      const verseElement = document.querySelector(selector) as HTMLElement | null;
+
+      if (verseElement) {
+        verseElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+        applyTemporaryHighlight(pendingVerseFocus.verseKey);
+        setPendingVerseFocus(null);
+        return;
+      }
+
+      if (pendingVerseFocus.fallbackTried) return;
+
+      const [chapterId, verseNumber] = pendingVerseFocus.verseKey.split(":").map(Number);
+      if (!chapterId || !verseNumber) {
+        setPendingVerseFocus(null);
+        return;
+      }
+
+      setPendingVerseFocus((current) =>
+        current ? { ...current, fallbackTried: true } : current
+      );
+
+      void (async () => {
+        try {
+          const result = await getVersesByRange(chapterId, verseNumber, verseNumber);
+          const resolvedPage = result.verses[0]?.page_number;
+          if (resolvedPage && resolvedPage !== requestedPageRef.current) {
+            goToPage(resolvedPage);
+          }
+        } catch (error) {
+          console.error("Failed to resolve verse focus page:", error);
+        }
+      })();
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [applyTemporaryHighlight, goToPage, pendingVerseFocus, rangeData, verses, viewMode]);
 
   // Highlight verse on click
-  const handleVerseClick = (verseKey: string) => {
-    setHighlightedVerse(verseKey === highlightedVerse ? null : verseKey);
-  };
+  const handleVerseClick = useCallback((verseKey: string) => {
+    setHighlightedVerse((prev) => (verseKey === prev ? null : verseKey));
+  }, []);
 
   // Verse options menu handlers
-  const handleVerseNumberClick = (verse: Verse, event: React.MouseEvent) => {
+  const handleVerseNumberClick = useCallback((verse: Verse, event: React.MouseEvent) => {
     event.stopPropagation();
     setSelectedVerseForMenu(verse);
     setVerseMenuPosition({ x: event.clientX, y: event.clientY });
+  }, []);
+
+  const showToast = (message: string, type: ToastType) => {
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((item) => item.id !== id));
+    }, 3000);
   };
 
-  const showToast = (message: string, type: "success" | "error") => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((item) => item.id !== id));
   };
 
   // Audio
@@ -391,7 +501,6 @@ export default function MushafViewer() {
     setCurrentAudioVerse(verseKey);
     setIsPlaying(true);
     setAudioCurrentTime(0);
-    setAudioProgress(0);
 
     audio.onloadedmetadata = () => {
       setAudioDuration(audio.duration);
@@ -399,9 +508,6 @@ export default function MushafViewer() {
 
     audio.ontimeupdate = () => {
       setAudioCurrentTime(audio.currentTime);
-      if (audio.duration) {
-        setAudioProgress((audio.currentTime / audio.duration) * 100);
-      }
     };
 
     audio.play().catch(console.error);
@@ -452,7 +558,6 @@ export default function MushafViewer() {
         } else {
           setIsPlaying(false);
           setCurrentAudioVerse(null);
-          setAudioProgress(0);
           setAudioCurrentTime(0);
           setCurrentRangeRepeat(0);
           setCurrentVerseRepeat(0);
@@ -488,7 +593,6 @@ export default function MushafViewer() {
     }
     setIsPlaying(false);
     setCurrentAudioVerse(null);
-    setAudioProgress(0);
     setAudioCurrentTime(0);
     setAudioDuration(0);
     setCurrentRangeRepeat(0);
@@ -557,6 +661,30 @@ export default function MushafViewer() {
     setPauseBetweenVerses(seconds);
   };
 
+  const moveHighlightedVerse = useCallback((delta: number): boolean => {
+    const visibleVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
+    if (visibleVerses.length === 0) return false;
+
+    const activeVerseKey = highlightedVerse ?? currentAudioVerse;
+    if (!activeVerseKey) return false;
+
+    const currentIndex = visibleVerses.findIndex((verse) => verse.verse_key === activeVerseKey);
+    if (currentIndex === -1) return false;
+
+    const nextIndex = Math.max(0, Math.min(visibleVerses.length - 1, currentIndex + delta));
+    const nextVerseKey = visibleVerses[nextIndex]?.verse_key;
+    if (!nextVerseKey) return true;
+
+    setHighlightedVerse(nextVerseKey);
+    window.requestAnimationFrame(() => {
+      const selector = `[data-verse-key=\"${nextVerseKey}\"]`;
+      const verseElement = document.querySelector(selector) as HTMLElement | null;
+      verseElement?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+    });
+
+    return true;
+  }, [currentAudioVerse, highlightedVerse, rangeData, verses, viewMode]);
+
   // Auto-scroll
   useEffect(() => {
     let scrollInterval: NodeJS.Timeout;
@@ -575,15 +703,41 @@ export default function MushafViewer() {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement) return;
-      if (e.key === "ArrowLeft") nextPage();
-      if (e.key === "ArrowRight") prevPage();
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        e.target instanceof HTMLSelectElement ||
+        (e.target instanceof HTMLElement && e.target.isContentEditable)
+      ) {
+        return;
+      }
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        const direction = e.key === "ArrowLeft" ? 1 : -1;
+        const pageNavigation = e.key === "ArrowLeft" ? nextPage : prevPage;
+
+        if (e.shiftKey) {
+          e.preventDefault();
+          pageNavigation();
+          return;
+        }
+
+        const movedInVerses = moveHighlightedVerse(direction);
+        e.preventDefault();
+        if (movedInVerses) return;
+        pageNavigation();
+        return;
+      }
+
       if (e.key === "Escape") {
         setShowIndex(false);
         setShowTafsir(false);
+        setVerseMenuPosition(null);
+        setSelectedVerseForMenu(null);
         setShowDisplaySettings(false);
         setShowBookmarks(false);
         setShowShortcuts(false);
+        setShowScreenModeMenu(false);
       }
       if (e.key === "f" || e.key === "F") setShowIndex(true);
       if (e.key === "?") setShowShortcuts(true);
@@ -595,127 +749,33 @@ export default function MushafViewer() {
         else { setShowAudioPlayer(true); }
       }
 
-      // Phase 3: Keyboard shortcuts for verse range panel
-      // Toggle verse range panel: V or Alt+V
-      if ((e.key === "v" || e.key === "V") && !e.altKey) {
-        setShowVerseRangePanel(prev => !prev);
-      }
-      if (e.key === "V" && e.altKey) {
-        e.preventDefault();
-        setShowVerseRangePanel(prev => !prev);
+      if (e.key === "v" || e.key === "V") {
+        setShowVerseRangePanel((prev) => !prev);
       }
 
-      // Focus range selection: R or Alt+R (when panel is open)
-      if ((e.key === "r" || e.key === "R") && !e.altKey && showVerseRangePanel) {
+      if ((e.key === "r" || e.key === "R") && showVerseRangePanel) {
         // Focus on the verse range inputs
         const fromInput = document.querySelector('input[type="number"][placeholder="1"]') as HTMLInputElement;
         const toInput = document.querySelector('input[type="number"]:not([placeholder="1"])') as HTMLInputElement;
         if (fromInput) fromInput.focus();
         else if (toInput) toInput.focus();
       }
-      if (e.key === "R" && e.altKey) {
-        e.preventDefault();
-        const fromInput = document.querySelector('input[type="number"][placeholder="1"]') as HTMLInputElement;
-        const toInput = document.querySelector('input[type="number"]:not([placeholder="1"])') as HTMLInputElement;
-        if (fromInput) fromInput.focus();
-        else if (toInput) toInput.focus();
-      }
-
-      // Next range: N or Alt+N (when in range mode)
-      if ((e.key === "n" || e.key === "N") && !e.altKey && viewMode === "range" && rangeData) {
-        const nextChapter = chapters.find(c => c.id === rangeData.chapterId + 1);
-        if (nextChapter) {
-          handleSelectRange(nextChapter.id, 1, Math.min(10, nextChapter.verses_count));
-        }
-      }
-      if (e.key === "N" && e.altKey && viewMode === "range" && rangeData) {
-        e.preventDefault();
-        const nextChapter = chapters.find(c => c.id === rangeData.chapterId + 1);
-        if (nextChapter) {
-          handleSelectRange(nextChapter.id, 1, Math.min(10, nextChapter.verses_count));
-        }
-      }
-
-      // Previous range: P or Alt+P (when in range mode)
-      if ((e.key === "p" || e.key === "P") && !e.altKey && viewMode === "range" && rangeData) {
-        const prevChapter = chapters.find(c => c.id === rangeData.chapterId - 1);
-        if (prevChapter) {
-          handleSelectRange(prevChapter.id, 1, Math.min(10, prevChapter.verses_count));
-        }
-      }
-      if (e.key === "P" && e.altKey && viewMode === "range" && rangeData) {
-        e.preventDefault();
-        const prevChapter = chapters.find(c => c.id === rangeData.chapterId - 1);
-        if (prevChapter) {
-          handleSelectRange(prevChapter.id, 1, Math.min(10, prevChapter.verses_count));
-        }
-      }
-
-      // Toggle memorization mode: M or Alt+M
-      if ((e.key === "m" || e.key === "M") && !e.altKey) {
-        // This would toggle the memorization tab
-        const memButton = document.querySelector('button[title*="Memorization"]') as HTMLButtonElement;
-        if (memButton) memButton.click();
-      }
-      if (e.key === "M" && e.altKey) {
-        e.preventDefault();
-        const memButton = document.querySelector('button[title*="Memorization"]') as HTMLButtonElement;
-        if (memButton) memButton.click();
-      }
-
-      // Show/Hide all verses: S or Alt+S
-      if ((e.key === "s" || e.key === "S") && !e.altKey && viewMode === "range") {
-        // Toggle visibility of verses in range mode
-        const versesContainer = document.querySelector('.quran-text');
-        if (versesContainer) {
-          const isHidden = versesContainer.classList.contains('verses-hidden');
-          if (isHidden) {
-            versesContainer.classList.remove('verses-hidden');
-            versesContainer.classList.add('verses-visible');
-          } else {
-            versesContainer.classList.remove('verses-visible');
-            versesContainer.classList.add('verses-hidden');
-          }
-        }
-      }
-      if (e.key === "S" && e.altKey && viewMode === "range") {
-        e.preventDefault();
-        const versesContainer = document.querySelector('.quran-text');
-        if (versesContainer) {
-          const isHidden = versesContainer.classList.contains('verses-hidden');
-          if (isHidden) {
-            versesContainer.classList.remove('verses-hidden');
-            versesContainer.classList.add('verses-visible');
-          } else {
-            versesContainer.classList.remove('verses-visible');
-            versesContainer.classList.add('verses-hidden');
-          }
-        }
-      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, isPlaying, showAudioPlayer, currentAudioVerse, showVerseRangePanel, viewMode, rangeData, chapters]);
+  }, [
+    currentAudioVerse,
+    isPlaying,
+    moveHighlightedVerse,
+    nextPage,
+    playPage,
+    prevPage,
+    resumeAudio,
+    showAudioPlayer,
+    showVerseRangePanel,
+  ]);
 
   const currentSurah = getCurrentSurah();
-  const currentJuz = getCurrentJuz();
-
-  // Group verses by surah for page display
-  const groupedVerses: Array<{ chapterId: number; chapterName: string; verses: Verse[] }> = [];
-  verses.forEach((verse) => {
-    const last = groupedVerses[groupedVerses.length - 1];
-    if (last && last.chapterId === verse.chapter_id) {
-      last.verses.push(verse);
-    } else {
-      const chapter = chapters.find((c) => c.id === verse.chapter_id);
-      groupedVerses.push({
-        chapterId: verse.chapter_id,
-        chapterName: chapter?.name_arabic || `سورة ${verse.chapter_id}`,
-        verses: [verse],
-      });
-    }
-  });
 
   return (
     <div
@@ -730,120 +790,124 @@ export default function MushafViewer() {
         />
       </div>
 
-      {/* Top Bar */}
-      <div className="mushaf-top-bar flex items-center justify-between px-4 py-2 bg-card border-b border-border">
-        <div className="flex items-center gap-3">
-          <button
+      <div className="mushaf-top-bar flex items-center justify-between px-6 py-3 bg-card/60 backdrop-blur-xl border-b border-primary/10 shadow-sm relative z-50">
+        {/* Subtle top inner glow */}
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
+
+        <div className="flex items-center gap-4">
+          <MushafButton
+            variant="ghost"
             onClick={() => setShowIndex(true)}
-            className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-primary/5 hover:bg-primary/10 border border-primary/10 transition-all duration-300"
+            className="group flex flex-row items-center gap-3 px-4 py-2 rounded-2xl bg-primary/5 hover:bg-primary/10 border border-primary/10 transition-all duration-500 font-normal shadow-none h-auto whitespace-nowrap overflow-hidden"
           >
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+            <div className="w-9 h-9 flex-shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
               <Layers size={18} />
             </div>
-            <div className="flex flex-col items-start leading-none">
-              <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">{t.mushaf.surah}</span>
-              <span className="text-sm font-bold font-['Amiri',serif]">
+            <div className="flex items-center gap-2.5 leading-none whitespace-nowrap">
+              <span className="text-[10px] text-primary/70 uppercase font-black tracking-[0.1em] bg-primary/10 px-2 py-0.5 rounded-lg border border-primary/10 whitespace-nowrap">{t.mushaf.surah}</span>
+              <span className="text-lg font-bold font-['Amiri',serif] text-foreground drop-shadow-sm whitespace-nowrap">
                 {currentSurah?.name_arabic || ""}
               </span>
             </div>
-            <ChevronDown size={14} className="text-muted-foreground group-hover:text-primary transition-colors" />
-          </button>
+            <ChevronDown size={14} className="text-muted-foreground/60 group-hover:text-primary transition-colors duration-500 ms-1 flex-shrink-0" />
+          </MushafButton>
 
           {viewMode === "range" && rangeData && (
-            <button
+            <MushafButton
+              variant="primary"
               onClick={handleBackToPages}
-              className="px-3 py-1.5 text-xs bg-primary text-white rounded-xl hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all flex items-center gap-1"
+              icon={<ChevronLeft size={14} />}
+              className="text-xs px-3 py-2"
             >
-              <ChevronLeft size={14} />
               {t.mushaf.backToPages}
-            </button>
+            </MushafButton>
           )}
         </div>
 
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={() => setShowIndex(true)}
-            className="p-2.5 rounded-xl hover:bg-muted/50 transition-colors text-muted-foreground hover:text-primary"
-            title={t.mushaf.search}
-          >
-            <Search size={18} />
-          </button>
-          <button
-            onClick={() => {
-              setShowVerseRangePanel(!showVerseRangePanel);
-            }}
-            className={`p-2 rounded-lg transition-colors ${showVerseRangePanel ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+        <div className="flex items-center gap-2 bg-primary/5 p-1 rounded-2xl border border-primary/10 shadow-inner">
+          <MushafButton
+            variant="icon"
+            active={showVerseRangePanel}
+            onClick={() => setShowVerseRangePanel(!showVerseRangePanel)}
+            icon={<BookOpen size={16} />}
             title={t.mushaf.verseRange}
-          >
-            <BookOpen size={16} />
-          </button>
-          <button
+            className="hover:bg-primary/10 rounded-xl"
+          />
+          <MushafButton
+            variant="icon"
+            active={showBookmarks}
             onClick={() => setShowBookmarks(true)}
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
+            icon={<Bookmark size={16} />}
             title={locale === "ar" ? "الإشارات المرجعية" : "Bookmarks"}
-          >
-            <Bookmark size={16} />
-          </button>
-          <button
+            className="hover:bg-primary/10 rounded-xl"
+          />
+          <MushafButton
+            variant="icon"
+            active={showAudioPlayer}
             onClick={() => setShowAudioPlayer((v) => !v)}
-            className={`p-2 rounded-lg transition-colors ${showAudioPlayer ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+            icon={<Volume2 size={16} />}
             title={locale === "ar" ? t.mushaf.audioPlayer : t.mushaf.audioPlayer}
-          >
-            <Volume2 size={16} />
-          </button>
-          <button
+            className="hover:bg-primary/10 rounded-xl"
+          />
+          <MushafButton
+            variant="icon"
+            active={autoScroll}
             onClick={() => setAutoScroll(!autoScroll)}
-            className={`p-2 rounded-lg transition-colors ${autoScroll ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+            icon={<Scroll size={16} />}
             title={locale === "ar" ? "التمرير التلقائي" : "Auto Scroll"}
-          >
-            <Scroll size={16} />
-          </button>
-          <button
+            className="hover:bg-primary/10 rounded-xl"
+          />
+          <MushafButton
+            variant="icon"
+            active={showShortcuts}
             onClick={() => setShowShortcuts(true)}
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
+            icon={<Keyboard size={16} />}
             title={locale === "ar" ? "اختصارات لوحة المفاتيح" : "Keyboard Shortcuts"}
-          >
-            <Keyboard size={16} />
-          </button>
-          <button
+            className="hover:bg-primary/10 rounded-xl"
+          />
+          <MushafButton
+            variant="icon"
+            active={showDisplaySettings}
             onClick={() => setShowDisplaySettings(true)}
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
+            icon={<Settings size={16} />}
             title={t.mushaf.displaySettings}
-          >
-            <Settings size={16} />
-          </button>
-          <div className="w-px h-6 bg-border mx-1" />
+            className="hover:bg-primary/10 rounded-xl"
+          />
+          <div className="w-px h-5 bg-primary/10 mx-1" />
           <div className="relative">
-            <button
+            <MushafButton
+              variant="icon"
+              active={screenMode !== "normal"}
               onClick={() => setShowScreenModeMenu(!showScreenModeMenu)}
-              className={`p-2.5 rounded-xl transition-all duration-300 flex items-center gap-1.5 border ${screenMode !== "normal" ? "bg-primary text-primary-foreground border-primary" : "hover:bg-muted/80 border-transparent text-muted-foreground"}`}
+              icon={screenMode === "focus" ? <Scan size={18} /> : screenMode === "fullscreen" ? <Maximize2 size={18} /> : <Monitor size={18} />}
               title={t.mushaf.screenMode}
             >
-              {screenMode === "focus" ? <Scan size={18} /> : screenMode === "fullscreen" ? <Maximize2 size={18} /> : <Monitor size={18} />}
               <ChevronDown size={14} className={`transition-transform duration-300 ${showScreenModeMenu ? "rotate-180" : ""}`} />
-            </button>
+            </MushafButton>
             {showScreenModeMenu && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setShowScreenModeMenu(false)} />
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  className="absolute end-0 top-full mt-2 z-50 bg-card/90 backdrop-blur-xl border border-border/40 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] py-2 min-w-[180px] overflow-hidden"
+                  className="absolute end-0 top-full mt-2 z-50 bg-card/95 backdrop-blur-md border border-border/40 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] py-2 min-w-[180px] overflow-hidden"
                 >
                   {[
                     { value: "normal" as const, label: t.mushaf.screenModeNormal, icon: <Monitor size={16} /> },
                     { value: "focus" as const, label: t.mushaf.screenModeFocus, icon: <Scan size={16} /> },
                     { value: "fullscreen" as const, label: t.mushaf.screenModeFullscreen, icon: <Maximize2 size={16} /> },
                   ].map((mode) => (
-                    <button
+                    <MushafButton
                       key={mode.value}
+                      variant="ghost"
+                      active={screenMode === mode.value}
                       onClick={() => { handleScreenModeChange(mode.value); setShowScreenModeMenu(false); }}
-                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-all hover:bg-primary/10 ${screenMode === mode.value ? "text-primary font-bold bg-primary/5" : "text-foreground/70"}`}
+                      icon={mode.icon}
+                      className="w-full justify-start rounded-md px-4 py-2"
                     >
-                      {mode.icon}
-                      {mode.label}
+                      <span className="flex-1 text-start">{mode.label}</span>
                       {screenMode === mode.value && <div className="ms-auto w-1.5 h-1.5 rounded-full bg-primary" />}
-                    </button>
+                    </MushafButton>
                   ))}
                 </motion.div>
               </>
@@ -855,262 +919,65 @@ export default function MushafViewer() {
       {/* Main Content */}
       <div className="flex-1 overflow-auto relative custom-scrollbar bg-background/50" ref={scrollContainerRef}>
         <div className={`${getPageWidthClass(pageWidth)} mx-auto px-4 sm:px-8 py-10`}>
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="w-8 h-8 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
-            </div>
-          ) : viewMode === "range" && rangeData ? (
-            // Range Mode View
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-card border border-border rounded-2xl p-6 sm:p-10 relative overflow-hidden"
-            >
-              {/* Range Header */}
-              <div className="text-center mb-8">
-                <div className="inline-block px-8 py-3 bg-primary/10 rounded-2xl border border-primary/30">
-                  <h2 className="text-xl font-bold font-['Amiri',serif] text-primary">
-                    {rangeData.chapterInfo?.name_arabic || `سورة ${rangeData.chapterId}`}
-                  </h2>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {locale === "ar"
-                      ? `الآيات ${rangeData.fromVerse} - ${rangeData.toVerse}`
-                      : `Verses ${rangeData.fromVerse} - ${rangeData.toVerse}`}
-                  </p>
-                </div>
-
-                {/* Bismillah if first verse and not Surah 1 or 9 */}
-                {rangeData.fromVerse === 1 &&
-                  rangeData.chapterId !== 1 &&
-                  rangeData.chapterId !== 9 && (
-                    <p className={`mt-6 ${getFontSizeClass(fontSize)} font-['Amiri',serif] text-muted-foreground`}>
-                      بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
-                    </p>
-                  )}
+          {viewMode === "range" ? (
+            loading && !rangeData ? (
+              <div className="flex items-center justify-center h-64">
+                <div className="w-8 h-8 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
               </div>
-
-              {/* Range Verses */}
-              <div className={`quran-text text-center leading-[2.5] ${getFontSizeClass(fontSize)}`} dir="rtl">
-                {rangeData.verses.map((verse) => (
-                  <span
-                    key={verse.verse_key}
-                    className={`cursor-pointer transition-colors inline ${currentAudioVerse === verse.verse_key
-                      ? "verse-highlight"
-                      : highlightedVerse === verse.verse_key
-                        ? "bg-yellow-200/30 dark:bg-yellow-500/20"
-                        : "hover:text-foreground/70"
-                      }`}
-                    onClick={() => handleVerseClick(verse.verse_key)}
-                  >
-                    {verse.text_uthmani}{" "}
+            ) : rangeData ? (
+              // Range Mode View
+              <MushafPageFrame
+                locale={locale}
+                isRangeMode={true}
+                chapterName={rangeData.chapterInfo?.name_arabic || `سورة ${rangeData.chapterId}`}
+                chapterId={rangeData.chapterId}
+                fromVerse={rangeData.fromVerse}
+                toVerse={rangeData.toVerse}
+                fontSizeClass={getFontSizeClass(fontSize)}
+              >
+                {/* Range Verses */}
+                <div className={`quran-text text-center leading-[2.8] ${getFontSizeClass(fontSize)}`} dir="rtl">
+                  {rangeData.verses.map((verse) => (
                     <span
-                      className={`inline-flex items-center justify-center ${getFontSizeClass(fontSize)} text-muted-foreground font-sans mx-1 min-w-[1.5rem] hover:bg-muted/50 rounded cursor-pointer`}
-                      onClick={(e) => handleVerseNumberClick(verse, e)}
+                      key={verse.verse_key}
+                      data-verse-key={verse.verse_key}
+                      className={`cursor-pointer transition-all duration-500 ease-out inline relative px-1 py-0.5 rounded-lg ${currentAudioVerse === verse.verse_key
+                        ? "bg-amber-500/10 dark:bg-amber-400/10 text-primary ring-1 ring-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)] z-10"
+                        : highlightedVerse === verse.verse_key
+                          ? "bg-primary/5 ring-1 ring-primary/20 shadow-[0_0_10px_rgba(var(--color-primary),0.1)] z-10"
+                          : "hover:bg-black/5 dark:hover:bg-white/5"
+                        }`}
+                      onClick={() => handleVerseClick(verse.verse_key)}
                     >
-                      ۝{verse.verse_number.toLocaleString("ar-EG")}
-                    </span>{" "}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
+                      <span className={currentAudioVerse === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
+                      <span
+                        className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-amber-500 dark:hover:text-amber-400 text-primary/60 hover:drop-shadow-[0_0_8px_rgba(245,158,11,0.5)] cursor-pointer select-none"
+                        onClick={(e) => handleVerseNumberClick(verse, e)}
+                      >
+                        ۝{verse.verse_number.toLocaleString("ar-EG")}
+                      </span>{" "}
+                    </span>
+                  ))}
+                </div>
+              </MushafPageFrame>
+            ) : null
           ) : (
             // Normal Pages Mode
-            <motion.div
-              key={currentPage}
-              initial={{ opacity: 0, x: locale === "ar" ? 50 : -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            >
-              {/* Mushaf Page Frame */}
-              <div className={`relative ${displayMode === 'double' ? 'bg-transparent border-none' : 'bg-card shadow-[0_10px_50px_-15px_rgba(0,0,0,0.1)] border border-border/40 rounded-3xl p-8 sm:p-12'} overflow-hidden`}>
-                {/* Pages View */}
-                {displayMode === 'double' ? (
-                  <div className="grid grid-cols-2 gap-0.5 bg-border/20 rounded-3xl overflow-hidden shadow-[0_20px_70px_-20px_rgba(0,0,0,0.2)] border border-border/30 relative">
-                    {/* Center Spine */}
-                    <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-10 z-10 pointer-events-none bg-gradient-to-r from-transparent via-black/[0.07] to-transparent" />
-                    <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px z-10 pointer-events-none bg-border/30" />
-
-                    {/* Left Page (Standard Mushaf: Left is even Page) */}
-                    <div className="bg-card p-10 sm:p-16 relative overflow-hidden group">
-                      {/* Inner Shadow for depth near spine */}
-                      <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-black/[0.03] to-transparent pointer-events-none" />
-
-                      {/* Page Header */}
-                      <div className="flex items-center justify-between mb-8 opacity-40 hover:opacity-100 transition-opacity">
-                        <span className="text-[10px] font-bold uppercase tracking-widest">{t.mushaf.juz} {currentJuz}</span>
-                        <span className="text-[10px] font-bold">{currentPage}</span>
-                      </div>
-
-                      <div className={`quran-text text-center leading-[2.8] ${getFontSizeClass(fontSize)}`} dir="rtl">
-                        {groupedVerses.map((group, gi) => (
-                          <div key={gi}>
-                            {group.verses[0].verse_number === 1 && (
-                              <div className="my-10 text-center">
-                                <div className="inline-block px-14 py-4 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner">
-                                  <h3 className="text-2xl font-bold font-['Amiri',serif] text-foreground">
-                                    {group.chapterName}
-                                  </h3>
-                                </div>
-                                {group.chapterId !== 9 && group.chapterId !== 1 && (
-                                  <p className="mt-6 text-2xl font-['Amiri',serif] text-muted-foreground/80">
-                                    بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
-                                  </p>
-                                )}
-                              </div>
-                            )}
-
-                            {group.verses.map((verse) => (
-                              <span
-                                key={verse.verse_key}
-                                className={`cursor-pointer transition-all inline relative px-0.5 rounded ${currentAudioVerse === verse.verse_key
-                                  ? "bg-primary/20 text-primary ring-2 ring-primary/30"
-                                  : highlightedVerse === verse.verse_key
-                                    ? "bg-yellow-400/20 text-amber-900 dark:text-amber-100 ring-2 ring-yellow-400/30"
-                                    : "hover:bg-primary/5"
-                                  }`}
-                                onClick={() => handleVerseClick(verse.verse_key)}
-                              >
-                                {verse.text_uthmani}{" "}
-                                <span
-                                  className="inline-flex items-center justify-center text-muted-foreground/60 font-sans mx-1.5 transition-colors hover:text-primary"
-                                  onClick={(e) => handleVerseNumberClick(verse, e)}
-                                >
-                                  ۝{verse.verse_number.toLocaleString("ar-EG")}
-                                </span>{" "}
-                              </span>
-                            ))}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Right Page (Next Page) */}
-                    <div className="bg-card p-10 sm:p-16 relative overflow-hidden group border-s border-border/10">
-                      {/* Inner Shadow for depth near spine */}
-                      <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-black/[0.03] to-transparent pointer-events-none" />
-
-                      {/* Page Header */}
-                      <div className="flex items-center justify-between mb-8 opacity-40 hover:opacity-100 transition-opacity">
-                        <span className="text-[10px] font-bold">{currentPage + 1}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-widest">
-                          {nextPageVerses.length > 0 ? (chapters.find(c => c.id === nextPageVerses[0].chapter_id)?.name_arabic || "") : ""}
-                        </span>
-                      </div>
-
-                      {nextPageVerses.length > 0 ? (
-                        <div className={`quran-text text-center leading-[2.8] ${getFontSizeClass(fontSize)}`} dir="rtl">
-                          {(() => {
-                            const nextGroupedVerses: Array<{ chapterId: number; chapterName: string; verses: Verse[] }> = [];
-                            nextPageVerses.forEach((verse) => {
-                              const last = nextGroupedVerses[nextGroupedVerses.length - 1];
-                              if (last && last.chapterId === verse.chapter_id) {
-                                last.verses.push(verse);
-                              } else {
-                                const chapter = chapters.find((c) => c.id === verse.chapter_id);
-                                nextGroupedVerses.push({
-                                  chapterId: verse.chapter_id,
-                                  chapterName: chapter?.name_arabic || `سورة ${verse.chapter_id}`,
-                                  verses: [verse],
-                                });
-                              }
-                            });
-                            return nextGroupedVerses.map((group, gi) => (
-                              <div key={gi}>
-                                {group.verses[0].verse_number === 1 && (
-                                  <div className="my-10 text-center">
-                                    <div className="inline-block px-14 py-4 bg-primary/5 rounded-2xl border border-primary/10">
-                                      <h3 className="text-2xl font-bold font-['Amiri',serif]">{group.chapterName}</h3>
-                                    </div>
-                                    {group.chapterId !== 9 && group.chapterId !== 1 && (
-                                      <p className="mt-6 text-2xl font-['Amiri',serif] text-muted-foreground/80">
-                                        بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
-                                      </p>
-                                    )}
-                                  </div>
-                                )}
-                                {group.verses.map((verse) => (
-                                  <span
-                                    key={verse.verse_key}
-                                    className={`cursor-pointer transition-all inline relative px-0.5 rounded ${currentAudioVerse === verse.verse_key
-                                      ? "bg-primary/20 text-primary ring-2 ring-primary/30"
-                                      : highlightedVerse === verse.verse_key
-                                        ? "bg-yellow-400/20 text-amber-900 dark:text-amber-100 ring-2 ring-yellow-400/30"
-                                        : "hover:bg-primary/5"
-                                      }`}
-                                    onClick={() => handleVerseClick(verse.verse_key)}
-                                  >
-                                    {verse.text_uthmani}{" "}
-                                    <span
-                                      className="inline-flex items-center justify-center text-muted-foreground/60 font-sans mx-1.5 transition-colors hover:text-primary"
-                                      onClick={(e) => handleVerseNumberClick(verse, e)}
-                                    >
-                                      ۝{verse.verse_number.toLocaleString("ar-EG")}
-                                    </span>{" "}
-                                  </span>
-                                ))}
-                              </div>
-                            ));
-                          })()}
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center h-full text-muted-foreground italic text-sm">
-                          {locale === "ar" ? "نهاية المصحف" : "End of Mushaf"}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-between mb-10 opacity-40 hover:opacity-100 transition-opacity">
-                      <span className="text-xs font-bold uppercase tracking-widest">{t.mushaf.juz} {currentJuz}</span>
-                      <span className="text-xs font-bold">{currentPage}</span>
-                    </div>
-
-                    <div className={`quran-text text-center leading-[2.8] ${getFontSizeClass(fontSize)}`} dir="rtl">
-                      {groupedVerses.map((group, gi) => (
-                        <div key={gi}>
-                          {group.verses[0].verse_number === 1 && (
-                            <div className="my-10 text-center">
-                              <div className="inline-block px-16 py-5 bg-primary/5 rounded-3xl border border-primary/10 shadow-sm">
-                                <h3 className="text-3xl font-bold font-['Amiri',serif] text-foreground">
-                                  {group.chapterName}
-                                </h3>
-                              </div>
-                              {group.chapterId !== 9 && group.chapterId !== 1 && (
-                                <p className="mt-8 text-2xl font-['Amiri',serif] text-muted-foreground/80">
-                                  بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
-                                </p>
-                              )}
-                            </div>
-                          )}
-
-                          {group.verses.map((verse) => (
-                            <span
-                              key={verse.verse_key}
-                              className={`cursor-pointer transition-all inline relative px-0.5 rounded-lg ${currentAudioVerse === verse.verse_key
-                                ? "bg-primary/20 text-primary ring-4 ring-primary/10"
-                                : highlightedVerse === verse.verse_key
-                                  ? "bg-yellow-400/20 text-amber-900 dark:text-amber-100 ring-4 ring-yellow-400/10"
-                                  : "hover:bg-primary/5"
-                                }`}
-                              onClick={() => handleVerseClick(verse.verse_key)}
-                            >
-                              {verse.text_uthmani}{" "}
-                              <span
-                                className="inline-flex items-center justify-center text-muted-foreground/50 font-sans mx-2 transition-colors hover:text-primary scale-110"
-                                onClick={(e) => handleVerseNumberClick(verse, e)}
-                              >
-                                ۝{verse.verse_number.toLocaleString("ar-EG")}
-                              </span>{" "}
-                            </span>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
-            </motion.div>
+            <div>
+              <MushafPageView
+                pageNumber={currentPage}
+                fontSizeClass={getFontSizeClass(fontSize)}
+                chapters={chapters}
+                locale={locale}
+                juzLabel={t.mushaf.juz}
+                endOfMushafLabel={locale === "ar" ? "نهاية المصحف" : "End of Mushaf"}
+                verses={verses}
+                currentAudioVerse={currentAudioVerse}
+                highlightedVerse={highlightedVerse}
+                onVerseClick={handleVerseClick}
+                onVerseNumberClick={handleVerseNumberClick}
+              />
+            </div>
           )}
         </div>
 
@@ -1118,15 +985,16 @@ export default function MushafViewer() {
 
       {/* Bottom Navigation - Hide in range mode */}
       {viewMode === "pages" && (
-        <div className="mushaf-bottom-nav flex items-center justify-center gap-6 px-6 py-4 bg-card/80 backdrop-blur-xl border-t border-border/40 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.1)]">
-          <button
+        <div className="mushaf-bottom-nav flex items-center justify-center gap-6 px-6 py-4 bg-card/95 backdrop-blur-md border-t border-border/40 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.1)]">
+          <MushafButton
+            variant="ghost"
             onClick={prevPage}
-            disabled={currentPage <= 1}
-            className="flex items-center gap-3 px-7 py-3 text-sm font-black bg-muted/40 backdrop-blur-md hover:bg-primary hover:text-white rounded-2xl transition-all duration-300 disabled:opacity-10 disabled:cursor-not-allowed group shadow-sm hover:shadow-[0_10px_25px_-5px_rgba(var(--color-primary),0.3)] border border-border/30 hover:border-primary/50"
+            disabled={currentPage - pageStep < 1}
+            icon={<SkipForward size={18} />}
+            className="flex-row-reverse px-7 py-3 font-black bg-muted/40 backdrop-blur-md rounded-2xl shadow-sm border border-border/30 hover:border-primary/50 hover:bg-primary hover:text-white disabled:opacity-10 disabled:cursor-not-allowed"
           >
-            <SkipForward size={18} className="transition-transform group-hover:scale-110 group-active:-translate-x-0.5" />
-            <span>{t.mushaf.prevPage}</span>
-          </button>
+            {t.mushaf.prevPage}
+          </MushafButton>
 
           <div className="flex flex-col items-center">
             <div className="relative px-5 py-2 rounded-xl bg-background border border-border/40 shadow-inner flex items-center gap-2 group cursor-pointer overflow-hidden">
@@ -1137,14 +1005,15 @@ export default function MushafViewer() {
             </div>
           </div>
 
-          <button
+          <MushafButton
+            variant="ghost"
             onClick={nextPage}
-            disabled={currentPage >= TOTAL_PAGES}
-            className="flex items-center gap-3 px-7 py-3 text-sm font-black bg-muted/40 backdrop-blur-md hover:bg-primary hover:text-white rounded-2xl transition-all duration-300 disabled:opacity-10 disabled:cursor-not-allowed group shadow-sm hover:shadow-[0_10px_25px_-5px_rgba(var(--color-primary),0.3)] border border-border/30 hover:border-primary/50"
+            disabled={currentPage + pageStep > TOTAL_PAGES}
+            icon={<SkipBack size={18} className="order-last" />}
+            className="px-7 py-3 font-black bg-muted/40 backdrop-blur-md rounded-2xl shadow-sm border border-border/30 hover:border-primary/50 hover:bg-primary hover:text-white disabled:opacity-10 disabled:cursor-not-allowed"
           >
-            <span>{t.mushaf.nextPage}</span>
-            <SkipBack size={18} className="transition-transform group-hover:scale-110 group-active:translate-x-0.5" />
-          </button>
+            {t.mushaf.nextPage}
+          </MushafButton>
         </div>
       )}
 
@@ -1154,6 +1023,17 @@ export default function MushafViewer() {
         onClose={() => setShowIndex(false)}
         chapters={chapters}
         onNavigate={handleNavigateFromIndex}
+      />
+
+      <BookmarksPanel
+        isOpen={showBookmarks}
+        onClose={() => setShowBookmarks(false)}
+        onNavigate={handleNavigateToBookmark}
+      />
+
+      <KeyboardShortcutsPanel
+        isOpen={showShortcuts}
+        onClose={() => setShowShortcuts(false)}
       />
 
       {/* Floating Verse Range Panel */}
@@ -1198,7 +1078,6 @@ export default function MushafViewer() {
         onPause={pauseAudio}
         onNextVerse={handleNextVerse}
         onPrevVerse={handlePrevVerse}
-        audioProgress={audioProgress}
         audioDuration={audioDuration}
         audioCurrentTime={audioCurrentTime}
         onSeek={handleAudioSeek}
@@ -1208,6 +1087,60 @@ export default function MushafViewer() {
         onSetSpeed={handleSetSpeed}
         repeatMode={repeatMode}
         onSetRepeatMode={handleSetRepeatMode}
+      />
+
+      <VerseOptionsMenu
+        position={verseMenuPosition}
+        verseKey={selectedVerseForMenu?.verse_key ?? ""}
+        verseText={selectedVerseForMenu?.text_uthmani ?? ""}
+        onTafsir={() => {
+          if (selectedVerseForMenu) {
+            handleTafsir(selectedVerseForMenu.verse_key);
+          }
+        }}
+        onPlay={() => {
+          if (selectedVerseForMenu) {
+            playVerse(selectedVerseForMenu.verse_key);
+          }
+        }}
+        onCopy={async () => {
+          if (!selectedVerseForMenu) return;
+          const copied = await copyVerseToClipboard(selectedVerseForMenu.verse_key, selectedVerseForMenu.text_uthmani);
+          showToast(
+            copied
+              ? (locale === "ar" ? "تم نسخ الآية" : "Verse copied")
+              : (locale === "ar" ? "فشل نسخ الآية" : "Failed to copy verse"),
+            copied ? "success" : "error"
+          );
+        }}
+        onShare={async () => {
+          if (!selectedVerseForMenu) return;
+          const shared = await shareVerse(selectedVerseForMenu.verse_key, selectedVerseForMenu.text_uthmani);
+          if (!shared) {
+            showToast(locale === "ar" ? "تعذر مشاركة الآية" : "Unable to share verse", "error");
+          }
+        }}
+        onBookmark={() => {
+          if (!selectedVerseForMenu) return;
+          const verseKey = selectedVerseForMenu.verse_key;
+          const bookmarked = isBookmarked(verseKey);
+          if (bookmarked) {
+            removeBookmarkByVerseKey(verseKey);
+          } else {
+            addBookmark(verseKey, selectedVerseForMenu.chapter_id, currentPage);
+          }
+          showToast(
+            bookmarked
+              ? (locale === "ar" ? "تم حذف العلامة" : "Bookmark removed")
+              : (locale === "ar" ? "تمت إضافة علامة" : "Bookmark added"),
+            "success"
+          );
+        }}
+        isBookmarked={selectedVerseForMenu ? isBookmarked(selectedVerseForMenu.verse_key) : false}
+        onClose={() => {
+          setVerseMenuPosition(null);
+          setSelectedVerseForMenu(null);
+        }}
       />
 
       {/* Tafsir Panel */}
@@ -1222,24 +1155,7 @@ export default function MushafViewer() {
         }}
       />
 
-      <AnimatePresence>
-        {toast && (
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className={`fixed bottom-10 left-1/2 -translate-x-1/2 px-6 py-3.5 rounded-2xl shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] text-sm font-bold z-[100] backdrop-blur-xl border ${toast.type === "success"
-              ? "bg-green-500/90 text-white border-green-400/30"
-              : "bg-red-500/90 text-white border-red-400/30"
-              }`}
-          >
-            <div className="flex items-center gap-3">
-              {toast.type === "success" ? <Check size={20} className="animate-in zoom-in duration-300" /> : <X size={20} className="animate-in zoom-in duration-300" />}
-              <span className="tracking-tight">{toast.message}</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
 
       {/* Display Settings */}
       <DisplaySettings
@@ -1249,8 +1165,6 @@ export default function MushafViewer() {
         setFontSize={setFontSize}
         pageWidth={pageWidth}
         setPageWidth={setPageWidth}
-        displayMode={displayMode}
-        setDisplayMode={setDisplayMode}
         pageInput={pageInput}
         setPageInput={setPageInput}
         goToPage={goToPage}

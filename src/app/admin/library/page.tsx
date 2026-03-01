@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -53,7 +53,7 @@ export default function AdminLibraryPage() {
   const [saving, setSaving] = useState(false);
   const [toasts, setToasts] = useState<Array<{ id: string; message: string; type: "success" | "error" }>>([]);
 
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   const showToast = (message: string, type: "success" | "error") => {
     const id = Date.now().toString();
@@ -67,18 +67,18 @@ export default function AdminLibraryPage() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const loadApps = async () => {
+  const loadApps = useCallback(async () => {
     const { data } = await supabase
       .from("library_apps")
       .select("*")
       .order("created_at", { ascending: false });
     setApps(data || []);
     setLoading(false);
-  };
+  }, [supabase]);
 
   useEffect(() => {
     loadApps();
-  }, []);
+  }, [loadApps]);
 
   const handleSubmit = async () => {
     // Validate inputs

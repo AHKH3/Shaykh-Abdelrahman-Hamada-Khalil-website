@@ -91,7 +91,6 @@ function highlightMatch(originalText: string, normalizedQuery: string): string {
 function mapNormalizedToOriginal(original: string, normalizedPos: number): number {
     let normIdx = 0;
     let origIdx = 0;
-    const normalized = normalizeArabic(original);
 
     // Walk through original text character by character
     while (origIdx < original.length && normIdx < normalizedPos) {

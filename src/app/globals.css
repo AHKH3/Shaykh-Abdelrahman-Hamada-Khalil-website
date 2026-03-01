@@ -92,6 +92,11 @@
     color: var(--primary-foreground);
   }
 
+  ::-moz-selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -179,6 +184,19 @@
     color: var(--accent-foreground);
     border-radius: 4px;
     padding: 2px 4px;
+  }
+
+  .verse-click-highlight {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border: 1px solid var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
+    border-radius: 4px;
+    padding: 2px 4px;
+  }
+
+  .verse-click-highlight > span {
+    color: var(--primary-foreground) !important;
   }
 
   /* Phase 3: Verses visibility toggle */
@@ -303,18 +321,6 @@
   .btn-anthropic:active {
     transform: translateY(0);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Page Flip Animation */
-  .page-flip {
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
-    perspective: 1500px;
-  }
-
-  .page-flip-container {
-    perspective: 1500px;
-    transform-style: preserve-3d;
   }
 
   /* Reading Mode Styles */
@@ -868,23 +874,6 @@
     color: var(--foreground);
   }
 
-  /* Turn.js page flip styles */
-  .turn-page-container {
-    position: relative;
-    width: 100%;
-    min-height: 600px;
-    perspective: 2000px;
-  }
-
-  .turn-page-container .page {
-    background-color: var(--card);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .turn-page-container .page .shadow {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-  }
-
   /* Screen Mode Styles */
   /* Focus Mode - Only hides site header, keeps internal bars visible */
 
@@ -915,7 +904,7 @@
     padding: 0;
   }
 
-  .screen-mode-fullscreen:fullscreen .page-flip {
+  .screen-mode-fullscreen:fullscreen .mushaf-page-view {
     max-height: none !important;
     height: auto !important;
     border-radius: 0;

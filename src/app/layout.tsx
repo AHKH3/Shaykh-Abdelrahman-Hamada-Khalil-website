@@ -1,6 +1,21 @@
 import type { Metadata } from "next";
+import { Amiri, Noto_Naskh_Arabic } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
+
+const amiri = Amiri({
+  weight: ["400", "700"],
+  subsets: ["arabic", "latin"],
+  variable: "--font-amiri",
+  display: "swap",
+});
+
+const notoNaskhArabic = Noto_Naskh_Arabic({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["arabic", "latin"],
+  variable: "--font-noto-naskh-arabic",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "الشيخ عبد الرحمن حماده خليل | Shaykh Abdelrahman Hamada Khalil",
@@ -51,20 +66,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>
+      <body className={`${amiri.variable} ${notoNaskhArabic.variable}`}>
         <Providers>
           <a href="#main-content" className="skip-to-content">
             انتقل إلى المحتوى الرئيسي

@@ -8,6 +8,12 @@ export interface Bookmark {
 }
 
 const STORAGE_KEY = "quran_bookmarks";
+export const BOOKMARKS_UPDATED_EVENT = "quran-bookmarks-updated";
+
+function notifyBookmarksUpdated(): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(BOOKMARKS_UPDATED_EVENT));
+}
 
 export function getBookmarks(): Bookmark[] {
   if (typeof window === "undefined") return [];
@@ -61,6 +67,7 @@ function saveBookmarks(bookmarks: Bookmark[]): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
+    notifyBookmarksUpdated();
   } catch (error) {
     console.error("Failed to save bookmarks:", error);
   }
