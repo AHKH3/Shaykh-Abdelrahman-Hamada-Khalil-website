@@ -5,13 +5,10 @@ import { motion } from "framer-motion";
 import {
   ChevronLeft,
   BookOpen,
-  SkipBack,
-  SkipForward,
   Volume2,
   Settings,
   Layers,
   Bookmark,
-  Keyboard,
   Scroll,
   Monitor,
   Maximize2,
@@ -40,10 +37,59 @@ import { isBookmarked, addBookmark, removeBookmarkByVerseKey } from "@/lib/quran
 import { copyVerseToClipboard, shareVerse } from "@/lib/quran/export";
 import { ToastContainer, type ToastType } from "@/components/ui/Toast";
 import BookmarksPanel from "./BookmarksPanel";
-import KeyboardShortcutsPanel from "./KeyboardShortcutsPanel";
 import MushafButton from "./ui/MushafButton";
+import MushafPageFlipButton from "./ui/MushafPageFlipButton";
 
 const PRELOAD_RADIUS = 3;
+type ReadingMode = "normal" | "sepia" | "green" | "purple" | "blue" | "red" | "pink" | "highContrast";
+type PageWidth = "normal" | "wide" | "full";
+
+interface DisplaySettingsState {
+  fontSize: number;
+  pageWidth: PageWidth;
+  readingMode: ReadingMode;
+}
+
+const DISPLAY_SETTINGS_STORAGE_KEY = "mushaf_display_settings_v1";
+const LAST_OPEN_PAGE_STORAGE_KEY = "mushaf_last_open_page_v1";
+const DEFAULT_DISPLAY_SETTINGS: DisplaySettingsState = {
+  fontSize: 32,
+  pageWidth: "normal",
+  readingMode: "normal",
+};
+
+function isValidFontSize(value: unknown): value is number {
+  return typeof value === "number" && [24, 32, 40, 48].includes(value);
+}
+
+function isValidPageWidth(value: unknown): value is PageWidth {
+  return value === "normal" || value === "wide" || value === "full";
+}
+
+function isValidReadingMode(value: unknown): value is ReadingMode {
+  return value === "normal" || value === "sepia" || value === "green" || value === "purple" || value === "blue" || value === "red" || value === "pink" || value === "highContrast";
+}
+
+function parseStoredPage(raw: string | null): number | null {
+  if (!raw) return null;
+  const page = Number(raw);
+  if (!Number.isInteger(page) || page < 1 || page > TOTAL_PAGES) return null;
+  return page;
+}
+
+function parseStoredDisplaySettings(raw: string | null): DisplaySettingsState | null {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as Partial<DisplaySettingsState>;
+    return {
+      fontSize: isValidFontSize(parsed.fontSize) ? parsed.fontSize : DEFAULT_DISPLAY_SETTINGS.fontSize,
+      pageWidth: isValidPageWidth(parsed.pageWidth) ? parsed.pageWidth : DEFAULT_DISPLAY_SETTINGS.pageWidth,
+      readingMode: isValidReadingMode(parsed.readingMode) ? parsed.readingMode : DEFAULT_DISPLAY_SETTINGS.readingMode,
+    };
+  } catch {
+    return null;
+  }
+}
 
 export default function MushafViewer() {
   const { t, locale } = useI18n();
@@ -58,7 +104,6 @@ export default function MushafViewer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentAudioVerse, setCurrentAudioVerse] = useState<string | null>(null);
   const [selectedReciter, setSelectedReciter] = useState(1);
-  const [pageInput, setPageInput] = useState("");
   const [showAudioPlayer, setShowAudioPlayer] = useState(false);
   const [audioDuration, setAudioDuration] = useState(0);
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
@@ -88,16 +133,25 @@ export default function MushafViewer() {
   const [toasts, setToasts] = useState<Array<{ id: string; message: string; type: ToastType }>>([]);
 
   // Display settings
-  const [fontSize, setFontSize] = useState(32);
-  const [pageWidth, setPageWidth] = useState<"normal" | "wide" | "full">("normal");
+  const [displaySettings, setDisplaySettings] = useState<DisplaySettingsState>({ ...DEFAULT_DISPLAY_SETTINGS });
+  const [displaySettingsReady, setDisplaySettingsReady] = useState(false);
+  const [lastPageReady, setLastPageReady] = useState(false);
+  const { fontSize, pageWidth, readingMode } = displaySettings;
+  const setFontSize = useCallback((size: number) => {
+    setDisplaySettings((prev) => (prev.fontSize === size ? prev : { ...prev, fontSize: size }));
+  }, []);
+  const setPageWidth = useCallback((width: PageWidth) => {
+    setDisplaySettings((prev) => (prev.pageWidth === width ? prev : { ...prev, pageWidth: width }));
+  }, []);
+  const setReadingMode = useCallback((mode: ReadingMode) => {
+    setDisplaySettings((prev) => (prev.readingMode === mode ? prev : { ...prev, readingMode: mode }));
+  }, []);
   const [showDisplaySettings, setShowDisplaySettings] = useState(false);
-  const [readingMode, setReadingMode] = useState<"normal" | "sepia" | "green" | "purple" | "blue" | "red" | "pink" | "highContrast">("normal");
   const [screenMode, setScreenMode] = useState<"normal" | "focus" | "fullscreen">("normal");
   const [showScreenModeMenu, setShowScreenModeMenu] = useState(false);
 
   // Additional features
   const [showBookmarks, setShowBookmarks] = useState(false);
-  const [showShortcuts, setShowShortcuts] = useState(false);
   const [autoScroll, setAutoScroll] = useState(false);
   const [scrollSpeed] = useState(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -137,6 +191,20 @@ export default function MushafViewer() {
       document.body.classList.remove("mushaf-focus-mode");
     };
   }, [screenMode]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const stored = parseStoredDisplaySettings(window.localStorage.getItem(DISPLAY_SETTINGS_STORAGE_KEY));
+    if (stored) {
+      setDisplaySettings(stored);
+    }
+    setDisplaySettingsReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!displaySettingsReady || typeof window === "undefined") return;
+    window.localStorage.setItem(DISPLAY_SETTINGS_STORAGE_KEY, JSON.stringify(displaySettings));
+  }, [displaySettings, displaySettingsReady]);
 
   // Helper functions for display settings
   const getFontSizeClass = (size: number) => {
@@ -306,8 +374,28 @@ export default function MushafViewer() {
   }, [fetchMissingPages, mergeCache, preloadNearbyPages]);
 
   useEffect(() => {
-    void loadPage(1);
+    let active = true;
+    const storedPage =
+      typeof window === "undefined"
+        ? null
+        : parseStoredPage(window.localStorage.getItem(LAST_OPEN_PAGE_STORAGE_KEY));
+
+    void (async () => {
+      await loadPage(storedPage ?? 1);
+      if (active) {
+        setLastPageReady(true);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
   }, [loadPage]);
+
+  useEffect(() => {
+    if (!lastPageReady || typeof window === "undefined") return;
+    window.localStorage.setItem(LAST_OPEN_PAGE_STORAGE_KEY, String(currentPage));
+  }, [currentPage, lastPageReady]);
 
   // Listen for fullscreen changes
   useEffect(() => {
@@ -470,17 +558,25 @@ export default function MushafViewer() {
     setVerseMenuPosition({ x: event.clientX, y: event.clientY });
   }, []);
 
-  const showToast = (message: string, type: ToastType) => {
+  const showToast = useCallback((message: string, type: ToastType) => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((item) => item.id !== id));
     }, 3000);
-  };
+  }, []);
 
   const removeToast = (id: string) => {
     setToasts((prev) => prev.filter((item) => item.id !== id));
   };
+
+  const handleResetDisplaySettings = useCallback(() => {
+    setDisplaySettings({ ...DEFAULT_DISPLAY_SETTINGS });
+    showToast(
+      locale === "ar" ? "تمت إعادة إعدادات العرض الافتراضية" : "Display settings reset to defaults",
+      "success"
+    );
+  }, [locale, showToast]);
 
   // Audio
   const playVerse = (verseKey: string) => {
@@ -736,11 +832,9 @@ export default function MushafViewer() {
         setSelectedVerseForMenu(null);
         setShowDisplaySettings(false);
         setShowBookmarks(false);
-        setShowShortcuts(false);
         setShowScreenModeMenu(false);
       }
       if (e.key === "f" || e.key === "F") setShowIndex(true);
-      if (e.key === "?") setShowShortcuts(true);
       if (e.key === " ") {
         e.preventDefault();
         if (showAudioPlayer && isPlaying) pauseAudio();
@@ -776,6 +870,7 @@ export default function MushafViewer() {
   ]);
 
   const currentSurah = getCurrentSurah();
+  const isRtl = locale === "ar";
 
   return (
     <div
@@ -857,14 +952,6 @@ export default function MushafViewer() {
             onClick={() => setAutoScroll(!autoScroll)}
             icon={<Scroll size={16} />}
             title={locale === "ar" ? "التمرير التلقائي" : "Auto Scroll"}
-            className="hover:bg-primary/10 rounded-xl"
-          />
-          <MushafButton
-            variant="icon"
-            active={showShortcuts}
-            onClick={() => setShowShortcuts(true)}
-            icon={<Keyboard size={16} />}
-            title={locale === "ar" ? "اختصارات لوحة المفاتيح" : "Keyboard Shortcuts"}
             className="hover:bg-primary/10 rounded-xl"
           />
           <MushafButton
@@ -987,35 +1074,42 @@ export default function MushafViewer() {
 
       {/* Bottom Navigation - Hide in range mode */}
       {viewMode === "pages" && (
-        <div className="mushaf-bottom-nav flex items-center justify-center gap-6 px-6 py-4 bg-card/95 backdrop-blur-md border-t border-border/40 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.1)]">
-          <MushafButton
-            variant="ghost"
+        <div className="mushaf-bottom-nav flex items-center justify-center gap-2.5 sm:gap-4 px-3 sm:px-6 py-3.5 bg-card/95 backdrop-blur-md border-t border-border/40 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.1)]">
+          <MushafPageFlipButton
+            direction="prev"
+            label={t.mushaf.prevPage}
             onClick={prevPage}
             disabled={currentPage - pageStep < 1}
-            icon={<SkipForward size={18} />}
-            className="flex-row-reverse px-7 py-3 font-black bg-muted/40 backdrop-blur-md rounded-2xl shadow-sm border border-border/30 hover:border-primary/50 hover:bg-primary hover:text-white disabled:opacity-10 disabled:cursor-not-allowed"
-          >
-            {t.mushaf.prevPage}
-          </MushafButton>
+            isRtl={isRtl}
+          />
 
-          <div className="flex flex-col items-center">
-            <div className="relative px-5 py-2 rounded-xl bg-background border border-border/40 shadow-inner flex items-center gap-2 group cursor-pointer overflow-hidden">
-              <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <span className="text-lg font-black text-primary relative z-10">{currentPage}</span>
-              <span className="text-xs text-muted-foreground/60 relative z-10">/</span>
-              <span className="text-sm font-bold text-muted-foreground relative z-10">{TOTAL_PAGES}</span>
+          <div
+            className="shrink-0 min-w-[88px] sm:min-w-[112px] rounded-2xl border border-primary/10 bg-primary/5 px-2.5 sm:px-4 py-1.5 sm:py-2 text-center shadow-sm"
+            role="status"
+            aria-live="polite"
+            aria-label={locale === "ar" ? `الصفحة ${currentPage} من ${TOTAL_PAGES}` : `Page ${currentPage} of ${TOTAL_PAGES}`}
+          >
+            <span className="block text-[10px] sm:text-xs font-semibold text-muted-foreground leading-none">
+              {t.mushaf.page}
+            </span>
+            <div className="mt-0.5 sm:mt-1 flex items-baseline justify-center gap-1 leading-none">
+              <span className="text-base sm:text-lg font-black text-primary tabular-nums">
+                {currentPage}
+              </span>
+              <span className="text-[11px] sm:text-xs font-medium text-muted-foreground/70">/</span>
+              <span className="text-xs sm:text-sm font-semibold text-muted-foreground tabular-nums">
+                {TOTAL_PAGES}
+              </span>
             </div>
           </div>
 
-          <MushafButton
-            variant="ghost"
+          <MushafPageFlipButton
+            direction="next"
+            label={t.mushaf.nextPage}
             onClick={nextPage}
             disabled={currentPage + pageStep > TOTAL_PAGES}
-            icon={<SkipBack size={18} className="order-last" />}
-            className="px-7 py-3 font-black bg-muted/40 backdrop-blur-md rounded-2xl shadow-sm border border-border/30 hover:border-primary/50 hover:bg-primary hover:text-white disabled:opacity-10 disabled:cursor-not-allowed"
-          >
-            {t.mushaf.nextPage}
-          </MushafButton>
+            isRtl={isRtl}
+          />
         </div>
       )}
 
@@ -1031,11 +1125,6 @@ export default function MushafViewer() {
         isOpen={showBookmarks}
         onClose={() => setShowBookmarks(false)}
         onNavigate={handleNavigateToBookmark}
-      />
-
-      <KeyboardShortcutsPanel
-        isOpen={showShortcuts}
-        onClose={() => setShowShortcuts(false)}
       />
 
       {/* Floating Verse Range Panel */}
@@ -1163,13 +1252,11 @@ export default function MushafViewer() {
       <DisplaySettings
         isOpen={showDisplaySettings}
         onClose={() => setShowDisplaySettings(false)}
+        onResetToDefaults={handleResetDisplaySettings}
         fontSize={fontSize}
         setFontSize={setFontSize}
         pageWidth={pageWidth}
         setPageWidth={setPageWidth}
-        pageInput={pageInput}
-        setPageInput={setPageInput}
-        goToPage={goToPage}
         readingMode={readingMode}
         setReadingMode={setReadingMode}
       />

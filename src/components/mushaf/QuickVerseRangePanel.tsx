@@ -66,11 +66,6 @@ export function VerseRangeForm({
   const lastAppliedRef = useRef<{ chapterId: number; from: number; to: number } | null>(null);
   const isRtl = locale === "ar";
 
-  const iconButtonClass =
-    "h-10 w-10 rounded-xl border border-border/40 bg-muted/40 text-foreground transition-colors hover:bg-muted/70 flex items-center justify-center";
-  const chipButtonClass =
-    "px-3.5 py-2 text-xs rounded-xl border border-border/40 bg-muted/35 text-foreground transition-colors hover:bg-muted/60 font-semibold";
-
   useEffect(() => {
     const stored = safeGetStorageItem(RECENT_SURAHS_KEY);
     if (stored) {
@@ -187,8 +182,8 @@ export function VerseRangeForm({
 
   const selectChapter = (chapter: Chapter) => {
     setSelectedChapter(chapter);
-    setFromVerse("");
-    setToVerse("");
+    setFromVerse("1");
+    setToVerse(chapter.verses_count.toString());
     setError("");
     setSearchQuery("");
     setIsDropdownOpen(false);
@@ -217,25 +212,23 @@ export function VerseRangeForm({
     setError("");
   };
 
-  const handleQuickRange = (from: number, to: number) => {
-    if (!selectedChapter) return;
-    setFromVerse(from.toString());
-    setToVerse(Math.min(to, selectedChapter.verses_count).toString());
-    setError("");
-  };
-
-  const handleWholeSurah = () => {
-    if (!selectedChapter) return;
-    setFromVerse("1");
-    setToVerse(selectedChapter.verses_count.toString());
-    setError("");
-  };
+  const fromValue = Number(fromVerse);
+  const toValue = Number(toVerse);
+  const selectedVerseCount =
+    selectedChapter &&
+    Number.isInteger(fromValue) &&
+    Number.isInteger(toValue) &&
+    fromValue >= 1 &&
+    toValue <= selectedChapter.verses_count &&
+    toValue >= fromValue
+      ? toValue - fromValue + 1
+      : null;
 
   return (
     <div className="flex h-full flex-col" dir={isRtl ? "rtl" : "ltr"}>
-      <div className="flex-1 overflow-y-auto p-5 space-y-6">
+      <div className="flex-1 space-y-4 overflow-y-auto p-5">
         <div>
-          <label className="block text-sm font-semibold mb-2 text-foreground">{t.mushaf.selectSurah}</label>
+          <label className="mb-2 block text-sm font-semibold text-foreground">{t.mushaf.selectSurah}</label>
           <div className="relative" ref={dropdownRef}>
             <div className="relative">
               <input
@@ -255,7 +248,7 @@ export function VerseRangeForm({
                       ? "ابحث باسم السورة أو رقمها…"
                       : "Search surah…"
                 }
-                className="w-full rounded-xl border border-border/50 bg-muted/40 px-4 py-3 text-sm font-medium shadow-sm transition-colors hover:bg-muted/70 focus:outline-none focus:ring-2 focus:ring-primary/35 pe-10"
+                className="w-full rounded-xl border border-border/50 bg-background px-4 py-3 text-sm font-medium transition-colors hover:bg-muted/20 focus:outline-none focus:ring-2 focus:ring-primary/35 pe-10"
               />
               {searchQuery ? (
                 <MushafButton
@@ -293,7 +286,7 @@ export function VerseRangeForm({
                           <MushafButton
                             key={`recent-${chapter.id}`}
                             onClick={() => selectChapter(chapter)}
-                            className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm transition-colors hover:bg-accent rounded-none bg-transparent font-normal"
+                            className="flex w-full items-center gap-2 rounded-none bg-transparent px-3 py-2 text-start text-sm font-normal transition-colors hover:bg-accent"
                           >
                             <span className="w-6 text-xs text-muted-foreground">{chapter.id}.</span>
                             <span className="font-medium">{chapter.name_arabic}</span>
@@ -315,7 +308,7 @@ export function VerseRangeForm({
                       <MushafButton
                         key={`all-${chapter.id}`}
                         onClick={() => selectChapter(chapter)}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm transition-colors hover:bg-accent rounded-none bg-transparent font-normal"
+                        className="flex w-full items-center gap-2 rounded-none bg-transparent px-3 py-2 text-start text-sm font-normal transition-colors hover:bg-accent"
                       >
                         <span className="w-6 text-xs text-muted-foreground">{chapter.id}.</span>
                         <span className="font-medium">{chapter.name_arabic}</span>
@@ -340,17 +333,24 @@ export function VerseRangeForm({
           </div>
 
           {selectedChapter && (
-            <p className="mt-1.5 flex items-center gap-1 text-xs text-muted-foreground">
-              <BookOpen size={12} />
-              {isRtl ? (
-                <>
-                  {selectedChapter.name_arabic} — <span className="font-semibold">{selectedChapter.verses_count}</span> آية
-                </>
-              ) : (
-                <>
-                  {selectedChapter.name_simple} — <span className="font-semibold">{selectedChapter.verses_count}</span> verses
-                </>
-              )}
+            <p className="mt-2 text-xs text-muted-foreground">
+              <span className="font-semibold text-foreground">
+                {isRtl ? selectedChapter.name_arabic : selectedChapter.name_simple}
+              </span>
+              <span className="mx-2">•</span>
+              <span>
+                {selectedChapter.verses_count} {isRtl ? "آية" : "verses"}
+              </span>
+              <span className="mx-2">•</span>
+              <span>
+                {selectedVerseCount
+                  ? isRtl
+                    ? `${selectedVerseCount} مختارة`
+                    : `${selectedVerseCount} selected`
+                  : isRtl
+                    ? "غير محدد"
+                    : "Not set"}
+              </span>
             </p>
           )}
         </div>
@@ -361,19 +361,19 @@ export function VerseRangeForm({
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="space-y-4"
+              className="rounded-xl border border-border/40 p-3.5"
             >
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-end">
                 <div>
-                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    {t.mushaf.from} {isRtl ? "الآية" : "Verse"}
+                  <label className="mb-2 block text-xs font-semibold text-muted-foreground">
+                    {t.mushaf.from} {isRtl ? "الآية" : "verse"}
                   </label>
                   <div className="flex items-center gap-2">
                     <MushafButton
                       variant="icon"
                       onClick={() => handleVerseAdjust("from", -1)}
                       icon={<Minus size={14} />}
-                      className="h-10 w-10 border border-border/40 bg-muted/40 shadow-sm"
+                      className="h-10 w-10 border border-border/40 bg-background"
                     />
                     <input
                       type="number"
@@ -384,7 +384,7 @@ export function VerseRangeForm({
                         setFromVerse(event.target.value);
                         setError("");
                       }}
-                      className="h-10 flex-1 rounded-xl border border-border/50 bg-muted/30 px-3 text-center text-sm font-semibold shadow-inner focus:outline-none focus:ring-2 focus:ring-primary/35"
+                      className="h-10 flex-1 rounded-xl border border-border/50 bg-background px-3 text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/35"
                       placeholder="1"
                       dir="ltr"
                     />
@@ -392,21 +392,25 @@ export function VerseRangeForm({
                       variant="icon"
                       onClick={() => handleVerseAdjust("from", 1)}
                       icon={<Plus size={14} />}
-                      className="h-10 w-10 border border-border/40 bg-muted/40 shadow-sm"
+                      className="h-10 w-10 border border-border/40 bg-background"
                     />
                   </div>
                 </div>
 
+                <div className="hidden items-center justify-center pb-2 sm:flex">
+                  <span className="text-xs font-semibold text-muted-foreground">{isRtl ? "إلى" : "to"}</span>
+                </div>
+
                 <div>
-                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    {t.mushaf.to} {isRtl ? "الآية" : "Verse"}
+                  <label className="mb-2 block text-xs font-semibold text-muted-foreground">
+                    {t.mushaf.to} {isRtl ? "الآية" : "verse"}
                   </label>
                   <div className="flex items-center gap-2">
                     <MushafButton
                       variant="icon"
                       onClick={() => handleVerseAdjust("to", -1)}
                       icon={<Minus size={14} />}
-                      className="h-10 w-10 border border-border/40 bg-muted/40 shadow-sm"
+                      className="h-10 w-10 border border-border/40 bg-background"
                     />
                     <input
                       type="number"
@@ -417,7 +421,7 @@ export function VerseRangeForm({
                         setToVerse(event.target.value);
                         setError("");
                       }}
-                      className="h-10 flex-1 rounded-xl border border-border/50 bg-muted/30 px-3 text-center text-sm font-semibold shadow-inner focus:outline-none focus:ring-2 focus:ring-primary/35"
+                      className="h-10 flex-1 rounded-xl border border-border/50 bg-background px-3 text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/35"
                       placeholder={selectedChapter.verses_count.toString()}
                       dir="ltr"
                     />
@@ -425,66 +429,9 @@ export function VerseRangeForm({
                       variant="icon"
                       onClick={() => handleVerseAdjust("to", 1)}
                       icon={<Plus size={14} />}
-                      className="h-10 w-10 border border-border/40 bg-muted/40 shadow-sm"
+                      className="h-10 w-10 border border-border/40 bg-background"
                     />
                   </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {isRtl ? "مدى سريع" : "Quick Range"}
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { label: "١–١٠", from: 1, to: 10 },
-                    { label: "١١–٢٠", from: 11, to: 20 },
-                    { label: "٢١–٣٠", from: 21, to: 30 },
-                    { label: "٣١–٤٠", from: 31, to: 40 },
-                  ]
-                    .filter((range) => selectedChapter.verses_count >= range.from)
-                    .map((range) => (
-                      <MushafButton
-                        key={range.label}
-                        onClick={() => handleQuickRange(range.from, range.to)}
-                        className="px-3.5 py-2 text-xs border border-border/40 bg-muted/35 font-semibold hover:bg-muted/60"
-                      >
-                        {range.label}
-                      </MushafButton>
-                    ))}
-
-                  <MushafButton
-                    onClick={handleWholeSurah}
-                    className="px-3.5 py-2 text-xs border border-primary/35 bg-primary/12 text-primary hover:bg-primary/18 font-bold"
-                  >
-                    {t.mushaf.wholeSurah}
-                  </MushafButton>
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {isRtl ? "تحريك المدى" : "Shift Range"}
-                </label>
-                <div className="grid grid-cols-4 gap-2">
-                  {[-10, -5, +5, +10].map((delta) => (
-                    <MushafButton
-                      key={`shift-${delta}`}
-                      onClick={() => {
-                        const from = Number(fromVerse) || 1;
-                        const to = Number(toVerse) || 10;
-                        const max = selectedChapter.verses_count;
-                        const shiftedFrom = Math.max(1, Math.min(max - 1, from + delta));
-                        const shiftedTo = Math.max(2, Math.min(max, to + delta));
-                        setFromVerse(shiftedFrom.toString());
-                        setToVerse(shiftedTo.toString());
-                        setError("");
-                      }}
-                      className="px-3.5 py-2 text-xs border border-border/40 bg-muted/35 font-semibold hover:bg-muted/60"
-                    >
-                      {delta > 0 ? `+${delta}` : delta}
-                    </MushafButton>
-                  ))}
                 </div>
               </div>
             </motion.div>
@@ -504,17 +451,19 @@ export function VerseRangeForm({
           )}
         </AnimatePresence>
 
-        <section className="rounded-2xl border border-border/40 bg-muted/15 p-3">
+        <section className="border-t border-border/35 pt-3">
           <MushafButton
             onClick={() => setShowHistory((prev) => !prev)}
-            className="w-full rounded-xl border border-border/40 bg-background/70 px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted/40"
+            className="w-full rounded-xl border border-border/35 bg-transparent px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted/20"
           >
             <span className="flex w-full min-w-0 items-center justify-between gap-2 whitespace-nowrap">
               <span className="flex min-w-0 items-center gap-2">
                 <History size={15} className="text-primary flex-shrink-0" />
                 <span className="truncate whitespace-nowrap">{locale === "ar" ? "السجل" : "History"}</span>
               </span>
-              <span className="text-xs text-muted-foreground flex-shrink-0">{showHistory ? "−" : "+"}</span>
+              <span className="text-xs text-muted-foreground flex-shrink-0">
+                {showHistory ? (locale === "ar" ? "إخفاء" : "Hide") : locale === "ar" ? "إظهار" : "Show"}
+              </span>
             </span>
           </MushafButton>
 
@@ -548,13 +497,12 @@ export default function QuickVerseRangePanel({
       onClose={onClose}
       zIndex={70}
       containerClassName="flex items-center justify-center p-4"
-      panelClassName="bg-card/95 backdrop-blur-xl border border-primary/10 rounded-3xl shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)] overflow-hidden max-w-md w-full mx-auto max-h-[85vh] flex flex-col"
+      panelClassName="bg-card border border-border/50 rounded-2xl shadow-xl overflow-hidden max-w-md w-full mx-auto max-h-[85vh] flex flex-col"
     >
-      <div className="flex items-center justify-between px-6 py-4 border-b border-primary/10 bg-primary/5 relative">
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
-        <h3 className="font-bold text-lg flex items-center gap-3 text-primary drop-shadow-sm font-['Amiri',serif]">
-          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-            <BookOpen size={20} />
+      <div className="flex items-center justify-between border-b border-border/40 px-5 py-3">
+        <h3 className="flex items-center gap-2.5 font-['Amiri',serif] text-lg font-bold text-primary">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+            <BookOpen size={18} />
           </div>
           {t.mushaf.verseRange}
         </h3>

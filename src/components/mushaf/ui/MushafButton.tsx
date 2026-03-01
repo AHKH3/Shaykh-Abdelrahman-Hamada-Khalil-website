@@ -17,7 +17,7 @@ const MushafButton = forwardRef<HTMLButtonElement, MushafButtonProps>(
 
         // Variant specific classes
         const variantClasses = {
-            primary: "bg-primary text-white font-bold px-5 py-2.5 rounded-xl shadow-[0_8px_20px_-6px_rgba(var(--color-primary),0.4)] hover:shadow-[0_12px_30px_-6px_rgba(var(--color-primary),0.5)] hover:bg-primary/90 border border-white/10 dark:border-white/5",
+            primary: "bg-primary text-primary-foreground font-bold px-5 py-2.5 rounded-xl shadow-[0_8px_20px_-6px_rgba(var(--color-primary),0.4)] hover:shadow-[0_12px_30px_-6px_rgba(var(--color-primary),0.5)] hover:bg-primary/90 border border-primary/20",
             ghost: `bg-transparent text-foreground/80 font-semibold px-4 py-2.5 rounded-xl hover:bg-primary/5 hover:text-primary border border-transparent hover:border-primary/10 ${active ? "bg-primary/10 text-primary border-primary/20" : ""}`,
             icon: `p-2.5 rounded-xl text-foreground/70 hover:bg-primary/5 hover:text-primary border border-transparent hover:border-primary/10 ${active ? "bg-primary/15 text-primary shadow-inner border-primary/20" : ""}`
         };

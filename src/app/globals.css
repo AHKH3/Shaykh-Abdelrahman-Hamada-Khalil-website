@@ -562,38 +562,38 @@
     color: var(--foreground);
   }
 
-  /* Green Mode - Sage & Forest */
+  /* Green Mode - Balanced Green */
   .mushaf-reading-mode-green {
-    --background: #E3EDE5;
-    --foreground: #14382A;
-    --card: #F2F9F6;
-    --card-foreground: #14382A;
-    --muted: #D1E3D9;
-    --muted-foreground: #52786B;
-    --border: #C2D6CC;
-    --input: #C2D6CC;
-    --primary: #14382A;
-    --primary-foreground: #E3EDE5;
-    --accent: #D1E3D9;
-    --accent-foreground: #14382A;
+    --background: #EAF4EC;
+    --foreground: #245A3F;
+    --card: #F4FAF6;
+    --card-foreground: #245A3F;
+    --muted: #D8EAD9;
+    --muted-foreground: #4E7D5F;
+    --border: #BCD8C2;
+    --input: #BCD8C2;
+    --primary: #2E7D4F;
+    --primary-foreground: #F4FAF6;
+    --accent: #D8EAD9;
+    --accent-foreground: #245A3F;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
   .dark .mushaf-reading-mode-green {
-    --background: #0D1714;
-    --foreground: #C4DAD2;
-    --card: #162420;
-    --card-foreground: #C4DAD2;
-    --muted: #1E332D;
-    --muted-foreground: #60857A;
-    --border: #233832;
-    --input: #233832;
-    --primary: #C4DAD2;
-    --primary-foreground: #0D1714;
-    --accent: #1E332D;
-    --accent-foreground: #C4DAD2;
+    --background: #102117;
+    --foreground: #C2E9CD;
+    --card: #173124;
+    --card-foreground: #C2E9CD;
+    --muted: #204132;
+    --muted-foreground: #88B69A;
+    --border: #2B5944;
+    --input: #2B5944;
+    --primary: #7EC79D;
+    --primary-foreground: #102117;
+    --accent: #204132;
+    --accent-foreground: #C2E9CD;
 
     background-color: var(--background);
     color: var(--foreground);
@@ -601,165 +601,149 @@
 
 
 
-  /* Purple Mode - Amethyst (Refined: Distinct Deep Purple) */
+  /* Purple Mode - Balanced Purple */
   .mushaf-reading-mode-purple {
-    --background: #F8F0FF;
-    /* Very pale lavender */
-    --foreground: #4B0082;
-    /* Indigo/Deep Purple */
-    --card: #FCF5FF;
-    --card-foreground: #4B0082;
-    --muted: #E6D9F2;
-    --muted-foreground: #7B4B94;
-    --border: #D1B3E2;
-    --input: #D1B3E2;
-    --primary: #4B0082;
-    --primary-foreground: #F8F0FF;
-    --accent: #E6D9F2;
-    --accent-foreground: #4B0082;
+    --background: #F5F1FA;
+    --foreground: #5A3E8A;
+    --card: #FBF8FF;
+    --card-foreground: #5A3E8A;
+    --muted: #E6DDF2;
+    --muted-foreground: #7C679F;
+    --border: #CCBEE0;
+    --input: #CCBEE0;
+    --primary: #6E52A3;
+    --primary-foreground: #F5F1FA;
+    --accent: #E6DDF2;
+    --accent-foreground: #5A3E8A;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
   .dark .mushaf-reading-mode-purple {
-    --background: #120024;
-    /* Deep Void Purple */
-    --foreground: #E0B0FF;
-    /* Mauve/Bright Violet */
-    --card: #1A0033;
-    --card-foreground: #E0B0FF;
-    --muted: #2D0052;
-    --muted-foreground: #B57EDC;
-    --border: #4D0085;
-    --input: #4D0085;
-    --primary: #E0B0FF;
-    --primary-foreground: #120024;
-    --accent: #2D0052;
-    --accent-foreground: #E0B0FF;
+    --background: #1B1527;
+    --foreground: #D0C2E7;
+    --card: #251D35;
+    --card-foreground: #D0C2E7;
+    --muted: #2F2741;
+    --muted-foreground: #A695C4;
+    --border: #4A3D64;
+    --input: #4A3D64;
+    --primary: #B19AD8;
+    --primary-foreground: #1B1527;
+    --accent: #2F2741;
+    --accent-foreground: #D0C2E7;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
-  /* Blue Mode - Sapphire (NEW: Distinct Blue) */
+  /* Blue Mode - Balanced Blue */
   .mushaf-reading-mode-blue {
-    --background: #F0F8FF;
-    /* Alice Blue */
-    --foreground: #000080;
-    /* Navy Blue */
-    --card: #F5FBFF;
-    --card-foreground: #000080;
-    --muted: #D9EAF7;
-    --muted-foreground: #4682B4;
-    --border: #B0C4DE;
-    --input: #B0C4DE;
-    --primary: #000080;
-    --primary-foreground: #F0F8FF;
-    --accent: #D9EAF7;
-    --accent-foreground: #000080;
+    --background: #EEF5FD;
+    --foreground: #1E4F8C;
+    --card: #F7FBFF;
+    --card-foreground: #1E4F8C;
+    --muted: #DBE7F5;
+    --muted-foreground: #557CAA;
+    --border: #BDD0E8;
+    --input: #BDD0E8;
+    --primary: #2E62A8;
+    --primary-foreground: #EEF5FD;
+    --accent: #DBE7F5;
+    --accent-foreground: #1E4F8C;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
   .dark .mushaf-reading-mode-blue {
-    --background: #020C1B;
-    /* Very Dark Blue */
-    --foreground: #ADD8E6;
-    /* Light Blue */
-    --card: #05162B;
-    --card-foreground: #ADD8E6;
-    --muted: #0A2540;
-    --muted-foreground: #5F9EA0;
-    --border: #1B3A57;
-    --input: #1B3A57;
-    --primary: #ADD8E6;
-    --primary-foreground: #020C1B;
-    --accent: #0A2540;
-    --accent-foreground: #ADD8E6;
+    --background: #132033;
+    --foreground: #B8D0EE;
+    --card: #1A2B44;
+    --card-foreground: #B8D0EE;
+    --muted: #223857;
+    --muted-foreground: #88A7CC;
+    --border: #365178;
+    --input: #365178;
+    --primary: #8FB2DE;
+    --primary-foreground: #132033;
+    --accent: #223857;
+    --accent-foreground: #B8D0EE;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
-  /* Red Mode - Ruby (Refined: True Red, not Pink) */
+  /* Red Mode - Soft Balanced Red */
   .mushaf-reading-mode-red {
-    --background: #FFF5F5;
-    /* Very pale red/rose without being pink */
-    --foreground: #8B0000;
-    /* Dark Red */
-    --card: #FFFAFA;
-    --card-foreground: #8B0000;
-    --muted: #FFE0E0;
-    --muted-foreground: #B22222;
-    --border: #F0A0A0;
-    --input: #F0A0A0;
-    --primary: #8B0000;
-    --primary-foreground: #FFF5F5;
-    --accent: #FFE0E0;
-    --accent-foreground: #8B0000;
+    --background: #FAEFEF;
+    --foreground: #7A2A2A;
+    --card: #FFF7F7;
+    --card-foreground: #7A2A2A;
+    --muted: #F3D9D9;
+    --muted-foreground: #9C5C5C;
+    --border: #DDB8B8;
+    --input: #DDB8B8;
+    --primary: #A34848;
+    --primary-foreground: #FFF8F8;
+    --accent: #F0D7D7;
+    --accent-foreground: #6F2C2C;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
   .dark .mushaf-reading-mode-red {
-    --background: #240000;
-    /* Deep Dark Red */
-    --foreground: #FF6B6B;
-    /* Light Red/Salmon */
-    --card: #330000;
-    --card-foreground: #FF6B6B;
-    --muted: #4D0000;
-    --muted-foreground: #CD5C5C;
-    --border: #660000;
-    --input: #660000;
-    --primary: #FF6B6B;
-    --primary-foreground: #240000;
-    --accent: #4D0000;
-    --accent-foreground: #FF6B6B;
+    --background: #261515;
+    --foreground: #E8B3B3;
+    --card: #332020;
+    --card-foreground: #E8B3B3;
+    --muted: #472C2C;
+    --muted-foreground: #C28C8C;
+    --border: #644242;
+    --input: #644242;
+    --primary: #D68484;
+    --primary-foreground: #291616;
+    --accent: #472C2C;
+    --accent-foreground: #E8B3B3;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
-  /* Pink Mode - Blossom (Reverted to Vibrant) */
+  /* Pink Mode - Soft Balanced Pink */
   .mushaf-reading-mode-pink {
-    --background: #FFF0F5;
-    /* Lavender Blush */
-    --foreground: #C71585;
-    /* Medium Violet Red */
-    --card: #FFF5F8;
-    --card-foreground: #C71585;
-    --muted: #FFE4E1;
-    --muted-foreground: #DB7093;
-    --border: #FFB6C1;
-    --input: #FFB6C1;
-    --primary: #C71585;
-    --primary-foreground: #FFF0F5;
-    --accent: #FFE4E1;
-    --accent-foreground: #C71585;
+    --background: #F9F0F4;
+    --foreground: #9A466F;
+    --card: #FFF7FA;
+    --card-foreground: #9A466F;
+    --muted: #F1DDE7;
+    --muted-foreground: #A96C88;
+    --border: #D9B7C8;
+    --input: #D9B7C8;
+    --primary: #B85D89;
+    --primary-foreground: #FFF7FB;
+    --accent: #F0D9E5;
+    --accent-foreground: #8B3F66;
 
     background-color: var(--background);
     color: var(--foreground);
   }
 
   .dark .mushaf-reading-mode-pink {
-    --background: #1F0010;
-    /* Dark Plum */
-    --foreground: #FF69B4;
-    /* Hot Pink */
-    --card: #2E0018;
-    --card-foreground: #FF69B4;
-    --muted: #450024;
-    --muted-foreground: #FF1493;
-    --border: #660036;
-    --input: #660036;
-    --primary: #FF69B4;
-    --primary-foreground: #1F0010;
-    --accent: #450024;
-    --accent-foreground: #FF69B4;
+    --background: #24161E;
+    --foreground: #E2B5C9;
+    --card: #2F1D27;
+    --card-foreground: #E2B5C9;
+    --muted: #452A38;
+    --muted-foreground: #C58FA9;
+    --border: #664456;
+    --input: #664456;
+    --primary: #D18DB0;
+    --primary-foreground: #23141C;
+    --accent: #452A38;
+    --accent-foreground: #E7C0D3;
 
     background-color: var(--background);
     color: var(--foreground);

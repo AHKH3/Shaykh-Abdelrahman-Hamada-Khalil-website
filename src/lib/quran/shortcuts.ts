@@ -54,10 +54,4 @@ export const MUSHAF_SHORTCUTS: MushafShortcut[] = [
     descriptionAr: "إغلاق النافذة أو القائمة النشطة",
     descriptionEn: "Close active panel or menu",
   },
-  {
-    id: "show-shortcuts",
-    keys: ["?"],
-    descriptionAr: "عرض الاختصارات",
-    descriptionEn: "Show shortcuts",
-  },
 ];

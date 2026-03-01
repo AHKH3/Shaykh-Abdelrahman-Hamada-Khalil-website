@@ -66,10 +66,11 @@ export default function TafsirPanel({
             titleId="tafsir-panel-title"
             initialFocusRef={closeButtonRef}
             zIndex={70}
-            containerClassName="relative h-full w-full"
-            panelClassName="absolute bottom-0 left-0 right-0 sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 bg-card/95 backdrop-blur-xl border border-white/10 dark:border-white/5 sm:border-primary/10 rounded-t-3xl sm:rounded-3xl shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)] overflow-hidden max-h-[85vh] sm:max-w-2xl sm:w-full mx-auto transition-all duration-500"
+            backdropClassName="bg-black/50"
+            containerClassName="flex items-end sm:items-center justify-center p-0 sm:p-4"
+            panelClassName="bg-card border border-white/10 dark:border-white/5 sm:border-primary/10 rounded-t-3xl sm:rounded-3xl shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)] overflow-hidden max-h-[85vh] max-w-2xl w-full mx-auto transition-all duration-500"
         >
-            <div className="flex items-center justify-between px-6 py-4 border-b border-primary/10 bg-primary/5 backdrop-blur-xl relative">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-primary/10 bg-primary/5 relative">
                 <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
                 <div className="flex items-center gap-4">
                     <MushafButton
@@ -134,7 +135,7 @@ export default function TafsirPanel({
             </div>
 
             {/* Tafsir Content */}
-            <div className="p-8 overflow-auto max-h-[50vh] sm:max-h-[60vh] bg-background/30 backdrop-blur-sm">
+            <div className="p-8 overflow-auto max-h-[50vh] sm:max-h-[60vh] bg-background">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-4">
                         <Loader2 size={32} className="animate-spin text-primary opacity-70" />
