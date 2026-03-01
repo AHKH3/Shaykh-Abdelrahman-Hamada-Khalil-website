@@ -8,7 +8,7 @@ export interface MushafCloseButtonProps extends React.ButtonHTMLAttributes<HTMLB
 }
 
 const MushafCloseButton = forwardRef<HTMLButtonElement, MushafCloseButtonProps>(
-    ({ className = "", iconSize = 18, title = "إغلاق", ...props }, ref) => {
+    ({ className = "", iconSize = 18, title = "Close", ...props }, ref) => {
         return (
             <button
                 ref={ref}

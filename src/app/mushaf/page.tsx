@@ -9,7 +9,7 @@ export default function MushafPage() {
   return (
     <>
       <Header />
-      <main className="pt-16 min-h-screen">
+      <main className="pt-[var(--header-height)] min-h-screen">
         <MushafViewer />
       </main>
     </>

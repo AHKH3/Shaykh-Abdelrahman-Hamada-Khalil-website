@@ -204,7 +204,7 @@ export default function FloatingAudioPlayer({
           <MushafButton
             variant={isPlaying ? "ghost" : "primary"}
             onClick={isPlaying ? onPause : onPlay}
-            className={`w-14 h-14 flex items-center justify-center rounded-2xl shadow-[0_10px_25px_-5px_rgba(var(--color-primary),0.4)] hover:shadow-[0_15px_30px_-5px_rgba(var(--color-primary),0.5)] transition-all duration-300 active:scale-95 ${isPlaying ? "bg-primary text-white ring-4 ring-primary/20 hover:bg-primary hover:text-white" : "bg-primary text-white"}`}
+            className={`w-14 h-14 flex items-center justify-center rounded-2xl shadow-[0_10px_25px_-5px_rgba(var(--color-primary-rgb),0.4)] hover:shadow-[0_15px_30px_-5px_rgba(var(--color-primary-rgb),0.5)] transition-all duration-300 active:scale-95 ${isPlaying ? "bg-primary text-white ring-4 ring-primary/20 hover:bg-primary hover:text-white" : "bg-primary text-white"}`}
             title={isPlaying ? t.mushaf.pause : t.mushaf.audio}
             icon={isPlaying ? (
               <Pause size={28} fill="currentColor" className="animate-in fade-in zoom-in duration-300" />

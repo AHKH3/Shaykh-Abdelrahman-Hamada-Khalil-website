@@ -60,9 +60,9 @@ function MushafPageViewComponent({
       key={verse.verse_key}
       data-verse-key={verse.verse_key}
       className={`cursor-pointer transition-all duration-500 ease-out inline relative px-1 py-0.5 rounded-lg ${currentAudioVerse === verse.verse_key
-        ? "bg-primary/10 text-primary ring-1 ring-primary/30 shadow-[0_0_15px_rgba(var(--color-primary),0.15)] z-10"
+        ? "bg-primary/10 text-primary ring-1 ring-primary/30 shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)] z-10"
         : highlightedVerse === verse.verse_key
-          ? "bg-primary/5 ring-1 ring-primary/20 shadow-[0_0_10px_rgba(var(--color-primary),0.1)] z-10"
+          ? "bg-primary/5 ring-1 ring-primary/20 shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.1)] z-10"
           : "hover:bg-black/5 dark:hover:bg-white/5"
         }`}
       onClick={() => onVerseClick(verse.verse_key)}

@@ -40,7 +40,7 @@ export default function LibraryPage() {
   return (
     <>
       <Header />
-      <main className="pt-20 pb-16 min-h-screen">
+      <main className="pt-[var(--header-height)] pb-16 min-h-screen">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <motion.div
@@ -73,7 +73,7 @@ export default function LibraryPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="bg-card border border-border rounded-xl overflow-hidden hover:border-foreground/20 transition-all group"
+                  className="card-elevated-sm bg-card border border-border rounded-xl overflow-hidden hover:border-foreground/20 transition-all group"
                 >
                   {/* Icon/Preview */}
                   <div className="h-32 bg-muted flex items-center justify-center">

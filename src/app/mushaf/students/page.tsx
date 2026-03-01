@@ -115,7 +115,7 @@ export default function StudentsPage() {
   return (
     <>
       <Header />
-      <main className="pt-20 pb-16 min-h-screen">
+      <main className="pt-[var(--header-height)] pb-16 min-h-screen">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           {/* Header */}
           <div className="mb-8">

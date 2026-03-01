@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   SkipBack,
   SkipForward,
@@ -19,6 +18,8 @@ import { useI18n } from "@/lib/i18n/context";
 import { getVersesByPage, getChapters, TOTAL_PAGES, type Verse, type Chapter } from "@/lib/quran/api";
 import type { Student, Annotation } from "@/lib/supabase/types";
 import Header from "@/components/layout/Header";
+import ModalShell from "@/components/ui/ModalShell";
+import MushafCloseButton from "@/components/mushaf/ui/MushafCloseButton";
 import html2canvas from "html2canvas-pro";
 import { jsPDF } from "jspdf";
 
@@ -249,7 +250,7 @@ export default function StudentMushafPage() {
   return (
     <>
       <Header />
-      <main className="pt-16 min-h-screen flex flex-col">
+      <main className="pt-[var(--header-height)] min-h-screen flex flex-col">
         {/* Toolbar */}
         <div className="flex items-center justify-between px-4 py-2 bg-card border-b border-border flex-wrap gap-2">
           <div className="flex items-center gap-3">
@@ -434,88 +435,91 @@ export default function StudentMushafPage() {
         </div>
 
         {/* Annotation Comment Popup */}
-        <AnimatePresence>
-          {showAnnotationPopup && pendingAnnotation && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center"
-              onClick={() => {
-                setShowAnnotationPopup(false);
-                setPendingAnnotation(null);
-              }}
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-card border border-border rounded-2xl w-full max-w-sm mx-4 p-6 shadow-lg"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <h3 className="font-semibold font-['Amiri',serif] mb-2">
+        <ModalShell
+          isOpen={showAnnotationPopup && Boolean(pendingAnnotation)}
+          onClose={() => {
+            setShowAnnotationPopup(false);
+            setPendingAnnotation(null);
+          }}
+          titleId="annotation-popup-title"
+          zIndex={70}
+          backdropClassName="bg-black/50 backdrop-blur-sm"
+          containerClassName="flex items-center justify-center p-4"
+          panelClassName="bg-card border border-border rounded-2xl w-full max-w-sm p-6 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)]"
+        >
+          {pendingAnnotation && (
+            <>
+              <div className="flex items-center justify-between mb-2">
+                <h3 id="annotation-popup-title" className="font-semibold font-['Amiri',serif]">
                   {t.mushaf.addAnnotation}
                 </h3>
-                <p className="text-xs text-muted-foreground mb-1">
-                  {pendingAnnotation.verseKey}
-                </p>
-                <p className="text-sm font-['Amiri',serif] mb-4 p-2 bg-muted rounded-lg" dir="rtl">
-                  &ldquo;{pendingAnnotation.text}&rdquo;
-                </p>
-
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs text-muted-foreground">{locale === "ar" ? "النوع:" : "Type:"}</span>
-                  <button
-                    onClick={() => setAnnotationMode("permanent")}
-                    className={`px-3 py-1 rounded-lg text-xs ${
-                      annotationMode === "permanent"
-                        ? "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {t.mushaf.permanent}
-                  </button>
-                  <button
-                    onClick={() => setAnnotationMode("temporary")}
-                    className={`px-3 py-1 rounded-lg text-xs ${
-                      annotationMode === "temporary"
-                        ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {t.mushaf.temporary}
-                  </button>
-                </div>
-
-                <textarea
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  placeholder={`${t.mushaf.comment} (${locale === "ar" ? "اختياري" : "optional"})`}
-                  className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-none h-20 mb-4"
-                  dir="rtl"
+                <MushafCloseButton
+                  onClick={() => {
+                    setShowAnnotationPopup(false);
+                    setPendingAnnotation(null);
+                  }}
+                  iconSize={16}
                 />
+              </div>
+              <p className="text-xs text-muted-foreground mb-1">
+                {pendingAnnotation.verseKey}
+              </p>
+              <p className="text-sm font-['Amiri',serif] mb-4 p-2 bg-muted rounded-lg" dir="rtl">
+                &ldquo;{pendingAnnotation.text}&rdquo;
+              </p>
 
-                <div className="flex gap-2">
-                  <button
-                    onClick={saveAnnotation}
-                    className="btn-anthropic flex-1 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-hover"
-                  >
-                    {t.mushaf.saveComment}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowAnnotationPopup(false);
-                      setPendingAnnotation(null);
-                    }}
-                    className="px-4 py-2 bg-muted rounded-lg text-sm hover:bg-muted/80 transition-colors"
-                  >
-                    {t.common.close}
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xs text-muted-foreground">{locale === "ar" ? "النوع:" : "Type:"}</span>
+                <button
+                  onClick={() => setAnnotationMode("permanent")}
+                  className={`px-3 py-1 rounded-lg text-xs ${
+                    annotationMode === "permanent"
+                      ? "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {t.mushaf.permanent}
+                </button>
+                <button
+                  onClick={() => setAnnotationMode("temporary")}
+                  className={`px-3 py-1 rounded-lg text-xs ${
+                    annotationMode === "temporary"
+                      ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {t.mushaf.temporary}
+                </button>
+              </div>
+
+              <textarea
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder={`${t.mushaf.comment} (${locale === "ar" ? "اختياري" : "optional"})`}
+                className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-none h-20 mb-4"
+                dir="rtl"
+              />
+
+              <div className="flex gap-2">
+                <button
+                  onClick={saveAnnotation}
+                  className="btn-anthropic flex-1 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-hover"
+                >
+                  {t.mushaf.saveComment}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowAnnotationPopup(false);
+                    setPendingAnnotation(null);
+                  }}
+                  className="px-4 py-2 bg-muted rounded-lg text-sm hover:bg-muted/80 transition-colors"
+                >
+                  {t.common.close}
+                </button>
+              </div>
+            </>
           )}
-        </AnimatePresence>
+        </ModalShell>
       </main>
     </>
   );

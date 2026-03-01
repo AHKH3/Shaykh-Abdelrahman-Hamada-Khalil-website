@@ -3,14 +3,13 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Plus,
   Trash2,
   Edit3,
   Upload,
-  X,
   Library,
   AppWindow,
   Save,
@@ -19,7 +18,9 @@ import { createClient } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/context";
 import type { LibraryApp } from "@/lib/supabase/types";
 import Header from "@/components/layout/Header";
+import ModalShell from "@/components/ui/ModalShell";
 import { ToastContainer } from "@/components/ui/Toast";
+import MushafCloseButton from "@/components/mushaf/ui/MushafCloseButton";
 
 interface AppForm {
   title: string;
@@ -237,7 +238,7 @@ export default function AdminLibraryPage() {
   return (
     <>
       <Header />
-      <main className="pt-20 pb-16 min-h-screen">
+      <main className="pt-[var(--header-height)] pb-16 min-h-screen">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
@@ -284,7 +285,7 @@ export default function AdminLibraryPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="flex items-center justify-between bg-card border border-border rounded-xl p-4 group"
+                  className="card-elevated-sm flex items-center justify-between bg-card border border-border rounded-xl p-4 group"
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center shrink-0">
@@ -327,175 +328,163 @@ export default function AdminLibraryPage() {
           )}
 
           {/* Add/Edit Form Modal */}
-          <AnimatePresence>
-            {showForm && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center"
-                onClick={() => setShowForm(false)}
-              >
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="bg-card border border-border rounded-2xl w-full max-w-md mx-4 p-6 shadow-2xl max-h-[90vh] overflow-auto"
-                  onClick={(e) => e.stopPropagation()}
+          <ModalShell
+            isOpen={showForm}
+            onClose={() => setShowForm(false)}
+            titleId="admin-library-form-title"
+            zIndex={70}
+            backdropClassName="bg-black/50 backdrop-blur-sm"
+            containerClassName="flex items-center justify-center p-4"
+            panelClassName="bg-card border border-border rounded-2xl w-full max-w-md p-6 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)] max-h-[90vh] overflow-auto"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 id="admin-library-form-title" className="text-lg font-bold font-['Amiri',serif]">
+                {editingId ? t.admin.editApp : t.admin.addApp}
+              </h2>
+              <MushafCloseButton onClick={() => setShowForm(false)} iconSize={18} />
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-medium mb-1">
+                  {t.admin.appTitle} (عربي) *
+                </label>
+                <input
+                  type="text"
+                  value={form.title}
+                  onChange={(e) =>
+                    setForm({ ...form, title: e.target.value })
+                  }
+                  className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  dir="rtl"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium mb-1">
+                  {t.admin.appTitle} (English)
+                </label>
+                <input
+                  type="text"
+                  value={form.title_en}
+                  onChange={(e) =>
+                    setForm({ ...form, title_en: e.target.value })
+                  }
+                  className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  dir="ltr"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium mb-1">
+                  {t.admin.appDescription} (عربي)
+                </label>
+                <textarea
+                  value={form.description}
+                  onChange={(e) =>
+                    setForm({ ...form, description: e.target.value })
+                  }
+                  className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-none h-16"
+                  dir="rtl"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium mb-1">
+                  {t.admin.appDescription} (English)
+                </label>
+                <textarea
+                  value={form.description_en}
+                  onChange={(e) =>
+                    setForm({ ...form, description_en: e.target.value })
+                  }
+                  className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-none h-16"
+                  dir="ltr"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium mb-1">
+                  {t.admin.appFile} (HTML) {!editingId && "*"}
+                </label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".html,.htm"
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      file: e.target.files?.[0] || null,
+                    })
+                  }
+                  className="hidden"
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-border rounded-lg text-sm text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-colors"
                 >
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-lg font-bold font-['Amiri',serif]">
-                      {editingId ? t.admin.editApp : t.admin.addApp}
-                    </h2>
-                    <button onClick={() => setShowForm(false)}>
-                      <X size={18} className="text-muted-foreground" />
-                    </button>
-                  </div>
+                  <Upload size={16} />
+                  {form.file
+                    ? form.file.name
+                    : locale === "ar"
+                      ? "اختر ملف HTML"
+                      : "Choose HTML file"}
+                </button>
+              </div>
 
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-xs font-medium mb-1">
-                        {t.admin.appTitle} (عربي) *
-                      </label>
-                      <input
-                        type="text"
-                        value={form.title}
-                        onChange={(e) =>
-                          setForm({ ...form, title: e.target.value })
-                        }
-                        className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                        dir="rtl"
-                      />
-                    </div>
+              <div>
+                <label className="block text-xs font-medium mb-1">
+                  {t.admin.appIcon}
+                </label>
+                <input
+                  ref={iconInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      icon: e.target.files?.[0] || null,
+                    })
+                  }
+                  className="hidden"
+                />
+                <button
+                  onClick={() => iconInputRef.current?.click()}
+                  className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-border rounded-lg text-sm text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-colors"
+                >
+                  <Upload size={16} />
+                  {form.icon
+                    ? form.icon.name
+                    : locale === "ar"
+                      ? "اختر صورة"
+                      : "Choose image"}
+                </button>
+              </div>
+            </div>
 
-                    <div>
-                      <label className="block text-xs font-medium mb-1">
-                        {t.admin.appTitle} (English)
-                      </label>
-                      <input
-                        type="text"
-                        value={form.title_en}
-                        onChange={(e) =>
-                          setForm({ ...form, title_en: e.target.value })
-                        }
-                        className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                        dir="ltr"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-medium mb-1">
-                        {t.admin.appDescription} (عربي)
-                      </label>
-                      <textarea
-                        value={form.description}
-                        onChange={(e) =>
-                          setForm({ ...form, description: e.target.value })
-                        }
-                        className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-none h-16"
-                        dir="rtl"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-medium mb-1">
-                        {t.admin.appDescription} (English)
-                      </label>
-                      <textarea
-                        value={form.description_en}
-                        onChange={(e) =>
-                          setForm({ ...form, description_en: e.target.value })
-                        }
-                        className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-none h-16"
-                        dir="ltr"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-medium mb-1">
-                        {t.admin.appFile} (HTML) {!editingId && "*"}
-                      </label>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".html,.htm"
-                        onChange={(e) =>
-                          setForm({
-                            ...form,
-                            file: e.target.files?.[0] || null,
-                          })
-                        }
-                        className="hidden"
-                      />
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-border rounded-lg text-sm text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-colors"
-                      >
-                        <Upload size={16} />
-                        {form.file
-                          ? form.file.name
-                          : locale === "ar"
-                            ? "اختر ملف HTML"
-                            : "Choose HTML file"}
-                      </button>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-medium mb-1">
-                        {t.admin.appIcon}
-                      </label>
-                      <input
-                        ref={iconInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) =>
-                          setForm({
-                            ...form,
-                            icon: e.target.files?.[0] || null,
-                          })
-                        }
-                        className="hidden"
-                      />
-                      <button
-                        onClick={() => iconInputRef.current?.click()}
-                        className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-border rounded-lg text-sm text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-colors"
-                      >
-                        <Upload size={16} />
-                        {form.icon
-                          ? form.icon.name
-                          : locale === "ar"
-                            ? "اختر صورة"
-                            : "Choose image"}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2 mt-6">
-                    <button
-                      onClick={handleSubmit}
-                      disabled={saving || !form.title.trim() || (!form.file && !editingId)}
-                      className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-foreground text-background rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-                    >
-                      {saving ? (
-                        <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                      ) : (
-                        <>
-                          <Save size={14} />
-                          {t.admin.save}
-                        </>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => setShowForm(false)}
-                      className="px-4 py-2.5 bg-muted rounded-lg text-sm hover:bg-muted/80 transition-colors"
-                    >
-                      {t.admin.cancel}
-                    </button>
-                  </div>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            <div className="flex gap-2 mt-6">
+              <button
+                onClick={handleSubmit}
+                disabled={saving || !form.title.trim() || (!form.file && !editingId)}
+                className="btn-anthropic flex-1 flex items-center justify-center gap-2 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-hover transition-opacity disabled:opacity-50"
+              >
+                {saving ? (
+                  <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Save size={14} />
+                    {t.admin.save}
+                  </>
+                )}
+              </button>
+              <button
+                onClick={() => setShowForm(false)}
+                className="px-4 py-2.5 bg-muted rounded-lg text-sm hover:bg-muted/80 transition-colors"
+              >
+                {t.admin.cancel}
+              </button>
+            </div>
+          </ModalShell>
         </div>
       </main>
       <ToastContainer toasts={toasts} removeToast={removeToast} />

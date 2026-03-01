@@ -4,6 +4,7 @@ import { useRef, type ReactNode, useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence, useDragControls, useMotionValue } from "framer-motion";
 import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Pin, PinOff, Brain, BarChart3 } from "lucide-react";
 import { useFloatingPanel } from "@/lib/hooks/useFloatingPanel";
+import { useI18n } from "@/lib/i18n/context";
 import MushafCloseButton from "./ui/MushafCloseButton";
 import MushafButton from "./ui/MushafButton";
 
@@ -61,6 +62,7 @@ export default function FloatingPanel({
   allowOverflow = false,
   contentHeight,
 }: FloatingPanelProps) {
+  const { locale } = useI18n();
   const dragControls = useDragControls();
   const panelRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -78,6 +80,12 @@ export default function FloatingPanel({
   const motionY = useMotionValue(position.y);
   const resolvedContentHeight =
     typeof contentHeight === "number" ? `${contentHeight}px` : contentHeight;
+  const pinTitle = isPinned
+    ? (locale === "ar" ? "إلغاء التثبيت" : "Unpin")
+    : (locale === "ar" ? "تثبيت" : "Pin");
+  const collapseTitle = locale === "ar" ? "تصغير" : "Collapse";
+  const closeTitle = locale === "ar" ? "إغلاق" : "Close";
+  const expandHint = locale === "ar" ? "انقر للتوسيع" : "Click to expand";
 
   // Check for mobile
   useEffect(() => {
@@ -175,20 +183,22 @@ export default function FloatingPanel({
                     variant="icon"
                     onClick={(e) => { e.stopPropagation(); togglePin(); }}
                     className={`p-1.5 rounded-lg transition-colors h-auto w-auto shadow-none border-transparent ${isPinned ? "bg-primary/20 text-primary hover:bg-primary/30" : "hover:bg-accent text-muted-foreground hover:text-foreground bg-transparent"}`}
-                    title={isPinned ? "إلغاء التثبيت" : "تثبيت"}
+                    title={pinTitle}
                     icon={isPinned ? <PinOff size={15} /> : <Pin size={15} />}
                   />
                   <MushafButton
                     variant="icon"
                     onClick={(e) => { e.stopPropagation(); handleCollapse(); }}
                     className="p-1.5 rounded-xl hover:bg-muted/80 transition-all text-muted-foreground hover:text-foreground h-auto w-auto shadow-none border-transparent bg-transparent"
+                    title={collapseTitle}
                     icon={<ChevronDown size={18} />}
                   />
-                </>
+                  </>
               )}
               <MushafCloseButton
                 onClick={(e) => { e.stopPropagation(); onClose(); }}
                 iconSize={15}
+                title={closeTitle}
               />
             </div>
           </div>
@@ -350,7 +360,7 @@ export default function FloatingPanel({
                     "bottom-full mb-2"
                 }`}
             >
-              انقر للتوسيع
+              {expandHint}
             </motion.div>
           )}
         </AnimatePresence>
@@ -395,7 +405,7 @@ export default function FloatingPanel({
           animate={{
             boxShadow: collapsedInfo.isPlaying
               ? ["0 0 0 0px rgba(34, 197, 94, 0.4)", "0 0 0 4px rgba(34, 197, 94, 0)", "0 0 0 0px rgba(34, 197, 94, 0.4)"]
-              : "0 0 0 2px rgba(var(--color-primary), 0.3)",
+              : "0 0 0 2px rgba(var(--color-primary-rgb), 0.3)",
           }}
           transition={collapsedInfo.isPlaying ? { duration: 2, repeat: Infinity } : { duration: 0 }}
         />
@@ -430,7 +440,7 @@ export default function FloatingPanel({
             onPointerDown={(e) => { e.stopPropagation(); }}
             onClick={(e) => { e.stopPropagation(); togglePin(); }}
             className={`p-1.5 rounded-lg transition-colors h-auto w-auto shadow-none border-transparent ${isPinned ? "bg-primary/20 text-primary hover:bg-primary/30" : "hover:bg-accent text-muted-foreground hover:text-foreground bg-transparent"}`}
-            title={isPinned ? "إلغاء التثبيت" : "تثبيت"}
+            title={pinTitle}
             icon={isPinned ? <PinOff size={13} /> : <Pin size={13} />}
           />
 
@@ -440,7 +450,7 @@ export default function FloatingPanel({
             onPointerDown={(e) => { e.stopPropagation(); }}
             onClick={(e) => { e.stopPropagation(); handleCollapse(); }}
             className="p-1.5 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground h-auto w-auto shadow-none border-transparent bg-transparent"
-            title="تصغير"
+            title={collapseTitle}
             icon={<ChevronDown size={13} />}
           />
 
@@ -448,7 +458,7 @@ export default function FloatingPanel({
             onPointerDown={(e) => e.stopPropagation()}
             onClick={onClose}
             iconSize={13}
-            title="إغلاق"
+            title={closeTitle}
           />
         </div>
       </div>

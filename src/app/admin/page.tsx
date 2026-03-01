@@ -71,7 +71,7 @@ export default function AdminPage() {
   return (
     <>
       <Header />
-      <main className="pt-20 pb-16 min-h-screen">
+      <main className="pt-[var(--header-height)] pb-16 min-h-screen">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
@@ -103,7 +103,7 @@ export default function AdminPage() {
                 >
                   <Link
                     href={card.href}
-                    className="block bg-card border border-border rounded-xl p-6 hover:border-foreground/20 transition-all group"
+                    className="card-elevated-sm block bg-card border border-border rounded-xl p-6 hover:border-foreground/20 transition-all group"
                   >
                     <div className={`w-12 h-12 ${card.color} rounded-xl flex items-center justify-center mb-4`}>
                       <Icon size={22} className="text-foreground" />

@@ -43,7 +43,7 @@ export default function LibraryAppPage() {
     return (
       <>
         <Header />
-        <main className="pt-16 min-h-screen flex items-center justify-center">
+        <main className="pt-[var(--header-height)] min-h-screen flex items-center justify-center">
           <div className="w-8 h-8 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
         </main>
       </>
@@ -54,7 +54,7 @@ export default function LibraryAppPage() {
     return (
       <>
         <Header />
-        <main className="pt-16 min-h-screen flex items-center justify-center">
+        <main className="pt-[var(--header-height)] min-h-screen flex items-center justify-center">
           <p className="text-muted-foreground">{t.common.error}</p>
         </main>
       </>
@@ -64,7 +64,7 @@ export default function LibraryAppPage() {
   return (
     <>
       <Header />
-      <main className="pt-16 min-h-screen flex flex-col">
+      <main className="pt-[var(--header-height)] min-h-screen flex flex-col">
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-2 bg-card border-b border-border">
           <div className="flex items-center gap-3">
