@@ -437,11 +437,12 @@ export const TAFSIR_RESOURCES: Record<number, TafsirResource> = {
 
 export async function getTafsir(
   verseKey: string,
-  tafsirId: number = 169 // Ibn Kathir Arabic
+  tafsirId: number = 169, // Ibn Kathir Arabic
+  options: { signal?: AbortSignal } = {}
 ): Promise<Tafsir> {
   const res = await fetch(
     `${BASE_URL}/tafsirs/${tafsirId}/by_ayah/${verseKey}`,
-    { next: { revalidate: 86400 } }
+    { next: { revalidate: 86400 }, signal: options.signal }
   );
   if (!res.ok) throw new Error("Failed to fetch tafsir");
   const data = await res.json();

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
   BookOpen,
+  FileText,
   Volume2,
   Settings,
   Layers,
@@ -27,7 +28,6 @@ import {
   type Chapter,
 } from "@/lib/quran/api";
 import VerseOptionsMenu from "./VerseOptionsMenu";
-import TafsirPanel from "./TafsirPanel";
 import DisplaySettings from "./DisplaySettings";
 import AdvancedSearch from "./AdvancedSearch";
 import FloatingVerseRangePanel from "./FloatingVerseRangePanel";
@@ -40,6 +40,13 @@ import { ToastContainer, type ToastType } from "@/components/ui/Toast";
 import BookmarksPanel from "./BookmarksPanel";
 import MushafButton from "./ui/MushafButton";
 import MushafPageFlipButton from "./ui/MushafPageFlipButton";
+import {
+  useTafsirWorkspace,
+  type TafsirScope,
+} from "@/lib/hooks/useTafsirWorkspace";
+import { resolveVerseKeysFromVerses } from "@/lib/quran/tafsir-service";
+import TafsirDockedSidebar from "./tafsir/TafsirDockedSidebar";
+import TafsirBottomSheet from "./tafsir/TafsirBottomSheet";
 
 const PRELOAD_RADIUS = 3;
 type ReadingMode = "normal" | "sepia" | "green" | "purple" | "blue" | "red" | "pink" | "highContrast";
@@ -53,6 +60,7 @@ interface DisplaySettingsState {
 
 const DISPLAY_SETTINGS_STORAGE_KEY = "mushaf_display_settings_v1";
 const LAST_OPEN_PAGE_STORAGE_KEY = "mushaf_last_open_page_v1";
+const TAFSIR_SIDEBAR_WIDTH_STORAGE_KEY = "mushaf_tafsir_sidebar_width_v1";
 const DEFAULT_DISPLAY_SETTINGS: DisplaySettingsState = {
   fontSize: 32,
   pageWidth: "normal",
@@ -99,11 +107,15 @@ export default function MushafViewer() {
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [loading, setLoading] = useState(false);
   const [showIndex, setShowIndex] = useState(false);
-  const [showTafsir, setShowTafsir] = useState(false);
-  const [selectedVerse, setSelectedVerse] = useState<string | null>(null);
+  const [selectedVerseForTafsir, setSelectedVerseForTafsir] = useState<string | null>(null);
   const [highlightedVerse, setHighlightedVerse] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentAudioVerse, setCurrentAudioVerse] = useState<string | null>(null);
+  const [viewportWidth, setViewportWidth] = useState<number>(
+    typeof window === "undefined" ? 1440 : window.innerWidth
+  );
+  const [selectedTafsirId, setSelectedTafsirId] = useState<number>(locale === "ar" ? 169 : 168);
+  const [tafsirSidebarWidth, setTafsirSidebarWidth] = useState(400);
   const [selectedReciter, setSelectedReciter] = useState(1);
   const [showAudioPlayer, setShowAudioPlayer] = useState(false);
   const [audioDuration, setAudioDuration] = useState(0);
@@ -179,6 +191,26 @@ export default function MushafViewer() {
     fallbackTried: boolean;
   } | null>(null);
 
+  const tafsirWorkspace = useTafsirWorkspace({
+    currentAudioVerse,
+    highlightedVerse,
+    selectedVerse: selectedVerseForTafsir,
+  });
+  const {
+    isOpen: isTafsirOpen,
+    scopeMode: tafsirScopeMode,
+    followMode: tafsirFollowMode,
+    activeAyahVerseKey,
+    openForAyah,
+    close: closeTafsir,
+    toggleOpen: toggleTafsirOpen,
+    setScopeMode: setTafsirScopeMode,
+    toggleFollowMode: toggleTafsirFollowMode,
+  } = tafsirWorkspace;
+
+  const isDesktopDockedTafsir = viewportWidth >= 1280;
+  const isTabletTafsirSheet = viewportWidth >= 1024 && viewportWidth < 1280;
+  const isMobileTafsirSheet = viewportWidth < 1024;
 
 
   // Handle focus mode - add class to body to hide site header only in focus mode
@@ -206,6 +238,39 @@ export default function MushafViewer() {
     if (!displaySettingsReady || typeof window === "undefined") return;
     window.localStorage.setItem(DISPLAY_SETTINGS_STORAGE_KEY, JSON.stringify(displaySettings));
   }, [displaySettings, displaySettingsReady]);
+
+  useEffect(() => {
+    const onResize = () => setViewportWidth(window.innerWidth);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const raw = window.localStorage.getItem(TAFSIR_SIDEBAR_WIDTH_STORAGE_KEY);
+    const parsed = raw ? Number(raw) : NaN;
+    if (Number.isFinite(parsed)) {
+      setTafsirSidebarWidth(Math.max(360, Math.min(520, parsed)));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(TAFSIR_SIDEBAR_WIDTH_STORAGE_KEY, String(tafsirSidebarWidth));
+  }, [tafsirSidebarWidth]);
+
+  useEffect(() => {
+    setSelectedTafsirId((current) => {
+      if (locale === "ar" && current !== 169 && current !== 14 && current !== 15 && current !== 16 && current !== 90 && current !== 91 && current !== 93 && current !== 94) {
+        return 169;
+      }
+      if (locale !== "ar" && current !== 168 && current !== 817) {
+        return 168;
+      }
+      return current;
+    });
+  }, [locale]);
 
   // Helper functions for display settings
   const getFontSizeClass = (size: number) => {
@@ -349,8 +414,7 @@ export default function MushafViewer() {
     if (cachedPage) {
       setCurrentPage(page);
       setVerses(cachedPage);
-      setSelectedVerse(null);
-      setShowTafsir(false);
+      setSelectedVerseForTafsir(null);
       void preloadNearbyPages(page);
       return;
     }
@@ -366,8 +430,7 @@ export default function MushafViewer() {
 
       setCurrentPage(page);
       setVerses(mergedCache[page] || []);
-      setSelectedVerse(null);
-      setShowTafsir(false);
+      setSelectedVerseForTafsir(null);
       void preloadNearbyPages(page);
     } catch (err) {
       console.error("Failed to load page:", err);
@@ -444,11 +507,10 @@ export default function MushafViewer() {
     return chapters.find((c) => c.id === chapterId);
   };
 
-  // Tafsir
-  const handleTafsir = (verseKey: string) => {
-    setSelectedVerse(verseKey);
-    setShowTafsir(true);
-  };
+  const openTafsirForVerse = useCallback((verseKey: string, lockToVerse = true) => {
+    setSelectedVerseForTafsir(verseKey);
+    openForAyah(verseKey, { lockToVerse });
+  }, [openForAyah]);
 
   // Verse range handlers
   const handleSelectRange = async (chapterId: number, fromVerse: number, toVerse: number) => {
@@ -497,6 +559,7 @@ export default function MushafViewer() {
 
     goToPage(pageNumber);
     if (verseKey) {
+      setSelectedVerseForTafsir(verseKey);
       setPendingVerseFocus({ verseKey, fallbackTried: false });
     }
   }, [goToPage, viewMode]);
@@ -550,6 +613,7 @@ export default function MushafViewer() {
   // Highlight verse on click
   const handleVerseClick = useCallback((verseKey: string) => {
     setHighlightedVerse((prev) => (verseKey === prev ? null : verseKey));
+    setSelectedVerseForTafsir(verseKey);
   }, []);
 
   // Verse options menu handlers
@@ -663,23 +727,23 @@ export default function MushafViewer() {
     };
   };
 
-  const playPage = () => {
+  const playPage = useCallback(() => {
     if (verses.length > 0) {
       playVerse(verses[0].verse_key);
     }
-  };
+  }, [verses]);
 
-  const pauseAudio = () => {
+  const pauseAudio = useCallback(() => {
     if (audioRef.current) audioRef.current.pause();
     setIsPlaying(false);
-  };
+  }, []);
 
-  const resumeAudio = () => {
+  const resumeAudio = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.play().catch(console.error);
       setIsPlaying(true);
     }
-  };
+  }, []);
 
   const stopAudio = () => {
     if (audioRef.current) {
@@ -828,7 +892,7 @@ export default function MushafViewer() {
 
       if (e.key === "Escape") {
         setShowIndex(false);
-        setShowTafsir(false);
+        closeTafsir();
         setVerseMenuPosition(null);
         setSelectedVerseForMenu(null);
         setShowDisplaySettings(false);
@@ -868,10 +932,71 @@ export default function MushafViewer() {
     resumeAudio,
     showAudioPlayer,
     showVerseRangePanel,
+    closeTafsir,
   ]);
 
   const currentSurah = getCurrentSurah();
   const isRtl = locale === "ar";
+  const pageVerseKeys = useMemo(() => resolveVerseKeysFromVerses(verses), [verses]);
+  const rangeVerseKeys = useMemo(
+    () => (rangeData ? resolveVerseKeysFromVerses(rangeData.verses) : []),
+    [rangeData]
+  );
+  const hasRangeScope = rangeVerseKeys.length > 0;
+  const hasPageScope = pageVerseKeys.length > 0;
+
+  const activeTafsirScope = useMemo<TafsirScope | null>(() => {
+    if (tafsirScopeMode === "ayah") {
+      return {
+        mode: "ayah",
+        verseKey: activeAyahVerseKey,
+      };
+    }
+
+    if (tafsirScopeMode === "range") {
+      if (!rangeData || rangeVerseKeys.length === 0) return null;
+      return {
+        mode: "range",
+        chapterId: rangeData.chapterId,
+        fromVerse: rangeData.fromVerse,
+        toVerse: rangeData.toVerse,
+        verseKeys: rangeVerseKeys,
+      };
+    }
+
+    if (pageVerseKeys.length === 0) return null;
+    return {
+      mode: "page",
+      pageNumber: currentPage,
+      verseKeys: pageVerseKeys,
+    };
+  }, [
+    currentPage,
+    pageVerseKeys,
+    rangeData,
+    rangeVerseKeys,
+    activeAyahVerseKey,
+    tafsirScopeMode,
+  ]);
+
+  const handleJumpToVerseFromTafsir = useCallback(
+    (verseKey: string) => {
+      setSelectedVerseForTafsir(verseKey);
+      setPendingVerseFocus({ verseKey, fallbackTried: false });
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (tafsirScopeMode === "range" && !hasRangeScope) {
+      setTafsirScopeMode(hasPageScope ? "page" : "ayah");
+      return;
+    }
+
+    if (tafsirScopeMode === "page" && !hasPageScope) {
+      setTafsirScopeMode("ayah");
+    }
+  }, [hasPageScope, hasRangeScope, setTafsirScopeMode, tafsirScopeMode]);
 
   return (
     <div
@@ -941,6 +1066,26 @@ export default function MushafViewer() {
           />
           <MushafButton
             variant="icon"
+            active={isTafsirOpen}
+            onClick={() => {
+              if (!isTafsirOpen && !activeAyahVerseKey) {
+                const fallbackVerseKey =
+                  (viewMode === "range" ? rangeVerseKeys[0] : pageVerseKeys[0]) ?? null;
+                if (fallbackVerseKey) {
+                  setSelectedVerseForTafsir(fallbackVerseKey);
+                  openForAyah(fallbackVerseKey, { lockToVerse: false });
+                  return;
+                }
+              }
+              toggleTafsirOpen();
+            }}
+            icon={<FileText size={16} />}
+            title={t.mushaf.openTafsirPanel}
+            className="hover:bg-primary/10 rounded-xl"
+            data-testid="open-tafsir-panel"
+          />
+          <MushafButton
+            variant="icon"
             active={showAudioPlayer}
             onClick={() => setShowAudioPlayer((v) => !v)}
             icon={<Volume2 size={16} />}
@@ -1007,70 +1152,94 @@ export default function MushafViewer() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto relative custom-scrollbar bg-background/50" ref={scrollContainerRef}>
-        <div className={`${getPageWidthClass(pageWidth)} mx-auto px-4 sm:px-8 py-10`}>
-          {viewMode === "range" ? (
-            loading && !rangeData ? (
-              <div className="flex items-center justify-center h-64">
-                <div className="w-8 h-8 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
-              </div>
-            ) : rangeData ? (
-              // Range Mode View
-              <MushafPageFrame
-                locale={locale}
-                isRangeMode={true}
-                chapterName={rangeData.chapterInfo?.name_arabic || `سورة ${rangeData.chapterId}`}
-                chapterId={rangeData.chapterId}
-                fromVerse={rangeData.fromVerse}
-                toVerse={rangeData.toVerse}
-                fontSizeClass={getFontSizeClass(fontSize)}
-              >
-                {/* Range Verses */}
-                <div className={`quran-text text-center leading-[2.8] ${getFontSizeClass(fontSize)}`} dir="rtl">
-                  {rangeData.verses.map((verse) => (
-                    <span
-                      key={verse.verse_key}
-                      data-verse-key={verse.verse_key}
-                      className={`cursor-pointer transition-all duration-500 ease-out inline relative px-1 py-0.5 rounded-lg ${currentAudioVerse === verse.verse_key
-                        ? "bg-primary/10 text-primary ring-1 ring-primary/30 shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)] z-10"
-                        : highlightedVerse === verse.verse_key
-                          ? "bg-primary/5 ring-1 ring-primary/20 shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.1)] z-10"
-                          : "hover:bg-black/5 dark:hover:bg-white/5"
-                        }`}
-                      onClick={() => handleVerseClick(verse.verse_key)}
-                    >
-                      <span className={currentAudioVerse === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
-                      <span
-                        className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-secondary text-primary/60 hover:drop-shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.35)] cursor-pointer select-none"
-                        onClick={(e) => handleVerseNumberClick(verse, e)}
-                      >
-                        ۝{verse.verse_number.toLocaleString("ar-EG")}
-                      </span>{" "}
-                    </span>
-                  ))}
+      <div className="mushaf-reading-layout flex-1 bg-background/50">
+        <div className="flex-1 overflow-auto custom-scrollbar" ref={scrollContainerRef}>
+          <div className={`${getPageWidthClass(pageWidth)} mx-auto px-4 sm:px-8 py-10`}>
+            {viewMode === "range" ? (
+              loading && !rangeData ? (
+                <div className="flex items-center justify-center h-64">
+                  <div className="w-8 h-8 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
                 </div>
-              </MushafPageFrame>
-            ) : null
-          ) : (
-            // Normal Pages Mode
-            <div>
-              <MushafPageView
-                pageNumber={currentPage}
-                fontSizeClass={getFontSizeClass(fontSize)}
-                chapters={chapters}
-                locale={locale}
-                juzLabel={t.mushaf.juz}
-                endOfMushafLabel={locale === "ar" ? "نهاية المصحف" : "End of Mushaf"}
-                verses={verses}
-                currentAudioVerse={currentAudioVerse}
-                highlightedVerse={highlightedVerse}
-                onVerseClick={handleVerseClick}
-                onVerseNumberClick={handleVerseNumberClick}
-              />
-            </div>
-          )}
+              ) : rangeData ? (
+                // Range Mode View
+                <MushafPageFrame
+                  locale={locale}
+                  isRangeMode={true}
+                  chapterName={rangeData.chapterInfo?.name_arabic || `سورة ${rangeData.chapterId}`}
+                  chapterId={rangeData.chapterId}
+                  fromVerse={rangeData.fromVerse}
+                  toVerse={rangeData.toVerse}
+                  fontSizeClass={getFontSizeClass(fontSize)}
+                >
+                  {/* Range Verses */}
+                  <div className={`quran-text text-center leading-[2.8] ${getFontSizeClass(fontSize)}`} dir="rtl">
+                    {rangeData.verses.map((verse) => (
+                      <span
+                        key={verse.verse_key}
+                        data-verse-key={verse.verse_key}
+                        className={`cursor-pointer transition-all duration-500 ease-out inline relative px-1 py-0.5 rounded-lg ${currentAudioVerse === verse.verse_key
+                          ? "bg-primary/10 text-primary ring-1 ring-primary/30 shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)] z-10"
+                          : highlightedVerse === verse.verse_key
+                            ? "bg-primary/5 ring-1 ring-primary/20 shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.1)] z-10"
+                            : "hover:bg-black/5 dark:hover:bg-white/5"
+                          }`}
+                        onClick={() => handleVerseClick(verse.verse_key)}
+                      >
+                        <span className={currentAudioVerse === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
+                        <span
+                          className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-secondary text-primary/60 hover:drop-shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.35)] cursor-pointer select-none"
+                          onClick={(e) => handleVerseNumberClick(verse, e)}
+                        >
+                          ۝{verse.verse_number.toLocaleString("ar-EG")}
+                        </span>{" "}
+                      </span>
+                    ))}
+                  </div>
+                </MushafPageFrame>
+              ) : null
+            ) : (
+              // Normal Pages Mode
+              <div>
+                <MushafPageView
+                  pageNumber={currentPage}
+                  fontSizeClass={getFontSizeClass(fontSize)}
+                  chapters={chapters}
+                  locale={locale}
+                  juzLabel={t.mushaf.juz}
+                  endOfMushafLabel={locale === "ar" ? "نهاية المصحف" : "End of Mushaf"}
+                  verses={verses}
+                  currentAudioVerse={currentAudioVerse}
+                  highlightedVerse={highlightedVerse}
+                  onVerseClick={handleVerseClick}
+                  onVerseNumberClick={handleVerseNumberClick}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
+        {isDesktopDockedTafsir ? (
+          <TafsirDockedSidebar
+            isOpen={isTafsirOpen}
+            mode="docked"
+            width={tafsirSidebarWidth}
+            minWidth={360}
+            maxWidth={520}
+            onWidthChange={setTafsirSidebarWidth}
+            scopeMode={tafsirScopeMode}
+            onScopeModeChange={setTafsirScopeMode}
+            followMode={tafsirFollowMode}
+            onToggleFollowMode={toggleTafsirFollowMode}
+            scope={activeTafsirScope}
+            selectedTafsirId={selectedTafsirId}
+            onSelectTafsirId={setSelectedTafsirId}
+            onClose={closeTafsir}
+            onPlayVerse={playVerse}
+            onJumpToVerse={handleJumpToVerseFromTafsir}
+            hasRangeScope={hasRangeScope}
+            hasPageScope={hasPageScope}
+          />
+        ) : null}
       </div>
 
       {/* Bottom Navigation - Hide in range mode */}
@@ -1181,13 +1350,54 @@ export default function MushafViewer() {
         onSetRepeatMode={handleSetRepeatMode}
       />
 
+      {isTabletTafsirSheet ? (
+        <TafsirDockedSidebar
+          isOpen={isTafsirOpen}
+          mode="sheet"
+          width={tafsirSidebarWidth}
+          minWidth={360}
+          maxWidth={520}
+          onWidthChange={setTafsirSidebarWidth}
+          scopeMode={tafsirScopeMode}
+          onScopeModeChange={setTafsirScopeMode}
+          followMode={tafsirFollowMode}
+          onToggleFollowMode={toggleTafsirFollowMode}
+          scope={activeTafsirScope}
+          selectedTafsirId={selectedTafsirId}
+          onSelectTafsirId={setSelectedTafsirId}
+          onClose={closeTafsir}
+          onPlayVerse={playVerse}
+          onJumpToVerse={handleJumpToVerseFromTafsir}
+          hasRangeScope={hasRangeScope}
+          hasPageScope={hasPageScope}
+        />
+      ) : null}
+
+      {isMobileTafsirSheet ? (
+        <TafsirBottomSheet
+          isOpen={isTafsirOpen}
+          onClose={closeTafsir}
+          scopeMode={tafsirScopeMode}
+          onScopeModeChange={setTafsirScopeMode}
+          followMode={tafsirFollowMode}
+          onToggleFollowMode={toggleTafsirFollowMode}
+          scope={activeTafsirScope}
+          selectedTafsirId={selectedTafsirId}
+          onSelectTafsirId={setSelectedTafsirId}
+          onPlayVerse={playVerse}
+          onJumpToVerse={handleJumpToVerseFromTafsir}
+          hasRangeScope={hasRangeScope}
+          hasPageScope={hasPageScope}
+        />
+      ) : null}
+
       <VerseOptionsMenu
         position={verseMenuPosition}
         verseKey={selectedVerseForMenu?.verse_key ?? ""}
         verseText={selectedVerseForMenu?.text_uthmani ?? ""}
         onTafsir={() => {
           if (selectedVerseForMenu) {
-            handleTafsir(selectedVerseForMenu.verse_key);
+            openTafsirForVerse(selectedVerseForMenu.verse_key, true);
           }
         }}
         onPlay={() => {
@@ -1232,18 +1442,6 @@ export default function MushafViewer() {
         onClose={() => {
           setVerseMenuPosition(null);
           setSelectedVerseForMenu(null);
-        }}
-      />
-
-      {/* Tafsir Panel */}
-      <TafsirPanel
-        isOpen={showTafsir}
-        verseKey={selectedVerse || ""}
-        onClose={() => setShowTafsir(false)}
-        onPlayVerse={() => {
-          if (selectedVerse) {
-            playVerse(selectedVerse);
-          }
         }}
       />
 

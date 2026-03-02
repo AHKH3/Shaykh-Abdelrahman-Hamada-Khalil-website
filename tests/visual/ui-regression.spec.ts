@@ -7,11 +7,21 @@ interface VisualScenario {
   id: string;
   path: string;
   readySelector: string;
+  setup?: (page: Page) => Promise<void>;
 }
 
 const scenarios: VisualScenario[] = [
   { id: "home", path: "/", readySelector: "main section" },
   { id: "mushaf", path: "/mushaf", readySelector: ".mushaf-page-view" },
+  {
+    id: "mushaf-tafsir-open",
+    path: "/mushaf",
+    readySelector: ".mushaf-page-view",
+    setup: async (page) => {
+      await page.getByTestId("open-tafsir-panel").click();
+      await page.getByTestId("tafsir-panel-root").waitFor({ state: "visible" });
+    },
+  },
   { id: "library", path: "/library", readySelector: "main h1" },
   { id: "admin", path: "/admin", readySelector: "main h1" },
   { id: "login", path: "/login", readySelector: "main form" },
@@ -166,6 +176,9 @@ for (const locale of locales) {
           (activeLocale) => document.documentElement.dir === (activeLocale === "ar" ? "rtl" : "ltr"),
           locale,
         );
+        if (scenario.setup) {
+          await scenario.setup(page);
+        }
         await freezeAnimations(page);
         await page.waitForTimeout(120);
 

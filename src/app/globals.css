@@ -883,6 +883,39 @@
     color: var(--foreground);
   }
 
+  .mushaf-reading-layout {
+    display: flex;
+    min-height: 0;
+  }
+
+  .mushaf-tafsir-resizer {
+    width: 10px;
+    cursor: col-resize;
+    border: 0;
+    border-inline-end: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+    background:
+      linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in srgb, var(--primary) 16%, transparent) 50%,
+        transparent 100%
+      );
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .mushaf-tafsir-resizer:hover,
+  .mushaf-tafsir-resizer:focus-visible {
+    background:
+      linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in srgb, var(--primary) 32%, transparent) 50%,
+        transparent 100%
+      );
+    border-inline-end-color: color-mix(in srgb, var(--primary) 35%, transparent);
+    outline: none;
+  }
+
   /* Screen Mode Styles */
   /* Focus Mode - Only hides site header, keeps internal bars visible */
 
