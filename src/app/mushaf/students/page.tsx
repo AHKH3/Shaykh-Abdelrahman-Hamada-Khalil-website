@@ -179,13 +179,13 @@ export default function StudentsPage() {
                     <div>
                       <h3 className="font-medium text-sm">{student.name}</h3>
                       <p className="text-xs text-muted-foreground">
-                        {new Date(student.created_at).toLocaleDateString("ar-EG")}
+                        {new Date(student.created_at).toLocaleDateString(locale === "ar" ? "ar-EG" : "en-US")}
                       </p>
                     </div>
                   </Link>
                   <button
                     onClick={() => deleteStudent(student.id)}
-                    className="p-2 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors opacity-0 group-hover:opacity-100"
+                    className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100"
                   >
                     <Trash2 size={16} />
                   </button>

@@ -47,7 +47,7 @@ export default function AdminPage() {
           : `${stats.students} students | ${stats.annotations} annotations`,
       icon: Users,
       href: "/mushaf/students",
-      color: "bg-blue-50 dark:bg-blue-950/20",
+      color: "bg-info/15 text-info",
     },
     {
       title: t.admin.manageLibrary,
@@ -57,14 +57,14 @@ export default function AdminPage() {
           : `${stats.apps} applications`,
       icon: Library,
       href: "/admin/library",
-      color: "bg-purple-50 dark:bg-purple-950/20",
+      color: "bg-secondary/20 text-secondary",
     },
     {
       title: t.nav.mushaf,
       description: locale === "ar" ? "فتح المصحف التفاعلي" : "Open Interactive Mushaf",
       icon: BookOpen,
       href: "/mushaf",
-      color: "bg-green-50 dark:bg-green-950/20",
+      color: "bg-success/15 text-success",
     },
   ];
 
@@ -106,7 +106,7 @@ export default function AdminPage() {
                     className="card-elevated-sm block bg-card border border-border rounded-xl p-6 hover:border-foreground/20 transition-all group"
                   >
                     <div className={`w-12 h-12 ${card.color} rounded-xl flex items-center justify-center mb-4`}>
-                      <Icon size={22} className="text-foreground" />
+                      <Icon size={22} />
                     </div>
                     <h3 className="font-semibold text-sm mb-1">{card.title}</h3>
                     <p className="text-xs text-muted-foreground">

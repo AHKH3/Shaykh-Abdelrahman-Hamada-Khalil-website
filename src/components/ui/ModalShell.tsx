@@ -28,7 +28,7 @@ export default function ModalShell({
   initialFocusRef,
   closeOnEsc = true,
   closeOnBackdrop = true,
-  zIndex = 50,
+  zIndex = 70,
   backdropClassName = "bg-black/50 backdrop-blur-sm",
   containerClassName = "flex items-center justify-center p-4",
   panelClassName = "w-full",

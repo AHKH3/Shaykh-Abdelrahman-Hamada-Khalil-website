@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Lock, Mail, AlertCircle, ArrowRight } from "lucide-react";
+import { Lock, Mail, AlertCircle, ArrowLeft, ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/context";
 import Header from "@/components/layout/Header";
 
 export default function LoginPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -123,7 +123,7 @@ export default function LoginPage() {
                 ) : (
                   <>
                     {t.login.submit}
-                    <ArrowRight size={16} />
+                    {locale === "ar" ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
                   </>
                 )}
               </button>

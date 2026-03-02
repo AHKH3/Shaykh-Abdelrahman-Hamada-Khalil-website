@@ -1,0 +1,51 @@
+name: UI Verify
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ui-verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ui-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: env -u NO_COLOR FORCE_COLOR=0 npx playwright install --with-deps chromium
+
+      - name: Run UI verification
+        run: env -u NO_COLOR FORCE_COLOR=0 npm run ui:verify
+
+      - name: Upload Playwright artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-verify-artifacts
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: ignore
+          retention-days: 7

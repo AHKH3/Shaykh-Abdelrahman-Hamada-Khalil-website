@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
+  ArrowLeft,
   SkipBack,
   SkipForward,
   Image as ImageIcon,
@@ -258,7 +259,7 @@ export default function StudentMushafPage() {
               onClick={() => router.push("/mushaf/students")}
               className="p-2 rounded-lg hover:bg-muted transition-colors"
             >
-              <ArrowRight size={16} />
+              {locale === "ar" ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
             </button>
             <span className="text-sm font-medium">
               {student?.name || "..."} — {t.mushaf.page} {currentPage}
@@ -272,7 +273,7 @@ export default function StudentMushafPage() {
                 onClick={() => setAnnotationMode("permanent")}
                 className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                   annotationMode === "permanent"
-                    ? "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400"
+                    ? "bg-destructive/15 text-destructive dark:bg-destructive/20"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -283,7 +284,7 @@ export default function StudentMushafPage() {
                 onClick={() => setAnnotationMode("temporary")}
                 className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                   annotationMode === "temporary"
-                    ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400"
+                    ? "bg-warning/15 text-warning dark:bg-warning/20"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -328,7 +329,7 @@ export default function StudentMushafPage() {
             ) : (
               <div
                 ref={mushafRef}
-                className="bg-white dark:bg-card border border-border rounded-2xl p-6 sm:p-10"
+                className="bg-card border border-border rounded-2xl p-6 sm:p-10"
                 onMouseUp={handleTextSelection}
               >
                 {/* Student Name Header */}
@@ -383,12 +384,12 @@ export default function StudentMushafPage() {
                         <div
                           key={ann.id}
                           className={`flex items-start gap-2 p-2 rounded-lg text-xs ${
-                            ann.is_temporary ? "bg-yellow-50 dark:bg-yellow-950/20" : "bg-red-50 dark:bg-red-950/20"
+                            ann.is_temporary ? "bg-warning/10" : "bg-destructive/10"
                           }`}
                         >
                           <div
                             className={`w-2 h-2 rounded-full mt-1 shrink-0 ${
-                              ann.is_temporary ? "bg-yellow-500" : "bg-red-500"
+                              ann.is_temporary ? "bg-warning" : "bg-destructive"
                             }`}
                           />
                           <div className="flex-1 min-w-0">
@@ -474,7 +475,7 @@ export default function StudentMushafPage() {
                   onClick={() => setAnnotationMode("permanent")}
                   className={`px-3 py-1 rounded-lg text-xs ${
                     annotationMode === "permanent"
-                      ? "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400"
+                      ? "bg-destructive/15 text-destructive dark:bg-destructive/20"
                       : "bg-muted text-muted-foreground"
                   }`}
                 >
@@ -484,7 +485,7 @@ export default function StudentMushafPage() {
                   onClick={() => setAnnotationMode("temporary")}
                   className={`px-3 py-1 rounded-lg text-xs ${
                     annotationMode === "temporary"
-                      ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400"
+                      ? "bg-warning/15 text-warning dark:bg-warning/20"
                       : "bg-muted text-muted-foreground"
                   }`}
                 >

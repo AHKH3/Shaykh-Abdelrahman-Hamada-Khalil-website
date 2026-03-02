@@ -35,8 +35,8 @@ interface FloatingPanelProps {
 
 // Mode colors for visual feedback
 const modeColors = {
-  memorization: "bg-blue-500/20 border-blue-500/50 text-blue-600 dark:text-blue-400",
-  progress: "bg-purple-500/20 border-purple-500/50 text-purple-600 dark:text-purple-400",
+  memorization: "bg-info/20 border-info/50 text-info",
+  progress: "bg-secondary/20 border-secondary/50 text-secondary",
   range: "bg-primary/20 border-primary/50 text-primary",
 };
 
@@ -155,7 +155,7 @@ export default function FloatingPanel({
           exit={{ y: "100%" }}
           transition={{ type: "spring", bounce: 0.2 }}
           style={{ zIndex }}
-          className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border/40 rounded-t-3xl shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.2)]"
+          className="fixed bottom-0 inset-x-0 bg-card/95 backdrop-blur-md border-t border-border/40 rounded-t-3xl shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.2)]"
         >
           {/* Drag handle */}
           <div className="flex items-center justify-center pt-2">
@@ -171,7 +171,7 @@ export default function FloatingPanel({
               <span className="text-primary scale-110">{icon}</span>
               {title}
               {collapsedInfo?.rangeReference && isCollapsed && (
-                <span className="text-[10px] px-2 py-0.5 bg-primary/10 text-primary rounded-full font-bold mr-2">
+                <span className="text-[10px] px-2 py-0.5 bg-primary/10 text-primary rounded-full font-bold me-2">
                   {collapsedInfo.rangeReference}
                 </span>
               )}
@@ -289,7 +289,7 @@ export default function FloatingPanel({
             {/* Playing indicator */}
             {collapsedInfo?.isPlaying && (
               <motion.div
-                className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full"
+                className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-success rounded-full"
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
               />

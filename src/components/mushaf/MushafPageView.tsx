@@ -69,7 +69,7 @@ function MushafPageViewComponent({
     >
       <span className={currentAudioVerse === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
       <span
-        className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-amber-500 dark:hover:text-amber-400 text-primary/60 hover:drop-shadow-[0_0_8px_rgba(245,158,11,0.5)] cursor-pointer select-none"
+        className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-secondary text-primary/60 hover:drop-shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.35)] cursor-pointer select-none"
         onClick={(event) => onVerseNumberClick(verse, event)}
       >
         ۝{verse.verse_number.toLocaleString("ar-EG")}

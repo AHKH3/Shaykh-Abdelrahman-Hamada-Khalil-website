@@ -7,7 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "ui:guardrails": "node scripts/check-ui-guardrails.mjs",
+    "ui:contrast": "node scripts/audit-contrast.mjs",
+    "ui:contrast:check": "node scripts/audit-contrast.mjs --check",
+    "playwright:install": "playwright install chromium",
+    "visual:cleanup": "node scripts/cleanup-playwright-artifacts.mjs",
+    "visual:test": "node scripts/run-visual-tests.mjs",
+    "visual:update": "node scripts/run-visual-tests.mjs --update-snapshots",
+    "ui:verify": "npm run ui:guardrails && npm run ui:contrast:check && npm run visual:test"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
@@ -24,6 +32,7 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

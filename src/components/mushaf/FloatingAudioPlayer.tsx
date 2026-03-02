@@ -126,7 +126,7 @@ export default function FloatingAudioPlayer({
 
         {/* Now Playing Card */}
         <div className="rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/5 via-primary/10 to-transparent backdrop-blur-xl p-5 min-h-[90px] flex flex-col justify-center gap-2 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] relative overflow-hidden group/card">
-          <div className="absolute top-0 right-0 p-2 opacity-10 group-hover/card:opacity-20 transition-opacity">
+          <div className="absolute top-0 end-0 p-2 opacity-10 group-hover/card:opacity-20 transition-opacity">
             <Music2 size={40} className="text-primary" />
           </div>
           {currentVerseKey ? (

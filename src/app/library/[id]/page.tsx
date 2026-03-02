@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowRight, Maximize2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Maximize2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/context";
 import type { LibraryApp } from "@/lib/supabase/types";
@@ -72,7 +72,7 @@ export default function LibraryAppPage() {
               onClick={() => router.push("/library")}
               className="p-2 rounded-lg hover:bg-muted transition-colors"
             >
-              <ArrowRight size={16} />
+              {locale === "ar" ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
             </button>
             <span className="text-sm font-medium truncate">
               {locale === "ar" ? app.title : app.title_en || app.title}

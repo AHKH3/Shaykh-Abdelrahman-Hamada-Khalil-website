@@ -44,13 +44,13 @@ export default function Toast({ message, type, onClose }: ToastProps) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 20, scale: 0.9 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[var(--z-toast)] flex items-center gap-3 px-6 py-3 rounded-xl shadow-lg border ${getColors()} max-w-md mx-4`}
+      className={`fixed bottom-8 start-1/2 -translate-x-1/2 z-[var(--z-toast)] flex items-center gap-3 px-6 py-3 rounded-xl shadow-lg border ${getColors()} max-w-md mx-4`}
     >
       {getIcon()}
       <span className="text-sm font-medium">{message}</span>
       <button
         onClick={onClose}
-        className="ml-2 hover:opacity-80 transition-opacity"
+        className="ms-2 hover:opacity-80 transition-opacity"
         aria-label="Close"
       >
         <X size={16} />
@@ -66,7 +66,7 @@ interface ToastContainerProps {
 
 export function ToastContainer({ toasts, removeToast }: ToastContainerProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[var(--z-toast)] flex flex-col items-center gap-2 p-4 pointer-events-none">
+    <div className="fixed bottom-0 inset-x-0 z-[var(--z-toast)] flex flex-col items-center gap-2 p-4 pointer-events-none">
       <AnimatePresence>
         {toasts.map((toast) => (
           <motion.div
@@ -88,7 +88,7 @@ export function ToastContainer({ toasts, removeToast }: ToastContainerProps) {
               <span className="text-sm font-medium">{toast.message}</span>
               <button
                 onClick={() => removeToast(toast.id)}
-                className="ml-2 hover:opacity-80 transition-opacity"
+                className="ms-2 hover:opacity-80 transition-opacity"
                 aria-label="Close"
               >
                 <X size={16} />

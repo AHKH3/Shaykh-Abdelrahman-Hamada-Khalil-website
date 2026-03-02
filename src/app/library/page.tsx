@@ -118,7 +118,7 @@ export default function LibraryPage() {
                         title={t.library.shareApp}
                       >
                         {copiedId === app.id ? (
-                          <Check size={14} className="text-green-500" />
+                          <Check size={14} className="text-success" />
                         ) : (
                           <Copy size={14} />
                         )}

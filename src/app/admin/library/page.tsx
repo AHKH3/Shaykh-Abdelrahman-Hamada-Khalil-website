@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
+  ArrowLeft,
   ArrowRight,
   Plus,
   Trash2,
@@ -247,7 +248,7 @@ export default function AdminLibraryPage() {
                 onClick={() => router.push("/admin")}
                 className="p-2 rounded-lg hover:bg-muted transition-colors"
               >
-                <ArrowRight size={16} />
+                {locale === "ar" ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
               </button>
               <h1 className="text-xl font-bold font-['Amiri',serif] flex items-center gap-2">
                 <Library size={20} />
@@ -317,7 +318,7 @@ export default function AdminLibraryPage() {
                     </button>
                     <button
                       onClick={() => deleteApp(app)}
-                      className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 text-muted-foreground hover:text-red-500 transition-colors"
+                      className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
                     >
                       <Trash2 size={14} />
                     </button>

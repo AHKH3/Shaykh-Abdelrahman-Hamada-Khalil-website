@@ -49,7 +49,7 @@ export default function VerseOptionsMenu({
             zIndex={90}
             backdropClassName="bg-black/10 backdrop-blur-[2px]"
             containerClassName="relative h-full w-full"
-            panelClassName="fixed z-[100] min-w-[240px] bg-card/95 backdrop-blur-xl border border-primary/10 rounded-2xl shadow-[0_25px_60px_-12px_rgba(0,0,0,0.4)] py-3 overflow-hidden"
+            panelClassName="fixed z-[var(--z-context-menu)] min-w-[240px] bg-card/95 backdrop-blur-xl border border-primary/10 rounded-2xl shadow-[0_25px_60px_-12px_rgba(0,0,0,0.4)] py-3 overflow-hidden"
             panelStyle={{ left, top }}
         >
             <div className="px-5 py-3 mb-2 border-b border-primary/10 bg-primary/5 backdrop-blur-xl relative">

@@ -274,7 +274,7 @@ export function VerseRangeForm({
                   initial={{ opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  className="absolute z-[100] mt-2 w-full overflow-hidden rounded-2xl border border-border/70 bg-card shadow-2xl"
+                  className="absolute z-[var(--z-context-menu)] mt-2 w-full overflow-hidden rounded-2xl border border-border/70 bg-card shadow-2xl"
                 >
                   <div className="max-h-[280px] overflow-y-auto">
                     {recentChapters.length > 0 && !searchQuery && (
@@ -444,7 +444,7 @@ export function VerseRangeForm({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-600"
+              className="rounded-lg border border-destructive/25 bg-destructive/10 px-3 py-2 text-sm text-destructive"
             >
               {error}
             </motion.p>

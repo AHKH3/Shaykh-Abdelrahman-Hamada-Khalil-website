@@ -23,6 +23,8 @@
   --color-success-foreground: var(--success-foreground);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
 
   --font-ui-naskh: var(--font-noto-naskh-arabic), "Noto Naskh Arabic", serif;
   --font-ui-amiri: var(--font-amiri), "Amiri", serif;
@@ -52,6 +54,8 @@
     --success-foreground: #f7fff9;
     --info: #1f5ca8;
     --info-foreground: #f8fbff;
+    --warning: #9a5d00;
+    --warning-foreground: #ffffff;
     --color-primary-rgb: 6, 31, 79;
     --header-height: 5rem;
     --z-header: 50;
@@ -85,6 +89,8 @@
     --success-foreground: #02170c;
     --info: #7eb6ff;
     --info-foreground: #061a35;
+    --warning: #ffc266;
+    --warning-foreground: #301c00;
     --color-primary-rgb: 236, 232, 225;
   }
 
@@ -244,25 +250,25 @@
   }
 
   .annotation-permanent {
-    background: rgba(239, 68, 68, 0.2);
-    border-bottom: 2px solid #ef4444;
+    background: color-mix(in srgb, var(--destructive) 22%, transparent);
+    border-bottom: 2px solid var(--destructive);
     border-radius: 2px;
     padding: 1px 2px;
   }
 
   .annotation-temporary {
-    background: rgba(234, 179, 8, 0.2);
-    border-bottom: 2px solid #eab308;
+    background: color-mix(in srgb, var(--warning) 22%, transparent);
+    border-bottom: 2px solid var(--warning);
     border-radius: 2px;
     padding: 1px 2px;
   }
 
   .dark .annotation-permanent {
-    background: rgba(239, 68, 68, 0.15);
+    background: color-mix(in srgb, var(--destructive) 16%, transparent);
   }
 
   .dark .annotation-temporary {
-    background: rgba(234, 179, 8, 0.15);
+    background: color-mix(in srgb, var(--warning) 16%, transparent);
   }
 
   /* Anthropic Card System */
@@ -739,7 +745,7 @@
     --input: #D9B7C8;
     --primary: #B85D89;
     --color-primary-rgb: 184, 93, 137;
-    --primary-foreground: #FFF7FB;
+    --primary-foreground: #12070d;
     --accent: #F0D9E5;
     --accent-foreground: #8B3F66;
 

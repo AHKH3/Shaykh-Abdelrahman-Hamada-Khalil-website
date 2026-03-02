@@ -99,7 +99,7 @@ export default function ProgressTracker({ currentPage }: ProgressTrackerProps) {
     const progress = Math.round((pagesRead.size / 604) * 100);
 
     return (
-        <div className="fixed bottom-4 right-4 bg-card border border-border rounded-xl shadow-lg p-3 z-40 max-w-xs">
+        <div className="fixed bottom-4 end-4 bg-card border border-border rounded-xl shadow-lg p-3 z-[var(--z-floating)] max-w-xs">
             <div className="space-y-2">
                 {/* Progress */}
                 <div>
@@ -119,7 +119,7 @@ export default function ProgressTracker({ currentPage }: ProgressTrackerProps) {
 
                 {/* Streak */}
                 <div className="flex items-center gap-2">
-                    <Flame size={14} className="text-amber-500" />
+                    <Flame size={14} className="text-warning" />
                     <div>
                         <span className="text-xs text-muted-foreground">{t.mushaf.streak}</span>
                         <span className="text-sm font-medium">{streak}</span>

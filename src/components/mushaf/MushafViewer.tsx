@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import {
   ChevronLeft,
+  ChevronRight,
   BookOpen,
   Volume2,
   Settings,
@@ -885,7 +886,7 @@ export default function MushafViewer() {
         />
       </div>
 
-      <div className="mushaf-top-bar flex items-center justify-between px-6 py-3 bg-card/60 backdrop-blur-xl border-b border-primary/10 shadow-sm relative z-50">
+      <div className="mushaf-top-bar flex items-center justify-between px-6 py-3 bg-card/60 backdrop-blur-xl border-b border-primary/10 shadow-sm relative z-[var(--z-floating)]">
         {/* Subtle top inner glow */}
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
 
@@ -913,7 +914,7 @@ export default function MushafViewer() {
             <MushafButton
               variant="primary"
               onClick={handleBackToPages}
-              icon={<ChevronLeft size={14} />}
+              icon={isRtl ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
               className="text-xs px-3 py-2"
             >
               {t.mushaf.backToPages}
@@ -975,11 +976,11 @@ export default function MushafViewer() {
             </MushafButton>
             {showScreenModeMenu && (
               <>
-                <div className="fixed inset-0 z-40" onClick={() => setShowScreenModeMenu(false)} />
+                <div className="fixed inset-0 z-[var(--z-floating)]" onClick={() => setShowScreenModeMenu(false)} />
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  className="absolute end-0 top-full mt-2 z-50 bg-card/95 backdrop-blur-md border border-border/40 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] py-2 min-w-[180px] overflow-hidden"
+                  className="absolute end-0 top-full mt-2 z-[var(--z-context-menu)] bg-card/95 backdrop-blur-md border border-border/40 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] py-2 min-w-[180px] overflow-hidden"
                 >
                   {[
                     { value: "normal" as const, label: t.mushaf.screenModeNormal, icon: <Monitor size={16} /> },
@@ -1040,7 +1041,7 @@ export default function MushafViewer() {
                     >
                       <span className={currentAudioVerse === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
                       <span
-                        className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-amber-500 dark:hover:text-amber-400 text-primary/60 hover:drop-shadow-[0_0_8px_rgba(245,158,11,0.5)] cursor-pointer select-none"
+                        className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-secondary text-primary/60 hover:drop-shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.35)] cursor-pointer select-none"
                         onClick={(e) => handleVerseNumberClick(verse, e)}
                       >
                         ۝{verse.verse_number.toLocaleString("ar-EG")}
