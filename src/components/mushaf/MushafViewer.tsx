@@ -613,7 +613,7 @@ export default function MushafViewer() {
   // Highlight verse on click
   const handleVerseClick = useCallback((verseKey: string) => {
     setHighlightedVerse((prev) => (verseKey === prev ? null : verseKey));
-    setSelectedVerseForTafsir(verseKey);
+    setSelectedVerseForTafsir((prev) => (verseKey === prev ? null : verseKey));
   }, []);
 
   // Verse options menu handlers
@@ -1177,15 +1177,15 @@ export default function MushafViewer() {
                       <span
                         key={verse.verse_key}
                         data-verse-key={verse.verse_key}
-                        className={`cursor-pointer transition-all duration-500 ease-out inline relative px-1 py-0.5 rounded-lg ${currentAudioVerse === verse.verse_key
-                          ? "bg-primary/10 text-primary ring-1 ring-primary/30 shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)] z-10"
+                        className={`cursor-pointer transition-all duration-500 ease-out inline relative verse-ayah ${currentAudioVerse === verse.verse_key || selectedVerseForTafsir === verse.verse_key
+                          ? "verse-highlight-strong z-10"
                           : highlightedVerse === verse.verse_key
-                            ? "bg-primary/5 ring-1 ring-primary/20 shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.1)] z-10"
+                            ? "verse-highlight-soft z-10"
                             : "hover:bg-black/5 dark:hover:bg-white/5"
                           }`}
                         onClick={() => handleVerseClick(verse.verse_key)}
                       >
-                        <span className={currentAudioVerse === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
+                        <span className={currentAudioVerse === verse.verse_key || selectedVerseForTafsir === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
                         <span
                           className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-secondary text-primary/60 hover:drop-shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.35)] cursor-pointer select-none"
                           onClick={(e) => handleVerseNumberClick(verse, e)}
@@ -1210,6 +1210,7 @@ export default function MushafViewer() {
                   verses={verses}
                   currentAudioVerse={currentAudioVerse}
                   highlightedVerse={highlightedVerse}
+                  selectedVerse={selectedVerseForTafsir}
                   onVerseClick={handleVerseClick}
                   onVerseNumberClick={handleVerseNumberClick}
                 />

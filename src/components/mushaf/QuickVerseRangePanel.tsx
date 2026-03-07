@@ -364,11 +364,11 @@ export function VerseRangeForm({
               className="rounded-xl border border-border/40 p-3.5"
             >
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-end">
-                <div>
+                <div className="min-w-0">
                   <label className="mb-2 block text-xs font-semibold text-muted-foreground">
                     {t.mushaf.from} {isRtl ? "الآية" : "verse"}
                   </label>
-                  <div className="flex items-center gap-2">
+                  <div className="flex min-w-0 items-center gap-2">
                     <MushafButton
                       variant="icon"
                       onClick={() => handleVerseAdjust("from", -1)}
@@ -384,7 +384,7 @@ export function VerseRangeForm({
                         setFromVerse(event.target.value);
                         setError("");
                       }}
-                      className="h-10 flex-1 rounded-xl border border-border/50 bg-background px-3 text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/35"
+                      className="verse-range-number-input h-10 min-w-0 flex-1 rounded-xl border border-border/50 bg-background px-3 text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/35"
                       placeholder="1"
                       dir="ltr"
                     />
@@ -401,11 +401,11 @@ export function VerseRangeForm({
                   <span className="text-xs font-semibold text-muted-foreground">{isRtl ? "إلى" : "to"}</span>
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <label className="mb-2 block text-xs font-semibold text-muted-foreground">
                     {t.mushaf.to} {isRtl ? "الآية" : "verse"}
                   </label>
-                  <div className="flex items-center gap-2">
+                  <div className="flex min-w-0 items-center gap-2">
                     <MushafButton
                       variant="icon"
                       onClick={() => handleVerseAdjust("to", -1)}
@@ -421,7 +421,7 @@ export function VerseRangeForm({
                         setToVerse(event.target.value);
                         setError("");
                       }}
-                      className="h-10 flex-1 rounded-xl border border-border/50 bg-background px-3 text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/35"
+                      className="verse-range-number-input h-10 min-w-0 flex-1 rounded-xl border border-border/50 bg-background px-3 text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/35"
                       placeholder={selectedChapter.verses_count.toString()}
                       dir="ltr"
                     />

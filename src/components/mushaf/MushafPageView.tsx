@@ -14,6 +14,7 @@ interface MushafPageViewProps {
   verses: Verse[];
   currentAudioVerse: string | null;
   highlightedVerse: string | null;
+  selectedVerse: string | null;
   onVerseClick: (verseKey: string) => void;
   onVerseNumberClick: (verse: Verse, event: ReactMouseEvent) => void;
 }
@@ -49,6 +50,7 @@ function MushafPageViewComponent({
   verses,
   currentAudioVerse,
   highlightedVerse,
+  selectedVerse,
   onVerseClick,
   onVerseNumberClick,
 }: MushafPageViewProps) {
@@ -59,15 +61,15 @@ function MushafPageViewComponent({
     <span
       key={verse.verse_key}
       data-verse-key={verse.verse_key}
-      className={`cursor-pointer transition-all duration-500 ease-out inline relative px-1 py-0.5 rounded-lg ${currentAudioVerse === verse.verse_key
-        ? "bg-primary/10 text-primary ring-1 ring-primary/30 shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)] z-10"
+      className={`cursor-pointer transition-all duration-500 ease-out inline relative verse-ayah ${currentAudioVerse === verse.verse_key || selectedVerse === verse.verse_key
+        ? "verse-highlight-strong z-10"
         : highlightedVerse === verse.verse_key
-          ? "bg-primary/5 ring-1 ring-primary/20 shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.1)] z-10"
+          ? "verse-highlight-soft z-10"
           : "hover:bg-black/5 dark:hover:bg-white/5"
         }`}
       onClick={() => onVerseClick(verse.verse_key)}
     >
-      <span className={currentAudioVerse === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
+      <span className={currentAudioVerse === verse.verse_key || selectedVerse === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
       <span
         className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-secondary text-primary/60 hover:drop-shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.35)] cursor-pointer select-none"
         onClick={(event) => onVerseNumberClick(verse, event)}
@@ -78,7 +80,7 @@ function MushafPageViewComponent({
   );
 
   return (
-    <div className="mushaf-page-view w-full mx-auto max-w-[820px]">
+    <div className="mushaf-page-view w-full mx-auto">
       {verses.length === 0 ? (
         <div className="rounded-3xl border border-border/40 p-6 sm:p-8 bg-card shadow-[0_10px_50px_-15px_rgba(0,0,0,0.15)] flex flex-col items-center justify-center min-h-[360px] text-muted-foreground text-center gap-2">
           <p className="text-sm italic">{endOfMushafLabel}</p>

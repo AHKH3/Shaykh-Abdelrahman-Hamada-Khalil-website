@@ -57,6 +57,12 @@
     --warning: #9a5d00;
     --warning-foreground: #ffffff;
     --color-primary-rgb: 6, 31, 79;
+    --mushaf-verse-highlight-soft: color-mix(in srgb, var(--accent) 70%, var(--primary) 30%);
+    --mushaf-verse-highlight-strong: color-mix(in srgb, var(--accent) 52%, var(--primary) 48%);
+    --mushaf-verse-highlight-soft-text: var(--foreground);
+    --mushaf-verse-highlight-strong-text: var(--foreground);
+    --mushaf-verse-highlight-soft-shadow: color-mix(in srgb, var(--primary) 18%, transparent);
+    --mushaf-verse-highlight-strong-shadow: color-mix(in srgb, var(--primary) 28%, transparent);
     --header-height: 5rem;
     --z-header: 50;
     --z-floating: 60;
@@ -92,6 +98,12 @@
     --warning: #ffc266;
     --warning-foreground: #301c00;
     --color-primary-rgb: 236, 232, 225;
+    --mushaf-verse-highlight-soft: color-mix(in srgb, var(--accent) 74%, var(--primary) 26%);
+    --mushaf-verse-highlight-strong: color-mix(in srgb, var(--accent) 60%, var(--primary) 40%);
+    --mushaf-verse-highlight-soft-text: var(--foreground);
+    --mushaf-verse-highlight-strong-text: var(--foreground);
+    --mushaf-verse-highlight-soft-shadow: color-mix(in srgb, var(--primary) 26%, transparent);
+    --mushaf-verse-highlight-strong-shadow: color-mix(in srgb, var(--primary) 36%, transparent);
   }
 
   html {
@@ -213,23 +225,66 @@
   }
 
   .verse-highlight {
-    background: var(--accent);
-    color: var(--accent-foreground);
-    border-radius: 4px;
+    background:
+      linear-gradient(180deg,
+        color-mix(in srgb, var(--mushaf-verse-highlight-soft) 94%, #ffffff 6%),
+        var(--mushaf-verse-highlight-soft));
+    color: var(--mushaf-verse-highlight-soft-text);
+    border-radius: 12px;
     padding: 2px 4px;
+    box-shadow: 0 10px 24px -18px var(--mushaf-verse-highlight-soft-shadow);
   }
 
   .verse-click-highlight {
-    background: var(--primary);
-    color: var(--primary-foreground);
-    border: 1px solid var(--primary);
-    box-shadow: 0 0 0 1px var(--primary);
-    border-radius: 4px;
+    background:
+      linear-gradient(180deg,
+        color-mix(in srgb, var(--mushaf-verse-highlight-strong) 92%, #ffffff 8%),
+        var(--mushaf-verse-highlight-strong));
+    color: var(--mushaf-verse-highlight-strong-text);
+    border-radius: 12px;
     padding: 2px 4px;
+    box-shadow: 0 14px 30px -16px var(--mushaf-verse-highlight-strong-shadow);
   }
 
   .verse-click-highlight > span {
-    color: var(--primary-foreground) !important;
+    color: inherit !important;
+  }
+
+  .verse-ayah {
+    border-radius: 14px;
+    padding-inline: 5px;
+    padding-block: 2px;
+  }
+
+  .verse-highlight-soft {
+    background:
+      linear-gradient(180deg,
+        color-mix(in srgb, var(--mushaf-verse-highlight-soft) 94%, #ffffff 6%),
+        var(--mushaf-verse-highlight-soft));
+    color: var(--mushaf-verse-highlight-soft-text);
+    box-shadow: 0 12px 26px -18px var(--mushaf-verse-highlight-soft-shadow);
+  }
+
+  .verse-highlight-strong {
+    background:
+      linear-gradient(180deg,
+        color-mix(in srgb, var(--mushaf-verse-highlight-strong) 92%, #ffffff 8%),
+        var(--mushaf-verse-highlight-strong));
+    color: var(--mushaf-verse-highlight-strong-text);
+    box-shadow: 0 18px 36px -16px var(--mushaf-verse-highlight-strong-shadow);
+  }
+
+  .verse-highlight-soft > span:first-child,
+  .verse-highlight-strong > span:first-child {
+    color: inherit !important;
+  }
+
+  .verse-highlight-strong > span:first-child {
+    font-weight: 600;
+  }
+
+  .verse-highlight-strong > span:last-child {
+    color: color-mix(in srgb, var(--mushaf-verse-highlight-strong-text) 72%, var(--mushaf-verse-highlight-strong) 28%) !important;
   }
 
   /* Phase 3: Verses visibility toggle */
@@ -415,6 +470,18 @@
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
+  }
+
+  .verse-range-number-input {
+    min-width: 0;
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  .verse-range-number-input::-webkit-outer-spin-button,
+  .verse-range-number-input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
   }
 
   @keyframes spin-slow {
@@ -809,6 +876,54 @@
 
     background-color: var(--background);
     color: var(--foreground);
+  }
+
+  .mushaf-reading-mode-normal,
+  .mushaf-reading-mode-sepia,
+  .mushaf-reading-mode-green,
+  .mushaf-reading-mode-purple,
+  .mushaf-reading-mode-blue,
+  .mushaf-reading-mode-red,
+  .mushaf-reading-mode-pink,
+  .mushaf-reading-mode-high-contrast {
+    --mushaf-verse-highlight-soft: color-mix(in srgb, var(--accent) 70%, var(--primary) 30%);
+    --mushaf-verse-highlight-strong: color-mix(in srgb, var(--accent) 52%, var(--primary) 48%);
+    --mushaf-verse-highlight-soft-text: var(--foreground);
+    --mushaf-verse-highlight-strong-text: var(--foreground);
+    --mushaf-verse-highlight-soft-shadow: color-mix(in srgb, var(--primary) 18%, transparent);
+    --mushaf-verse-highlight-strong-shadow: color-mix(in srgb, var(--primary) 28%, transparent);
+  }
+
+  .dark .mushaf-reading-mode-normal,
+  .dark .mushaf-reading-mode-sepia,
+  .dark .mushaf-reading-mode-green,
+  .dark .mushaf-reading-mode-purple,
+  .dark .mushaf-reading-mode-blue,
+  .dark .mushaf-reading-mode-red,
+  .dark .mushaf-reading-mode-pink,
+  .dark .mushaf-reading-mode-high-contrast {
+    --mushaf-verse-highlight-soft: color-mix(in srgb, var(--accent) 74%, var(--primary) 26%);
+    --mushaf-verse-highlight-strong: color-mix(in srgb, var(--accent) 60%, var(--primary) 40%);
+    --mushaf-verse-highlight-soft-shadow: color-mix(in srgb, var(--primary) 26%, transparent);
+    --mushaf-verse-highlight-strong-shadow: color-mix(in srgb, var(--primary) 36%, transparent);
+  }
+
+  .mushaf-reading-mode-high-contrast {
+    --mushaf-verse-highlight-soft: color-mix(in srgb, var(--accent) 74%, var(--primary) 26%);
+    --mushaf-verse-highlight-strong: color-mix(in srgb, var(--accent) 58%, var(--primary) 42%);
+    --mushaf-verse-highlight-soft-text: #000000;
+    --mushaf-verse-highlight-strong-text: #000000;
+    --mushaf-verse-highlight-soft-shadow: rgba(0, 0, 0, 0.18);
+    --mushaf-verse-highlight-strong-shadow: rgba(0, 0, 0, 0.28);
+  }
+
+  .dark .mushaf-reading-mode-high-contrast {
+    --mushaf-verse-highlight-soft: color-mix(in srgb, var(--accent) 72%, var(--primary) 28%);
+    --mushaf-verse-highlight-strong: color-mix(in srgb, var(--accent) 55%, var(--primary) 45%);
+    --mushaf-verse-highlight-soft-text: #ffffff;
+    --mushaf-verse-highlight-strong-text: #ffffff;
+    --mushaf-verse-highlight-soft-shadow: rgba(255, 255, 255, 0.18);
+    --mushaf-verse-highlight-strong-shadow: rgba(255, 255, 255, 0.3);
   }
 
 
