@@ -17,9 +17,9 @@ const MushafButton = forwardRef<HTMLButtonElement, MushafButtonProps>(
 
         // Variant specific classes
         const variantClasses = {
-            primary: "bg-primary text-primary-foreground font-bold px-5 py-2.5 rounded-xl shadow-[0_8px_20px_-6px_rgba(var(--color-primary-rgb),0.4)] hover:shadow-[0_12px_30px_-6px_rgba(var(--color-primary-rgb),0.5)] hover:bg-primary/90 border border-primary/20",
-            ghost: `bg-transparent text-foreground/80 font-semibold px-4 py-2.5 rounded-xl hover:bg-primary/5 hover:text-primary border border-transparent hover:border-primary/10 ${active ? "bg-primary/10 text-primary border-primary/20" : ""}`,
-            icon: `p-2.5 rounded-xl text-foreground/70 hover:bg-primary/5 hover:text-primary border border-transparent hover:border-primary/10 ${active ? "bg-primary/15 text-primary shadow-inner border-primary/20" : ""}`
+            primary: "bg-gradient-to-b from-primary/95 to-primary text-primary-foreground font-bold px-6 py-2.5 rounded-xl shadow-[0_8px_20px_-6px_rgba(var(--color-primary-rgb),0.5),_inset_0_1px_1px_rgba(255,255,255,0.2)] hover:shadow-[0_12px_30px_-6px_rgba(var(--color-primary-rgb),0.6),_inset_0_1px_1px_rgba(255,255,255,0.3)] hover:-translate-y-0.5 border border-primary/20",
+            ghost: `bg-transparent text-foreground/80 font-semibold px-4 py-2.5 rounded-xl hover:bg-primary/5 hover:text-primary hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] border border-transparent hover:border-primary/10 ${active ? "bg-gradient-to-b from-primary/10 to-primary/5 text-primary border-primary/20 shadow-[inset_0_1px_2px_rgba(var(--color-primary-rgb),0.1)]" : ""}`,
+            icon: `p-2.5 rounded-xl text-foreground/70 hover:bg-gradient-to-b hover:from-primary/10 hover:to-primary/5 hover:text-primary hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] border border-transparent hover:border-primary/20 ${active ? "bg-gradient-to-b from-primary/15 to-primary/10 text-primary shadow-[inset_0_2px_4px_rgba(0,0,0,0.05),_0_1px_0_rgba(255,255,255,0.4)] border-primary/30" : ""}`
         };
 
         return (

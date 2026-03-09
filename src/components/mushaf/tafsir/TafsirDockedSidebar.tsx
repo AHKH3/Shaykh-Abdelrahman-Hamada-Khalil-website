@@ -88,6 +88,9 @@ export default function TafsirDockedSidebar({
 
     const onPointerMove = (moveEvent: PointerEvent) => {
       if (!resizeStartRef.current) return;
+      // In RTL (Arabic), moving left (smaller clientX) should increase width
+      // x is starting X, moveEvent.clientX is current X
+      // if we move left, clientX < x, so (x - clientX) is positive
       const delta = resizeStartRef.current.x - moveEvent.clientX;
       onWidthChange(clamp(resizeStartRef.current.width + delta, minWidth, maxWidth));
     };
@@ -107,6 +110,7 @@ export default function TafsirDockedSidebar({
 
     event.preventDefault();
     const step = 12;
+    // In RTL, left arrow increases width, right arrow decreases
     const delta = event.key === "ArrowLeft" ? step : -step;
     onWidthChange(clamp(width + delta, minWidth, maxWidth));
   };

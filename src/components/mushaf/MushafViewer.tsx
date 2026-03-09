@@ -170,6 +170,10 @@ export default function MushafViewer() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
 
+  // Scroll handling for smart header
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const lastScrollYRef = useRef(0);
+
   // Verse range mode
   const [viewMode, setViewMode] = useState<"pages" | "range">("pages");
   const [showVerseRangePanel, setShowVerseRangePanel] = useState(false);
@@ -616,6 +620,10 @@ export default function MushafViewer() {
     setSelectedVerseForTafsir((prev) => (verseKey === prev ? null : verseKey));
   }, []);
 
+  const handleVerseDoubleClick = useCallback((verseKey: string) => {
+    openTafsirForVerse(verseKey, true);
+  }, [openTafsirForVerse]);
+
   // Verse options menu handlers
   const handleVerseNumberClick = useCallback((verse: Verse, event: React.MouseEvent) => {
     event.stopPropagation();
@@ -716,6 +724,19 @@ export default function MushafViewer() {
         } else if (mode === "all" && allVerses.length > 0) {
           // Wrap around to the first verse
           playVerse(allVerses[0].verse_key);
+        } else if (viewMode === "pages" && requestedPageRef.current < TOTAL_PAGES) {
+          // Smart Auto-Page Flip
+          const nextPageToLoad = requestedPageRef.current + 1;
+          goToPage(nextPageToLoad);
+          // Wait briefly for page data to settle, then start playing the new page
+          setTimeout(() => {
+            if (activePageRequestIdRef.current) {
+              const firstVerseCache = pageVersesCacheRef.current[nextPageToLoad]?.[0];
+              if (firstVerseCache) {
+                 playVerse(firstVerseCache.verse_key);
+              }
+            }
+          }, 600);
         } else {
           setIsPlaying(false);
           setCurrentAudioVerse(null);
@@ -860,6 +881,29 @@ export default function MushafViewer() {
       if (scrollInterval) clearInterval(scrollInterval);
     };
   }, [autoScroll, scrollSpeed]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!scrollContainerRef.current) return;
+      const currentScrollY = scrollContainerRef.current.scrollTop;
+      if (currentScrollY > lastScrollYRef.current && currentScrollY > 100) {
+        setIsHeaderVisible(false);
+      } else if (currentScrollY < lastScrollYRef.current) {
+        setIsHeaderVisible(true);
+      }
+      lastScrollYRef.current = currentScrollY;
+    };
+
+    const scrollContainer = scrollContainerRef.current;
+    if (scrollContainer) {
+      scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+    }
+    return () => {
+      if (scrollContainer) {
+        scrollContainer.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
 
   // Keyboard navigation
   useEffect(() => {
@@ -1011,29 +1055,34 @@ export default function MushafViewer() {
         />
       </div>
 
-      <div className="mushaf-top-bar flex items-center justify-between px-6 py-3 bg-card/60 backdrop-blur-xl border-b border-primary/10 shadow-sm relative z-[var(--z-floating)]">
+      <div 
+        className={`mushaf-top-bar flex items-center justify-between px-6 py-3 bg-card/60 backdrop-blur-xl border-b border-primary/10 shadow-sm relative z-[var(--z-floating)] transition-all duration-500 ease-in-out ${isHeaderVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 absolute top-0 left-0 right-0 pointer-events-none"}`}
+      >
         {/* Subtle top inner glow */}
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
 
         <div className="flex items-center gap-4">
-          <MushafButton
-            variant="ghost"
-            onClick={() => setShowIndex(true)}
-            className="group px-4 py-2 rounded-2xl bg-primary/5 hover:bg-primary/10 border border-primary/10 transition-all duration-500 font-normal shadow-none h-auto whitespace-nowrap overflow-hidden"
-          >
-            <span className="flex w-full min-w-0 items-center gap-3 whitespace-nowrap">
-              <span className="w-9 h-9 flex-shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                <Layers size={18} />
-              </span>
-              <span className="flex min-w-0 items-center gap-2.5 leading-none whitespace-nowrap">
-                <span className="text-[10px] text-primary/70 uppercase font-black tracking-[0.1em] bg-primary/10 px-2 py-0.5 rounded-lg border border-primary/10 whitespace-nowrap">{t.mushaf.surah}</span>
-                <span className="text-lg font-bold font-['Amiri',serif] text-foreground drop-shadow-sm whitespace-nowrap truncate">
-                  {currentSurah?.name_arabic || ""}
+          <div className="p-1 mushaf-engraved-container flex items-center">
+            <button
+              type="button"
+              title="فهرس السور"
+              onClick={() => setShowIndex(true)}
+              className="group relative flex items-center gap-3 px-4 py-2 rounded-xl bg-transparent hover:bg-primary/5 border border-transparent hover:border-primary/10 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary/50 cursor-pointer active:scale-[0.98]"
+            >
+              <span className="flex w-full min-w-0 items-center gap-3 whitespace-nowrap relative z-10">
+                <span className="w-8 h-8 flex-shrink-0 rounded-lg bg-primary/5 group-hover:bg-primary/10 flex items-center justify-center text-primary/80 group-hover:text-primary transition-all duration-300">
+                  <Layers size={16} strokeWidth={2} />
                 </span>
+                <span className="flex min-w-0 items-center gap-2.5 leading-none whitespace-nowrap">
+                  <span className="text-[10px] text-primary/60 group-hover:text-primary/80 uppercase font-black tracking-[0.1em] px-1.5 py-0.5 rounded-md bg-transparent group-hover:bg-primary/5 transition-colors whitespace-nowrap">{t.mushaf.surah}</span>
+                  <span className="text-xl font-bold font-['Amiri',serif] text-foreground/90 group-hover:text-foreground drop-shadow-sm whitespace-nowrap truncate pt-1 transition-colors">
+                    {currentSurah?.name_arabic || ""}
+                  </span>
+                </span>
+                <ChevronDown size={14} className="text-primary/40 group-hover:text-primary transition-all duration-300 ms-1 flex-shrink-0" />
               </span>
-              <ChevronDown size={14} className="text-muted-foreground/60 group-hover:text-primary transition-colors duration-500 ms-1 flex-shrink-0" />
-            </span>
-          </MushafButton>
+            </button>
+          </div>
 
           {viewMode === "range" && rangeData && (
             <MushafButton
@@ -1047,7 +1096,7 @@ export default function MushafViewer() {
           )}
         </div>
 
-        <div className="flex items-center gap-2 bg-primary/5 p-1 rounded-2xl border border-primary/10 shadow-inner">
+        <div className="flex items-center gap-2 p-1 mushaf-engraved-container">
           <MushafButton
             variant="icon"
             active={showVerseRangePanel}
@@ -1177,13 +1226,12 @@ export default function MushafViewer() {
                       <span
                         key={verse.verse_key}
                         data-verse-key={verse.verse_key}
-                        className={`cursor-pointer transition-all duration-500 ease-out inline relative verse-ayah ${currentAudioVerse === verse.verse_key || selectedVerseForTafsir === verse.verse_key
+                        className={`cursor-pointer transition-all duration-500 ease-out inline relative verse-ayah ${currentAudioVerse === verse.verse_key || selectedVerseForTafsir === verse.verse_key || highlightedVerse === verse.verse_key
                           ? "verse-highlight-strong z-10"
-                          : highlightedVerse === verse.verse_key
-                            ? "verse-highlight-soft z-10"
-                            : "hover:bg-black/5 dark:hover:bg-white/5"
+                          : ""
                           }`}
                         onClick={() => handleVerseClick(verse.verse_key)}
+                        onDoubleClick={() => handleVerseDoubleClick(verse.verse_key)}
                       >
                         <span className={currentAudioVerse === verse.verse_key || selectedVerseForTafsir === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
                         <span
@@ -1212,6 +1260,7 @@ export default function MushafViewer() {
                   highlightedVerse={highlightedVerse}
                   selectedVerse={selectedVerseForTafsir}
                   onVerseClick={handleVerseClick}
+                  onVerseDoubleClick={handleVerseDoubleClick}
                   onVerseNumberClick={handleVerseNumberClick}
                 />
               </div>
@@ -1223,9 +1272,9 @@ export default function MushafViewer() {
           <TafsirDockedSidebar
             isOpen={isTafsirOpen}
             mode="docked"
-            width={tafsirSidebarWidth}
+            width={Math.min(tafsirSidebarWidth, viewportWidth / 2)}
             minWidth={360}
-            maxWidth={520}
+            maxWidth={viewportWidth / 2}
             onWidthChange={setTafsirSidebarWidth}
             scopeMode={tafsirScopeMode}
             onScopeModeChange={setTafsirScopeMode}
@@ -1255,7 +1304,7 @@ export default function MushafViewer() {
           />
 
           <div
-            className="shrink-0 min-w-[88px] sm:min-w-[112px] rounded-2xl border border-primary/10 bg-primary/5 px-2.5 sm:px-4 py-1.5 sm:py-2 text-center shadow-sm"
+            className="shrink-0 min-w-[88px] sm:min-w-[112px] mushaf-engraved-container px-2.5 sm:px-4 py-2 text-center flex flex-col justify-center items-center"
             role="status"
             aria-live="polite"
             aria-label={locale === "ar" ? `الصفحة ${currentPage} من ${TOTAL_PAGES}` : `Page ${currentPage} of ${TOTAL_PAGES}`}

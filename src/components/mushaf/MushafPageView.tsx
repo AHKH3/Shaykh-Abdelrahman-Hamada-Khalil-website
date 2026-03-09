@@ -16,6 +16,7 @@ interface MushafPageViewProps {
   highlightedVerse: string | null;
   selectedVerse: string | null;
   onVerseClick: (verseKey: string) => void;
+  onVerseDoubleClick: (verseKey: string) => void;
   onVerseNumberClick: (verse: Verse, event: ReactMouseEvent) => void;
 }
 
@@ -52,6 +53,7 @@ function MushafPageViewComponent({
   highlightedVerse,
   selectedVerse,
   onVerseClick,
+  onVerseDoubleClick,
   onVerseNumberClick,
 }: MushafPageViewProps) {
   const groupedVerses = groupVersesBySurah(verses, chapters);
@@ -61,13 +63,12 @@ function MushafPageViewComponent({
     <span
       key={verse.verse_key}
       data-verse-key={verse.verse_key}
-      className={`cursor-pointer transition-all duration-500 ease-out inline relative verse-ayah ${currentAudioVerse === verse.verse_key || selectedVerse === verse.verse_key
+      className={`cursor-pointer transition-all duration-500 ease-out inline relative verse-ayah ${currentAudioVerse === verse.verse_key || selectedVerse === verse.verse_key || highlightedVerse === verse.verse_key
         ? "verse-highlight-strong z-10"
-        : highlightedVerse === verse.verse_key
-          ? "verse-highlight-soft z-10"
-          : "hover:bg-black/5 dark:hover:bg-white/5"
+        : ""
         }`}
       onClick={() => onVerseClick(verse.verse_key)}
+      onDoubleClick={() => onVerseDoubleClick(verse.verse_key)}
     >
       <span className={currentAudioVerse === verse.verse_key || selectedVerse === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
       <span

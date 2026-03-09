@@ -45,12 +45,14 @@ export default function MushafPageFrame({
                     {/* Header Info (Juz & Page for standard mode) */}
                     {!isRangeMode && juz !== undefined && pageNumber !== undefined && (
                         <div className="flex items-center justify-between mb-8 pb-4 border-b border-border/40 opacity-60 hover:opacity-100 transition-opacity duration-500">
-                            <span className="text-[11px] font-bold uppercase tracking-widest text-primary/80 drop-shadow-sm">
-                                {juzLabel} {juz}
-                            </span>
-                            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/5 text-primary text-xs font-bold ring-1 ring-primary/20">
-                                {pageNumber}
-                            </span>
+                            <div className="mushaf-engraved-container px-3 py-1 flex items-center gap-3">
+                                <span className="text-[11px] font-bold uppercase tracking-widest text-primary/80 drop-shadow-sm">
+                                    {juzLabel} {juz}
+                                </span>
+                                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
+                                    {pageNumber}
+                                </span>
+                            </div>
                         </div>
                     )}
 

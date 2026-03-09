@@ -225,66 +225,80 @@
   }
 
   .verse-highlight {
-    background:
-      linear-gradient(180deg,
-        color-mix(in srgb, var(--mushaf-verse-highlight-soft) 94%, #ffffff 6%),
-        var(--mushaf-verse-highlight-soft));
-    color: var(--mushaf-verse-highlight-soft-text);
-    border-radius: 12px;
-    padding: 2px 4px;
-    box-shadow: 0 10px 24px -18px var(--mushaf-verse-highlight-soft-shadow);
+    background-color: color-mix(in srgb, var(--primary) 8%, transparent);
+    color: inherit;
+    border-radius: 8px;
+    padding-inline: 4px;
+    padding-block: 2px;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 5%, transparent);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 
   .verse-click-highlight {
-    background:
-      linear-gradient(180deg,
-        color-mix(in srgb, var(--mushaf-verse-highlight-strong) 92%, #ffffff 8%),
-        var(--mushaf-verse-highlight-strong));
-    color: var(--mushaf-verse-highlight-strong-text);
-    border-radius: 12px;
-    padding: 2px 4px;
-    box-shadow: 0 14px 30px -16px var(--mushaf-verse-highlight-strong-shadow);
+    background-color: color-mix(in srgb, var(--primary) 15%, transparent);
+    color: inherit;
+    border-radius: 8px;
+    padding-inline: 4px;
+    padding-block: 2px;
+    box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--primary) 25%, transparent), 0 0 0 1px color-mix(in srgb, var(--primary) 12%, transparent);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 
   .verse-click-highlight > span {
-    color: inherit !important;
+    color: var(--primary) !important;
   }
 
   .verse-ayah {
-    border-radius: 14px;
-    padding-inline: 5px;
+    border-radius: 10px;
+    padding-inline: 4px;
     padding-block: 2px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    transition: all 0.3s ease;
+    position: relative;
   }
 
+  /* Stunning Soft Highlight (Hover / Temporary Click) */
+  .verse-ayah:hover:not(.verse-highlight-strong):not(.verse-highlight-soft),
   .verse-highlight-soft {
-    background:
-      linear-gradient(180deg,
-        color-mix(in srgb, var(--mushaf-verse-highlight-soft) 94%, #ffffff 6%),
-        var(--mushaf-verse-highlight-soft));
-    color: var(--mushaf-verse-highlight-soft-text);
-    box-shadow: 0 12px 26px -18px var(--mushaf-verse-highlight-soft-shadow);
+    background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.08), rgba(var(--color-primary-rgb), 0.03));
+    box-shadow: 
+      inset 0 1px 1px rgba(var(--color-primary-rgb), 0.05),
+      0 0 0 1px rgba(var(--color-primary-rgb), 0.1);
+    color: inherit;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 
+  /* Stunning Strong Highlight (Active / Playing) */
   .verse-highlight-strong {
-    background:
-      linear-gradient(180deg,
-        color-mix(in srgb, var(--mushaf-verse-highlight-strong) 92%, #ffffff 8%),
-        var(--mushaf-verse-highlight-strong));
-    color: var(--mushaf-verse-highlight-strong-text);
-    box-shadow: 0 18px 36px -16px var(--mushaf-verse-highlight-strong-shadow);
+    background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.25), rgba(var(--color-primary-rgb), 0.12));
+    color: var(--primary) !important;
+    text-shadow: 0 1px 2px rgba(var(--color-primary-rgb), 0.15);
+    box-shadow: 
+      inset 0 1px 2px rgba(255, 255, 255, 0.4),
+      inset 0 -1px 2px rgba(var(--color-primary-rgb), 0.1),
+      0 0 0 1.5px rgba(var(--color-primary-rgb), 0.3),
+      0 8px 16px -4px rgba(var(--color-primary-rgb), 0.2);
+    transform: scale(1.01);
+    z-index: 10;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 
-  .verse-highlight-soft > span:first-child,
   .verse-highlight-strong > span:first-child {
-    color: inherit !important;
-  }
-
-  .verse-highlight-strong > span:first-child {
-    font-weight: 600;
+    font-weight: 700;
+    color: var(--primary) !important;
   }
 
   .verse-highlight-strong > span:last-child {
-    color: color-mix(in srgb, var(--mushaf-verse-highlight-strong-text) 72%, var(--mushaf-verse-highlight-strong) 28%) !important;
+    color: var(--primary) !important;
+    opacity: 0.95;
+    font-weight: 700;
+    transform: scale(1.1);
+    display: inline-block;
   }
 
   /* Phase 3: Verses visibility toggle */
@@ -305,25 +319,25 @@
   }
 
   .annotation-permanent {
-    background: color-mix(in srgb, var(--destructive) 22%, transparent);
+    background: rgba(var(--color-destructive-rgb, 191, 0, 15), 0.22);
     border-bottom: 2px solid var(--destructive);
     border-radius: 2px;
     padding: 1px 2px;
   }
 
   .annotation-temporary {
-    background: color-mix(in srgb, var(--warning) 22%, transparent);
+    background: rgba(var(--color-warning-rgb, 154, 93, 0), 0.22);
     border-bottom: 2px solid var(--warning);
     border-radius: 2px;
     padding: 1px 2px;
   }
 
   .dark .annotation-permanent {
-    background: color-mix(in srgb, var(--destructive) 16%, transparent);
+    background: rgba(var(--color-destructive-rgb, 255, 101, 104), 0.16);
   }
 
   .dark .annotation-temporary {
-    background: color-mix(in srgb, var(--warning) 16%, transparent);
+    background: rgba(var(--color-warning-rgb, 255, 194, 102), 0.16);
   }
 
   /* Anthropic Card System */
@@ -409,6 +423,46 @@
   .btn-anthropic:active {
     transform: translateY(0);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Premium Glassmorphic Engraved Container */
+  .mushaf-engraved-container {
+    background-color: rgba(var(--color-primary-rgb), 0.05);
+    border-radius: 1rem;
+    border: 1px solid rgba(var(--color-primary-rgb), 0.1);
+    box-shadow: 
+      inset 0 3px 6px -2px rgba(0,0,0,0.1),
+      inset 0 1px 3px -1px rgba(var(--color-primary-rgb), 0.2),
+      0 1px 0 rgba(255, 255, 255, 0.6);
+    position: relative;
+    /* REMOVED overflow: hidden to allow dropdown menus to render */
+  }
+  
+  .dark .mushaf-engraved-container {
+    box-shadow: 
+      inset 0 3px 6px -2px rgba(0,0,0,0.4),
+      inset 0 1px 3px -1px rgba(0,0,0,0.5),
+      0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+  
+  .mushaf-engraved-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(var(--color-primary-rgb), 0.03) 0%, transparent 100%);
+    pointer-events: none;
+    border-radius: 1rem;
+  }
+
+  /* Custom Animations for Premium UI */
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
   }
 
   /* Keyboard shortcut styling */
