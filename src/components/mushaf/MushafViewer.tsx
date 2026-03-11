@@ -1055,150 +1055,175 @@ export default function MushafViewer() {
         />
       </div>
 
-      <div 
-        className={`mushaf-top-bar flex items-center justify-between px-6 py-3 bg-card/60 backdrop-blur-xl border-b border-primary/10 shadow-sm relative z-[var(--z-floating)] transition-all duration-500 ease-in-out ${isHeaderVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 absolute top-0 left-0 right-0 pointer-events-none"}`}
+      <motion.div
+        initial={false}
+        animate={{
+          height: isHeaderVisible ? "auto" : 0,
+          opacity: isHeaderVisible ? 1 : 0.96,
+          borderBottomWidth: isHeaderVisible ? 1 : 0,
+        }}
+        transition={{
+          height: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+          opacity: { duration: 0.22, ease: [0.4, 0, 0.2, 1] },
+          borderBottomWidth: { duration: 0.28, ease: [0.4, 0, 0.2, 1] },
+        }}
+        className={`mushaf-top-bar relative z-[var(--z-floating)] overflow-hidden border-primary/10 bg-card/60 px-6 shadow-sm backdrop-blur-xl ${isHeaderVisible ? "" : "pointer-events-none"}`}
       >
         {/* Subtle top inner glow */}
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
 
-        <div className="flex items-center gap-4">
-          <div className="p-1 mushaf-engraved-container flex items-center">
-            <button
-              type="button"
-              title="فهرس السور"
-              onClick={() => setShowIndex(true)}
-              className="group relative flex items-center gap-3 px-4 py-2 rounded-xl bg-transparent hover:bg-primary/5 border border-transparent hover:border-primary/10 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary/50 cursor-pointer active:scale-[0.98]"
-            >
-              <span className="flex w-full min-w-0 items-center gap-3 whitespace-nowrap relative z-10">
-                <span className="w-8 h-8 flex-shrink-0 rounded-lg bg-primary/5 group-hover:bg-primary/10 flex items-center justify-center text-primary/80 group-hover:text-primary transition-all duration-300">
-                  <Layers size={16} strokeWidth={2} />
-                </span>
-                <span className="flex min-w-0 items-center gap-2.5 leading-none whitespace-nowrap">
-                  <span className="text-[10px] text-primary/60 group-hover:text-primary/80 uppercase font-black tracking-[0.1em] px-1.5 py-0.5 rounded-md bg-transparent group-hover:bg-primary/5 transition-colors whitespace-nowrap">{t.mushaf.surah}</span>
-                  <span className="text-xl font-bold font-['Amiri',serif] text-foreground/90 group-hover:text-foreground drop-shadow-sm whitespace-nowrap truncate pt-1 transition-colors">
-                    {currentSurah?.name_arabic || ""}
+        <motion.div
+          initial={false}
+          animate={{
+            y: isHeaderVisible ? 0 : -14,
+            opacity: isHeaderVisible ? 1 : 0,
+            scale: isHeaderVisible ? 1 : 0.985,
+          }}
+          transition={{
+            duration: isHeaderVisible ? 0.38 : 0.24,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="flex items-center justify-between py-3"
+        >
+          <div className="flex items-center gap-4">
+            <div className="p-1 mushaf-engraved-container flex items-center">
+              <button
+                type="button"
+                title="فهرس السور"
+                onClick={() => setShowIndex(true)}
+                className="group relative flex items-center gap-3 px-4 py-2 rounded-xl bg-transparent hover:bg-primary/5 border border-transparent hover:border-primary/10 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary/50 cursor-pointer active:scale-[0.98]"
+              >
+                <span className="flex w-full min-w-0 items-center gap-3 whitespace-nowrap relative z-10">
+                  <span className="w-8 h-8 flex-shrink-0 rounded-lg bg-primary/5 group-hover:bg-primary/10 flex items-center justify-center text-primary/80 group-hover:text-primary transition-all duration-300">
+                    <Layers size={16} strokeWidth={2} />
                   </span>
+                  <span className="flex min-w-0 items-center gap-2.5 leading-none whitespace-nowrap">
+                    <span className="text-[10px] text-primary/60 group-hover:text-primary/80 uppercase font-black tracking-[0.1em] px-1.5 py-0.5 rounded-md bg-transparent group-hover:bg-primary/5 transition-colors whitespace-nowrap">{t.mushaf.surah}</span>
+                    <span className="text-xl font-bold font-['Amiri',serif] text-foreground/90 group-hover:text-foreground drop-shadow-sm whitespace-nowrap truncate pt-1 transition-colors">
+                      {currentSurah?.name_arabic || ""}
+                    </span>
+                  </span>
+                  <ChevronDown size={14} className="text-primary/40 group-hover:text-primary transition-all duration-300 ms-1 flex-shrink-0" />
                 </span>
-                <ChevronDown size={14} className="text-primary/40 group-hover:text-primary transition-all duration-300 ms-1 flex-shrink-0" />
-              </span>
-            </button>
-          </div>
+              </button>
+            </div>
 
-          {viewMode === "range" && rangeData && (
-            <MushafButton
-              variant="primary"
-              onClick={handleBackToPages}
-              icon={isRtl ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-              className="text-xs px-3 py-2"
-            >
-              {t.mushaf.backToPages}
-            </MushafButton>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2 p-1 mushaf-engraved-container">
-          <MushafButton
-            variant="icon"
-            active={showVerseRangePanel}
-            onClick={() => setShowVerseRangePanel(!showVerseRangePanel)}
-            icon={<BookOpen size={16} />}
-            title={t.mushaf.verseRange}
-            className="hover:bg-primary/10 rounded-xl"
-          />
-          <MushafButton
-            variant="icon"
-            active={showBookmarks}
-            onClick={() => setShowBookmarks(true)}
-            icon={<Bookmark size={16} />}
-            title={locale === "ar" ? "الإشارات المرجعية" : "Bookmarks"}
-            className="hover:bg-primary/10 rounded-xl"
-          />
-          <MushafButton
-            variant="icon"
-            active={isTafsirOpen}
-            onClick={() => {
-              if (!isTafsirOpen && !activeAyahVerseKey) {
-                const fallbackVerseKey =
-                  (viewMode === "range" ? rangeVerseKeys[0] : pageVerseKeys[0]) ?? null;
-                if (fallbackVerseKey) {
-                  setSelectedVerseForTafsir(fallbackVerseKey);
-                  openForAyah(fallbackVerseKey, { lockToVerse: false });
-                  return;
-                }
-              }
-              toggleTafsirOpen();
-            }}
-            icon={<FileText size={16} />}
-            title={t.mushaf.openTafsirPanel}
-            className="hover:bg-primary/10 rounded-xl"
-            data-testid="open-tafsir-panel"
-          />
-          <MushafButton
-            variant="icon"
-            active={showAudioPlayer}
-            onClick={() => setShowAudioPlayer((v) => !v)}
-            icon={<Volume2 size={16} />}
-            title={locale === "ar" ? t.mushaf.audioPlayer : t.mushaf.audioPlayer}
-            className="hover:bg-primary/10 rounded-xl"
-          />
-          <MushafButton
-            variant="icon"
-            active={autoScroll}
-            onClick={() => setAutoScroll(!autoScroll)}
-            icon={<Scroll size={16} />}
-            title={locale === "ar" ? "التمرير التلقائي" : "Auto Scroll"}
-            className="hover:bg-primary/10 rounded-xl"
-          />
-          <MushafButton
-            variant="icon"
-            active={showDisplaySettings}
-            onClick={() => setShowDisplaySettings(true)}
-            icon={<Settings size={16} />}
-            title={t.mushaf.displaySettings}
-            className="hover:bg-primary/10 rounded-xl"
-          />
-          <div className="w-px h-5 bg-primary/10 mx-1" />
-          <div className="relative">
-            <MushafButton
-              variant="icon"
-              active={screenMode !== "normal"}
-              onClick={() => setShowScreenModeMenu(!showScreenModeMenu)}
-              icon={screenMode === "focus" ? <Scan size={18} /> : screenMode === "fullscreen" ? <Maximize2 size={18} /> : <Monitor size={18} />}
-              title={t.mushaf.screenMode}
-            >
-              <ChevronDown size={14} className={`transition-transform duration-300 ${showScreenModeMenu ? "rotate-180" : ""}`} />
-            </MushafButton>
-            {showScreenModeMenu && (
-              <>
-                <div className="fixed inset-0 z-[var(--z-floating)]" onClick={() => setShowScreenModeMenu(false)} />
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  className="absolute end-0 top-full mt-2 z-[var(--z-context-menu)] bg-card/95 backdrop-blur-md border border-border/40 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] py-2 min-w-[180px] overflow-hidden"
-                >
-                  {[
-                    { value: "normal" as const, label: t.mushaf.screenModeNormal, icon: <Monitor size={16} /> },
-                    { value: "focus" as const, label: t.mushaf.screenModeFocus, icon: <Scan size={16} /> },
-                    { value: "fullscreen" as const, label: t.mushaf.screenModeFullscreen, icon: <Maximize2 size={16} /> },
-                  ].map((mode) => (
-                    <MushafButton
-                      key={mode.value}
-                      variant="ghost"
-                      active={screenMode === mode.value}
-                      onClick={() => { handleScreenModeChange(mode.value); setShowScreenModeMenu(false); }}
-                      icon={mode.icon}
-                      className="w-full justify-start rounded-md px-4 py-2"
-                    >
-                      <span className="flex-1 text-start">{mode.label}</span>
-                      {screenMode === mode.value && <div className="ms-auto w-1.5 h-1.5 rounded-full bg-primary" />}
-                    </MushafButton>
-                  ))}
-                </motion.div>
-              </>
+            {viewMode === "range" && rangeData && (
+              <MushafButton
+                variant="primary"
+                onClick={handleBackToPages}
+                icon={isRtl ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+                className="text-xs px-3 py-2"
+              >
+                {t.mushaf.backToPages}
+              </MushafButton>
             )}
           </div>
-        </div>
-      </div>
+
+          <div className="flex items-center gap-2 p-1 mushaf-engraved-container">
+            <MushafButton
+              variant="icon"
+              active={showVerseRangePanel}
+              onClick={() => setShowVerseRangePanel(!showVerseRangePanel)}
+              icon={<BookOpen size={16} />}
+              title={t.mushaf.verseRange}
+              className="hover:bg-primary/10 rounded-xl"
+            />
+            <MushafButton
+              variant="icon"
+              active={showBookmarks}
+              onClick={() => setShowBookmarks(true)}
+              icon={<Bookmark size={16} />}
+              title={locale === "ar" ? "الإشارات المرجعية" : "Bookmarks"}
+              className="hover:bg-primary/10 rounded-xl"
+            />
+            <MushafButton
+              variant="icon"
+              active={isTafsirOpen}
+              onClick={() => {
+                if (!isTafsirOpen && !activeAyahVerseKey) {
+                  const fallbackVerseKey =
+                    (viewMode === "range" ? rangeVerseKeys[0] : pageVerseKeys[0]) ?? null;
+                  if (fallbackVerseKey) {
+                    setSelectedVerseForTafsir(fallbackVerseKey);
+                    openForAyah(fallbackVerseKey, { lockToVerse: false });
+                    return;
+                  }
+                }
+                toggleTafsirOpen();
+              }}
+              icon={<FileText size={16} />}
+              title={t.mushaf.openTafsirPanel}
+              className="hover:bg-primary/10 rounded-xl"
+              data-testid="open-tafsir-panel"
+            />
+            <MushafButton
+              variant="icon"
+              active={showAudioPlayer}
+              onClick={() => setShowAudioPlayer((v) => !v)}
+              icon={<Volume2 size={16} />}
+              title={locale === "ar" ? t.mushaf.audioPlayer : t.mushaf.audioPlayer}
+              className="hover:bg-primary/10 rounded-xl"
+            />
+            <MushafButton
+              variant="icon"
+              active={autoScroll}
+              onClick={() => setAutoScroll(!autoScroll)}
+              icon={<Scroll size={16} />}
+              title={locale === "ar" ? "التمرير التلقائي" : "Auto Scroll"}
+              className="hover:bg-primary/10 rounded-xl"
+            />
+            <MushafButton
+              variant="icon"
+              active={showDisplaySettings}
+              onClick={() => setShowDisplaySettings(true)}
+              icon={<Settings size={16} />}
+              title={t.mushaf.displaySettings}
+              className="hover:bg-primary/10 rounded-xl"
+            />
+            <div className="w-px h-5 bg-primary/10 mx-1" />
+            <div className="relative">
+              <MushafButton
+                variant="icon"
+                active={screenMode !== "normal"}
+                onClick={() => setShowScreenModeMenu(!showScreenModeMenu)}
+                icon={screenMode === "focus" ? <Scan size={18} /> : screenMode === "fullscreen" ? <Maximize2 size={18} /> : <Monitor size={18} />}
+                title={t.mushaf.screenMode}
+              >
+                <ChevronDown size={14} className={`transition-transform duration-300 ${showScreenModeMenu ? "rotate-180" : ""}`} />
+              </MushafButton>
+              {showScreenModeMenu && (
+                <>
+                  <div className="fixed inset-0 z-[var(--z-floating)]" onClick={() => setShowScreenModeMenu(false)} />
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    className="absolute end-0 top-full mt-2 z-[var(--z-context-menu)] bg-card/95 backdrop-blur-md border border-border/40 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] py-2 min-w-[180px] overflow-hidden"
+                  >
+                    {[
+                      { value: "normal" as const, label: t.mushaf.screenModeNormal, icon: <Monitor size={16} /> },
+                      { value: "focus" as const, label: t.mushaf.screenModeFocus, icon: <Scan size={16} /> },
+                      { value: "fullscreen" as const, label: t.mushaf.screenModeFullscreen, icon: <Maximize2 size={16} /> },
+                    ].map((mode) => (
+                      <MushafButton
+                        key={mode.value}
+                        variant="ghost"
+                        active={screenMode === mode.value}
+                        onClick={() => { handleScreenModeChange(mode.value); setShowScreenModeMenu(false); }}
+                        icon={mode.icon}
+                        className="w-full justify-start rounded-md px-4 py-2"
+                      >
+                        <span className="flex-1 text-start">{mode.label}</span>
+                        {screenMode === mode.value && <div className="ms-auto w-1.5 h-1.5 rounded-full bg-primary" />}
+                      </MushafButton>
+                    ))}
+                  </motion.div>
+                </>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
 
       {/* Main Content */}
       <div className="mushaf-reading-layout flex-1 bg-background/50">
