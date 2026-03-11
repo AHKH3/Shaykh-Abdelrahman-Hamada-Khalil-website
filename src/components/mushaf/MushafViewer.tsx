@@ -169,6 +169,7 @@ export default function MushafViewer() {
   const [scrollSpeed] = useState(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
+  const screenModeMenuRef = useRef<HTMLDivElement>(null);
 
   // Scroll handling for smart header
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
@@ -905,6 +906,37 @@ export default function MushafViewer() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isHeaderVisible && showScreenModeMenu) {
+      setShowScreenModeMenu(false);
+    }
+  }, [isHeaderVisible, showScreenModeMenu]);
+
+  useEffect(() => {
+    if (!showScreenModeMenu) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (screenModeMenuRef.current?.contains(target)) return;
+      setShowScreenModeMenu(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowScreenModeMenu(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showScreenModeMenu]);
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -1067,7 +1099,7 @@ export default function MushafViewer() {
           opacity: { duration: 0.22, ease: [0.4, 0, 0.2, 1] },
           borderBottomWidth: { duration: 0.28, ease: [0.4, 0, 0.2, 1] },
         }}
-        className={`mushaf-top-bar relative z-[var(--z-floating)] overflow-hidden border-primary/10 bg-card/60 px-6 shadow-sm backdrop-blur-xl ${isHeaderVisible ? "" : "pointer-events-none"}`}
+        className={`mushaf-top-bar relative z-[var(--z-floating)] border-primary/10 bg-card/60 px-6 shadow-sm backdrop-blur-xl ${showScreenModeMenu ? "overflow-visible" : "overflow-hidden"} ${isHeaderVisible ? "" : "pointer-events-none"}`}
       >
         {/* Subtle top inner glow */}
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
@@ -1182,7 +1214,7 @@ export default function MushafViewer() {
               className="hover:bg-primary/10 rounded-xl"
             />
             <div className="w-px h-5 bg-primary/10 mx-1" />
-            <div className="relative">
+            <div ref={screenModeMenuRef} className="relative">
               <MushafButton
                 variant="icon"
                 active={screenMode !== "normal"}
@@ -1193,32 +1225,29 @@ export default function MushafViewer() {
                 <ChevronDown size={14} className={`transition-transform duration-300 ${showScreenModeMenu ? "rotate-180" : ""}`} />
               </MushafButton>
               {showScreenModeMenu && (
-                <>
-                  <div className="fixed inset-0 z-[var(--z-floating)]" onClick={() => setShowScreenModeMenu(false)} />
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    className="absolute end-0 top-full mt-2 z-[var(--z-context-menu)] bg-card/95 backdrop-blur-md border border-border/40 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] py-2 min-w-[180px] overflow-hidden"
-                  >
-                    {[
-                      { value: "normal" as const, label: t.mushaf.screenModeNormal, icon: <Monitor size={16} /> },
-                      { value: "focus" as const, label: t.mushaf.screenModeFocus, icon: <Scan size={16} /> },
-                      { value: "fullscreen" as const, label: t.mushaf.screenModeFullscreen, icon: <Maximize2 size={16} /> },
-                    ].map((mode) => (
-                      <MushafButton
-                        key={mode.value}
-                        variant="ghost"
-                        active={screenMode === mode.value}
-                        onClick={() => { handleScreenModeChange(mode.value); setShowScreenModeMenu(false); }}
-                        icon={mode.icon}
-                        className="w-full justify-start rounded-md px-4 py-2"
-                      >
-                        <span className="flex-1 text-start">{mode.label}</span>
-                        {screenMode === mode.value && <div className="ms-auto w-1.5 h-1.5 rounded-full bg-primary" />}
-                      </MushafButton>
-                    ))}
-                  </motion.div>
-                </>
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  className="absolute end-0 top-full mt-2 z-[var(--z-context-menu)] bg-card/95 backdrop-blur-md border border-border/40 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] py-2 min-w-[180px] overflow-hidden"
+                >
+                  {[
+                    { value: "normal" as const, label: t.mushaf.screenModeNormal, icon: <Monitor size={16} /> },
+                    { value: "focus" as const, label: t.mushaf.screenModeFocus, icon: <Scan size={16} /> },
+                    { value: "fullscreen" as const, label: t.mushaf.screenModeFullscreen, icon: <Maximize2 size={16} /> },
+                  ].map((mode) => (
+                    <MushafButton
+                      key={mode.value}
+                      variant="ghost"
+                      active={screenMode === mode.value}
+                      onClick={() => { handleScreenModeChange(mode.value); setShowScreenModeMenu(false); }}
+                      icon={mode.icon}
+                      className="w-full justify-start rounded-md px-4 py-2"
+                    >
+                      <span className="flex-1 text-start">{mode.label}</span>
+                      {screenMode === mode.value && <div className="ms-auto w-1.5 h-1.5 rounded-full bg-primary" />}
+                    </MushafButton>
+                  ))}
+                </motion.div>
               )}
             </div>
           </div>
