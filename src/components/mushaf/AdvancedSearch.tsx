@@ -15,6 +15,7 @@ import {
 import { useI18n } from "@/lib/i18n/context";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import ModalShell from "@/components/ui/ModalShell";
+import EngravedInput from "@/components/ui/EngravedInput";
 import MushafButton from "./ui/MushafButton";
 import MushafCloseButton from "./ui/MushafCloseButton";
 
@@ -178,9 +179,9 @@ export default function AdvancedSearch({
       onClose={onClose}
       titleId="advanced-search-title"
       zIndex={100}
-      backdropClassName="bg-black/40 backdrop-blur-sm"
-      containerClassName="flex items-end sm:items-center justify-center p-0 sm:p-6"
-      panelClassName="bg-card/95 backdrop-blur-md max-w-2xl w-full rounded-t-3xl sm:rounded-2xl shadow-[0_20px_70px_-10px_rgba(0,0,0,0.3)] overflow-hidden border border-border/40 flex flex-col max-h-[88vh]"
+      backdropClassName="bg-black/50 backdrop-blur-sm"
+      containerClassName="flex items-end sm:items-center justify-center p-0 sm:p-4"
+      panelClassName="bg-card/95 backdrop-blur-xl border border-white/10 dark:border-white/5 sm:border-primary/10 rounded-t-3xl sm:rounded-3xl shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)] overflow-hidden max-w-2xl w-full mx-auto flex flex-col max-h-[88vh] transition-all duration-500"
     >
       <h2 id="advanced-search-title" className="sr-only">
         {t.mushaf.advancedSearch}
@@ -190,27 +191,15 @@ export default function AdvancedSearch({
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
         <div className="p-5 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="relative flex-1 group">
-              <Search className={`absolute start-4 top-1/2 -translate-y-1/2 transition-colors duration-300 ${query ? "text-primary" : "text-muted-foreground"}`} size={18} />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={locale === "ar" ? "ابحث عن آية أو سورة أو رقم صفحة..." : "Search for a verse, surah, or page..."}
-                className="w-full bg-muted/50 border border-transparent focus:border-primary/30 rounded-xl px-12 py-3 text-base placeholder:text-muted-foreground/60 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-primary/10"
-                dir={locale === "ar" ? "rtl" : "ltr"}
-                autoFocus
-              />
-              {query && (
-                <MushafButton
-                  variant="icon"
-                  onClick={() => { setQuery(""); setResults([]); }}
-                  icon={<X size={14} />}
-                  className="absolute end-4 top-1/2 -translate-y-1/2 bg-transparent text-muted-foreground hover:bg-muted/80 p-1"
-                />
-              )}
-            </div>
+            <EngravedInput
+              value={query}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={locale === "ar" ? "ابحث عن آية أو سورة أو رقم صفحة..." : "Search for a verse, surah, or page..."}
+              dir={locale === "ar" ? "rtl" : "ltr"}
+              autoFocus
+              containerClassName="flex-1"
+            />
             <MushafButton
               variant="icon"
               active={showFilters}
@@ -220,8 +209,8 @@ export default function AdvancedSearch({
             />
             <MushafCloseButton
               onClick={onClose}
-              className="w-11 h-11 border border-border/40 bg-background/70 shadow-sm"
               iconSize={20}
+              className="w-11 h-11 flex items-center justify-center"
             />
           </div>
 

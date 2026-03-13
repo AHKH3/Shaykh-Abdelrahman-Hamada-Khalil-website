@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect, useCallback, useEffectEvent, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 import {
   ChevronLeft,
@@ -41,6 +41,7 @@ import BookmarksPanel from "./BookmarksPanel";
 import MushafButton from "./ui/MushafButton";
 import MushafPageFlipButton from "./ui/MushafPageFlipButton";
 import {
+  resolveFollowCandidate,
   useTafsirWorkspace,
   type TafsirScope,
 } from "@/lib/hooks/useTafsirWorkspace";
@@ -216,6 +217,15 @@ export default function MushafViewer() {
   const isDesktopDockedTafsir = viewportWidth >= 1280;
   const isTabletTafsirSheet = viewportWidth >= 1024 && viewportWidth < 1280;
   const isMobileTafsirSheet = viewportWidth < 1024;
+  const activeDisplayVerseKey = useMemo(
+    () =>
+      resolveFollowCandidate({
+        currentAudioVerse,
+        highlightedVerse,
+        selectedVerse: selectedVerseForTafsir,
+      }),
+    [currentAudioVerse, highlightedVerse, selectedVerseForTafsir]
+  );
 
 
   // Handle focus mode - add class to body to hide site header only in focus mode
@@ -749,11 +759,11 @@ export default function MushafViewer() {
     };
   };
 
-  const playPage = useCallback(() => {
+  const playPage = () => {
     if (verses.length > 0) {
       playVerse(verses[0].verse_key);
     }
-  }, [verses]);
+  };
 
   const pauseAudio = useCallback(() => {
     if (audioRef.current) audioRef.current.pause();
@@ -787,7 +797,10 @@ export default function MushafViewer() {
     const allVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
     const idx = allVerses.findIndex((v) => v.verse_key === currentAudioVerse);
     if (idx >= 0 && idx < allVerses.length - 1) {
-      playVerse(allVerses[idx + 1].verse_key);
+      const nextVerseKey = allVerses[idx + 1].verse_key;
+      setSelectedVerseForTafsir(nextVerseKey);
+      setHighlightedVerse(nextVerseKey);
+      playVerse(nextVerseKey);
     }
   };
 
@@ -796,7 +809,10 @@ export default function MushafViewer() {
     const allVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
     const idx = allVerses.findIndex((v) => v.verse_key === currentAudioVerse);
     if (idx > 0) {
-      playVerse(allVerses[idx - 1].verse_key);
+      const nextVerseKey = allVerses[idx - 1].verse_key;
+      setSelectedVerseForTafsir(nextVerseKey);
+      setHighlightedVerse(nextVerseKey);
+      playVerse(nextVerseKey);
     }
   };
 
@@ -848,7 +864,7 @@ export default function MushafViewer() {
     const visibleVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
     if (visibleVerses.length === 0) return false;
 
-    const activeVerseKey = highlightedVerse ?? currentAudioVerse;
+    const activeVerseKey = activeDisplayVerseKey;
     if (!activeVerseKey) return false;
 
     const currentIndex = visibleVerses.findIndex((verse) => verse.verse_key === activeVerseKey);
@@ -859,6 +875,7 @@ export default function MushafViewer() {
     if (!nextVerseKey) return true;
 
     setHighlightedVerse(nextVerseKey);
+    setSelectedVerseForTafsir(nextVerseKey);
     window.requestAnimationFrame(() => {
       const selector = `[data-verse-key=\"${nextVerseKey}\"]`;
       const verseElement = document.querySelector(selector) as HTMLElement | null;
@@ -866,7 +883,7 @@ export default function MushafViewer() {
     });
 
     return true;
-  }, [currentAudioVerse, highlightedVerse, rangeData, verses, viewMode]);
+  }, [activeDisplayVerseKey, rangeData, verses, viewMode]);
 
   // Auto-scroll
   useEffect(() => {
@@ -938,78 +955,71 @@ export default function MushafViewer() {
   }, [showScreenModeMenu]);
 
   // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement ||
-        e.target instanceof HTMLSelectElement ||
-        (e.target instanceof HTMLElement && e.target.isContentEditable)
-      ) {
-        return;
-      }
+  const handleGlobalKeyDown = useEffectEvent((e: KeyboardEvent) => {
+    if (
+      e.target instanceof HTMLInputElement ||
+      e.target instanceof HTMLTextAreaElement ||
+      e.target instanceof HTMLSelectElement ||
+      (e.target instanceof HTMLElement && e.target.isContentEditable)
+    ) {
+      return;
+    }
 
-      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-        const direction = e.key === "ArrowLeft" ? 1 : -1;
-        const pageNavigation = e.key === "ArrowLeft" ? nextPage : prevPage;
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      const direction = e.key === "ArrowLeft" ? 1 : -1;
+      const pageNavigation = e.key === "ArrowLeft" ? nextPage : prevPage;
 
-        if (e.shiftKey) {
-          e.preventDefault();
-          pageNavigation();
-          return;
-        }
-
-        const movedInVerses = moveHighlightedVerse(direction);
+      if (e.shiftKey) {
         e.preventDefault();
-        if (movedInVerses) return;
         pageNavigation();
         return;
       }
 
-      if (e.key === "Escape") {
-        setShowIndex(false);
-        closeTafsir();
-        setVerseMenuPosition(null);
-        setSelectedVerseForMenu(null);
-        setShowDisplaySettings(false);
-        setShowBookmarks(false);
-        setShowScreenModeMenu(false);
-      }
-      if (e.key === "f" || e.key === "F") setShowIndex(true);
-      if (e.key === " ") {
-        e.preventDefault();
-        if (showAudioPlayer && isPlaying) pauseAudio();
-        else if (showAudioPlayer && !isPlaying && currentAudioVerse) resumeAudio();
-        else if (showAudioPlayer && !isPlaying) playPage();
-        else { setShowAudioPlayer(true); }
-      }
+      const movedInVerses = moveHighlightedVerse(direction);
+      e.preventDefault();
+      if (movedInVerses) return;
+      pageNavigation();
+      return;
+    }
 
-      if (e.key === "v" || e.key === "V") {
-        setShowVerseRangePanel((prev) => !prev);
-      }
+    if (e.key === "Escape") {
+      setShowIndex(false);
+      closeTafsir();
+      setVerseMenuPosition(null);
+      setSelectedVerseForMenu(null);
+      setShowDisplaySettings(false);
+      setShowBookmarks(false);
+      setShowScreenModeMenu(false);
+    }
+    if (e.key === "f" || e.key === "F") setShowIndex(true);
+    if (e.key === " ") {
+      e.preventDefault();
+      if (showAudioPlayer && isPlaying) pauseAudio();
+      else if (showAudioPlayer && !isPlaying && currentAudioVerse) resumeAudio();
+      else if (showAudioPlayer && !isPlaying) playPage();
+      else { setShowAudioPlayer(true); }
+    }
 
-      if ((e.key === "r" || e.key === "R") && showVerseRangePanel) {
-        // Focus on the verse range inputs
-        const fromInput = document.querySelector('input[type="number"][placeholder="1"]') as HTMLInputElement;
-        const toInput = document.querySelector('input[type="number"]:not([placeholder="1"])') as HTMLInputElement;
-        if (fromInput) fromInput.focus();
-        else if (toInput) toInput.focus();
-      }
+    if (e.key === "v" || e.key === "V") {
+      setShowVerseRangePanel((prev) => !prev);
+    }
+
+    if ((e.key === "r" || e.key === "R") && showVerseRangePanel) {
+      // Focus on the verse range inputs
+      const fromInput = document.querySelector('input[type="number"][placeholder="1"]') as HTMLInputElement;
+      const toInput = document.querySelector('input[type="number"]:not([placeholder="1"])') as HTMLInputElement;
+      if (fromInput) fromInput.focus();
+      else if (toInput) toInput.focus();
+    }
+  });
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      handleGlobalKeyDown(e);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
-    currentAudioVerse,
-    isPlaying,
-    moveHighlightedVerse,
-    nextPage,
-    playPage,
-    prevPage,
-    resumeAudio,
-    showAudioPlayer,
-    showVerseRangePanel,
-    closeTafsir,
-  ]);
+  }, []);
 
   const currentSurah = getCurrentSurah();
   const isRtl = locale === "ar";
@@ -1280,14 +1290,14 @@ export default function MushafViewer() {
                       <span
                         key={verse.verse_key}
                         data-verse-key={verse.verse_key}
-                        className={`cursor-pointer transition-all duration-500 ease-out inline relative verse-ayah ${currentAudioVerse === verse.verse_key || selectedVerseForTafsir === verse.verse_key || highlightedVerse === verse.verse_key
+                        className={`cursor-pointer transition-all duration-500 ease-out inline relative verse-ayah ${activeDisplayVerseKey === verse.verse_key
                           ? "verse-highlight-strong z-10"
                           : ""
                           }`}
                         onClick={() => handleVerseClick(verse.verse_key)}
                         onDoubleClick={() => handleVerseDoubleClick(verse.verse_key)}
                       >
-                        <span className={currentAudioVerse === verse.verse_key || selectedVerseForTafsir === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
+                        <span className={activeDisplayVerseKey === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
                         <span
                           className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-secondary text-primary/60 hover:drop-shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.35)] cursor-pointer select-none"
                           onClick={(e) => handleVerseNumberClick(verse, e)}
@@ -1310,9 +1320,7 @@ export default function MushafViewer() {
                   juzLabel={t.mushaf.juz}
                   endOfMushafLabel={locale === "ar" ? "نهاية المصحف" : "End of Mushaf"}
                   verses={verses}
-                  currentAudioVerse={currentAudioVerse}
-                  highlightedVerse={highlightedVerse}
-                  selectedVerse={selectedVerseForTafsir}
+                  activeVerseKey={activeDisplayVerseKey}
                   onVerseClick={handleVerseClick}
                   onVerseDoubleClick={handleVerseDoubleClick}
                   onVerseNumberClick={handleVerseNumberClick}

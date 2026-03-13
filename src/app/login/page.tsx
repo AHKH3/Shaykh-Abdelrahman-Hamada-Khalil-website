@@ -7,6 +7,7 @@ import { Lock, Mail, AlertCircle, ArrowLeft, ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/context";
 import Header from "@/components/layout/Header";
+import EngravedInput from "@/components/ui/EngravedInput";
 
 export default function LoginPage() {
   const { t, locale } = useI18n();
@@ -78,17 +79,15 @@ export default function LoginPage() {
                   {t.login.email}
                 </label>
                 <div className="relative">
-                  <Mail
-                    size={16}
-                    className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                  />
-                  <input
+                  <EngravedInput
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full ps-10 pe-4 py-2.5 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-all"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                    icon={<Mail size={16} />}
                     required
                     dir="ltr"
+                    className="p-0 h-10 w-full"
+                    containerClassName="w-full"
                   />
                 </div>
               </div>
@@ -98,17 +97,15 @@ export default function LoginPage() {
                   {t.login.password}
                 </label>
                 <div className="relative">
-                  <Lock
-                    size={16}
-                    className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                  />
-                  <input
+                  <EngravedInput
                     type="password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full ps-10 pe-4 py-2.5 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-all"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                    icon={<Lock size={16} />}
                     required
                     dir="ltr"
+                    className="p-0 h-10 w-full"
+                    containerClassName="w-full"
                   />
                 </div>
               </div>

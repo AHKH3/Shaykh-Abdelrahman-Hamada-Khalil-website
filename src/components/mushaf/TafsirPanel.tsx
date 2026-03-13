@@ -66,9 +66,9 @@ export default function TafsirPanel({
             titleId="tafsir-panel-title"
             initialFocusRef={closeButtonRef}
             zIndex={70}
-            backdropClassName="bg-black/50"
+            backdropClassName="bg-black/50 backdrop-blur-sm"
             containerClassName="flex items-end sm:items-center justify-center p-0 sm:p-4"
-            panelClassName="bg-card border border-white/10 dark:border-white/5 sm:border-primary/10 rounded-t-3xl sm:rounded-3xl shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)] overflow-hidden max-h-[85vh] max-w-2xl w-full mx-auto transition-all duration-500"
+            panelClassName="bg-card/95 backdrop-blur-xl border border-white/10 dark:border-white/5 sm:border-primary/10 rounded-t-3xl sm:rounded-3xl shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)] overflow-hidden max-h-[85vh] max-w-2xl w-full mx-auto transition-all duration-500"
         >
             <div className="flex items-center justify-between px-6 py-4 border-b border-primary/10 bg-primary/5 relative">
                 <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
@@ -88,7 +88,7 @@ export default function TafsirPanel({
                 <MushafCloseButton
                     ref={closeButtonRef}
                     onClick={onClose}
-                    iconSize={18}
+                    iconSize={20}
                     aria-label={t.common.close}
                 />
             </div>

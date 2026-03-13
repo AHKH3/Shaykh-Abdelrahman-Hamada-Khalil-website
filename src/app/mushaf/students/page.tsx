@@ -9,6 +9,7 @@ import { useI18n } from "@/lib/i18n/context";
 import type { Student } from "@/lib/supabase/types";
 import Header from "@/components/layout/Header";
 import { ToastContainer } from "@/components/ui/Toast";
+import EngravedInput from "@/components/ui/EngravedInput";
 
 export default function StudentsPage() {
   const { t, locale } = useI18n();
@@ -129,13 +130,13 @@ export default function StudentsPage() {
 
           {/* Add Student */}
           <div className="mb-8 flex gap-3">
-            <input
+            <EngravedInput
               type="text"
               value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && addStudent()}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewName(e.target.value)}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && addStudent()}
               placeholder={t.mushaf.studentName}
-              className="flex-1 px-4 py-2.5 bg-muted border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              containerClassName="flex-1"
             />
             <button
               onClick={addStudent}

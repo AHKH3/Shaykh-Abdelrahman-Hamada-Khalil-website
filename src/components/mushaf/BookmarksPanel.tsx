@@ -60,6 +60,7 @@ export default function BookmarksPanel({ isOpen, onClose, onNavigate }: Bookmark
       onClose={onClose}
       titleId="bookmarks-panel-title"
       zIndex={70}
+      backdropClassName="bg-black/50 backdrop-blur-sm"
       containerClassName="flex items-end sm:items-center justify-center p-0 sm:p-4"
       panelClassName="bg-card/95 backdrop-blur-xl border border-white/10 dark:border-white/5 sm:border-primary/10 rounded-t-3xl sm:rounded-3xl shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)] overflow-hidden max-w-lg w-full mx-auto max-h-[85vh] transition-all duration-500"
     >

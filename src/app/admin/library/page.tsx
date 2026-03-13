@@ -22,6 +22,7 @@ import Header from "@/components/layout/Header";
 import ModalShell from "@/components/ui/ModalShell";
 import { ToastContainer } from "@/components/ui/Toast";
 import MushafCloseButton from "@/components/mushaf/ui/MushafCloseButton";
+import EngravedInput from "@/components/ui/EngravedInput";
 
 interface AppForm {
   title: string;
@@ -350,13 +351,14 @@ export default function AdminLibraryPage() {
                 <label className="block text-xs font-medium mb-1">
                   {t.admin.appTitle} (عربي) *
                 </label>
-                <input
+                <EngravedInput
                   type="text"
                   value={form.title}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setForm({ ...form, title: e.target.value })
                   }
-                  className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  className="px-0 py-0 h-10 w-full"
+                  containerClassName="w-full px-3"
                   dir="rtl"
                 />
               </div>
@@ -365,13 +367,14 @@ export default function AdminLibraryPage() {
                 <label className="block text-xs font-medium mb-1">
                   {t.admin.appTitle} (English)
                 </label>
-                <input
+                <EngravedInput
                   type="text"
                   value={form.title_en}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setForm({ ...form, title_en: e.target.value })
                   }
-                  className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  className="px-0 py-0 h-10 w-full"
+                  containerClassName="w-full px-3"
                   dir="ltr"
                 />
               </div>

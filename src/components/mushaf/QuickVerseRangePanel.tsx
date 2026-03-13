@@ -10,6 +10,7 @@ import { saveRangeToHistory } from "@/lib/quran/range-utils";
 import { RangeHistory } from "./verse-range/RangeHistory";
 import MushafButton from "./ui/MushafButton";
 import ModalShell from "@/components/ui/ModalShell";
+import EngravedInput from "@/components/ui/EngravedInput";
 import MushafCloseButton from "./ui/MushafCloseButton";
 
 interface VerseRangeFormProps {
@@ -231,10 +232,9 @@ export function VerseRangeForm({
           <label className="mb-2 block text-sm font-semibold text-foreground">{t.mushaf.selectSurah}</label>
           <div className="relative" ref={dropdownRef}>
             <div className="relative">
-              <input
-                type="text"
+              <EngravedInput
                 value={searchQuery}
-                onChange={(event) => {
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setSearchQuery(event.target.value);
                   setIsDropdownOpen(true);
                 }}
@@ -248,24 +248,8 @@ export function VerseRangeForm({
                       ? "ابحث باسم السورة أو رقمها…"
                       : "Search surah…"
                 }
-                className="w-full rounded-xl border border-border/50 bg-background px-4 py-3 text-sm font-medium transition-colors hover:bg-muted/20 focus:outline-none focus:ring-2 focus:ring-primary/35 pe-10"
+                containerClassName="w-full"
               />
-              {searchQuery ? (
-                <MushafButton
-                  variant="icon"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setIsDropdownOpen(false);
-                  }}
-                  icon={<X size={16} />}
-                  className={`absolute top-1/2 -translate-y-1/2 bg-transparent text-muted-foreground hover:bg-transparent hover:text-foreground p-1 ${isRtl ? "left-3" : "right-3"}`}
-                />
-              ) : (
-                <Search
-                  size={16}
-                  className={`absolute top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground ${isRtl ? "left-3" : "right-3"}`}
-                />
-              )}
             </div>
 
             <AnimatePresence>
@@ -375,16 +359,17 @@ export function VerseRangeForm({
                       icon={<Minus size={14} />}
                       className="h-10 w-10 border border-border/40 bg-background"
                     />
-                    <input
+                    <EngravedInput
                       type="number"
                       min={1}
                       max={selectedChapter.verses_count}
                       value={fromVerse}
-                      onChange={(event) => {
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         setFromVerse(event.target.value);
                         setError("");
                       }}
-                      className="verse-range-number-input h-10 min-w-0 flex-1 rounded-xl border border-border/50 bg-background px-3 text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/35"
+                      className="verse-range-number-input text-center font-semibold p-0 h-10"
+                      containerClassName="min-w-0 flex-1 h-10 px-0"
                       placeholder="1"
                       dir="ltr"
                     />
@@ -412,16 +397,17 @@ export function VerseRangeForm({
                       icon={<Minus size={14} />}
                       className="h-10 w-10 border border-border/40 bg-background"
                     />
-                    <input
+                    <EngravedInput
                       type="number"
                       min={1}
                       max={selectedChapter.verses_count}
                       value={toVerse}
-                      onChange={(event) => {
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         setToVerse(event.target.value);
                         setError("");
                       }}
-                      className="verse-range-number-input h-10 min-w-0 flex-1 rounded-xl border border-border/50 bg-background px-3 text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/35"
+                      className="verse-range-number-input text-center font-semibold p-0 h-10"
+                      containerClassName="min-w-0 flex-1 h-10 px-0"
                       placeholder={selectedChapter.verses_count.toString()}
                       dir="ltr"
                     />
@@ -496,17 +482,19 @@ export default function QuickVerseRangePanel({
       isOpen={isOpen}
       onClose={onClose}
       zIndex={70}
-      containerClassName="flex items-center justify-center p-4"
-      panelClassName="bg-card border border-border/50 rounded-2xl shadow-xl overflow-hidden max-w-md w-full mx-auto max-h-[85vh] flex flex-col"
+      backdropClassName="bg-black/50 backdrop-blur-sm"
+      containerClassName="flex items-end sm:items-center justify-center p-0 sm:p-4"
+      panelClassName="bg-card/95 backdrop-blur-xl border border-white/10 dark:border-white/5 sm:border-primary/10 rounded-t-3xl sm:rounded-3xl shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)] overflow-hidden max-w-md w-full mx-auto flex flex-col max-h-[85vh] transition-all duration-500"
     >
-      <div className="flex items-center justify-between border-b border-border/40 px-5 py-3">
-        <h3 className="flex items-center gap-2.5 font-['Amiri',serif] text-lg font-bold text-primary">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-            <BookOpen size={18} />
+      <div className="flex items-center justify-between px-6 py-4 border-b border-primary/10 bg-primary/5 relative">
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
+        <h3 className="flex items-center gap-3 font-['Amiri',serif] text-lg font-bold text-primary">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 shadow-sm">
+            <BookOpen size={20} />
           </div>
           {t.mushaf.verseRange}
         </h3>
-        <MushafCloseButton onClick={onClose} iconSize={18} />
+        <MushafCloseButton onClick={onClose} iconSize={20} />
       </div>
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         <VerseRangeForm chapters={chapters} onSelectRange={onSelectRange} onClose={onClose} />
