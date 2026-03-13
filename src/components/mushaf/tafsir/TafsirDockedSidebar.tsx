@@ -6,7 +6,7 @@ import type {
   PointerEvent as ReactPointerEvent,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Lock, LockOpen, ChevronDown, Check, Search } from "lucide-react";
+import { Lock, LockOpen, ChevronDown, Check, Search } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import { TAFSIR_RESOURCES } from "@/lib/quran/api";
 import type {
@@ -17,6 +17,7 @@ import type {
 import MushafButton from "../ui/MushafButton";
 import MushafCloseButton from "../ui/MushafCloseButton";
 import TafsirInspectorContent from "./TafsirInspectorContent";
+import TafsirPanelIcon from "./TafsirPanelIcon";
 import {
   getSidebarKeyboardResizeDelta,
   getSidebarPointerResizeDelta,
@@ -174,7 +175,7 @@ export default function TafsirDockedSidebar({
         <div className="relative z-10 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="mushaf-engraved-container flex h-10 w-10 items-center justify-center text-primary shadow-sm">
-              <BookOpen size={20} className="drop-shadow-sm" />
+              <TafsirPanelIcon size={20} className="drop-shadow-sm" />
             </div>
             <div className="min-w-0">
               <p className="mushaf-text-overline font-black uppercase tracking-[0.2em] text-primary/50 leading-none mb-1">

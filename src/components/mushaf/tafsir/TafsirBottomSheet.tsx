@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Lock, LockOpen, ChevronDown, Check, Search } from "lucide-react";
+import { Lock, LockOpen, ChevronDown, Check, Search } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import { TAFSIR_RESOURCES } from "@/lib/quran/api";
 import type {
@@ -14,6 +14,7 @@ import ModalShell from "@/components/ui/ModalShell";
 import MushafButton from "../ui/MushafButton";
 import MushafCloseButton from "../ui/MushafCloseButton";
 import TafsirInspectorContent from "./TafsirInspectorContent";
+import TafsirPanelIcon from "./TafsirPanelIcon";
 
 interface TafsirBottomSheetProps {
   isOpen: boolean;
@@ -107,7 +108,7 @@ export default function TafsirBottomSheet({
           <div className="relative z-10 flex items-center justify-between">
             <div className="flex items-center gap-3.5">
               <div className="mushaf-engraved-container flex h-11 w-11 items-center justify-center text-primary shadow-sm">
-                <BookOpen size={22} className="drop-shadow-sm" />
+                <TafsirPanelIcon size={22} className="drop-shadow-sm" />
               </div>
               <div>
                 <p className="mushaf-text-overline font-black uppercase tracking-[0.25em] text-primary/50 leading-none mb-1.5">

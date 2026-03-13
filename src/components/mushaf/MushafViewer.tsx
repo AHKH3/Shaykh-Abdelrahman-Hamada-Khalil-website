@@ -6,7 +6,6 @@ import {
   ChevronLeft,
   ChevronRight,
   BookOpen,
-  FileText,
   Volume2,
   Settings,
   Layers,
@@ -50,6 +49,7 @@ import {
 import { resolveVerseKeysFromVerses } from "@/lib/quran/tafsir-service";
 import TafsirDockedSidebar from "./tafsir/TafsirDockedSidebar";
 import TafsirBottomSheet from "./tafsir/TafsirBottomSheet";
+import TafsirPanelIcon from "./tafsir/TafsirPanelIcon";
 
 const PRELOAD_RADIUS = 3;
 type ReadingMode = "normal" | "sepia" | "green" | "purple" | "blue" | "red" | "pink" | "highContrast";
@@ -1199,7 +1199,7 @@ export default function MushafViewer() {
                 }
                 toggleTafsirOpen();
               }}
-              icon={<FileText size={16} />}
+              icon={<TafsirPanelIcon size={16} />}
               title={t.mushaf.openTafsirPanel}
               className="hover:bg-primary/10 rounded-xl"
               data-testid="open-tafsir-panel"
