@@ -57,7 +57,6 @@ export default function Header() {
   const links = [
     { href: "/", label: t.nav.home },
     { href: "/mushaf", label: t.nav.mushaf },
-    { href: "/library", label: t.nav.library },
   ];
 
   const isActive = (href: string) => {

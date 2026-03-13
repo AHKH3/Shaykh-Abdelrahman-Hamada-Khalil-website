@@ -420,6 +420,9 @@ export interface TafsirResource {
   nameEn: string;
 }
 
+export const DEFAULT_ARABIC_TAFSIR_ID = 16;
+export const DEFAULT_ENGLISH_TAFSIR_ID = 168;
+
 export const TAFSIR_RESOURCES: Record<number, TafsirResource> = {
   // Arabic tafsirs
   169: { id: 169, name: "ابن كثير (مختصر)", language: "ar", nameEn: "Ibn Kathir (Abridged)" },
@@ -437,7 +440,7 @@ export const TAFSIR_RESOURCES: Record<number, TafsirResource> = {
 
 export async function getTafsir(
   verseKey: string,
-  tafsirId: number = 169, // Ibn Kathir Arabic
+  tafsirId: number = DEFAULT_ARABIC_TAFSIR_ID, // Tafsir al-Muyassar
   options: { signal?: AbortSignal } = {}
 ): Promise<Tafsir> {
   const res = await fetch(

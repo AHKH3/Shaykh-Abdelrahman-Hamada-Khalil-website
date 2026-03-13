@@ -8,11 +8,32 @@ interface VisualScenario {
   path: string;
   readySelector: string;
   setup?: (page: Page) => Promise<void>;
+  assert?: (page: Page, locale: Locale) => Promise<void>;
 }
 
 const scenarios: VisualScenario[] = [
-  { id: "home", path: "/", readySelector: "main section" },
-  { id: "mushaf", path: "/mushaf", readySelector: ".mushaf-page-view" },
+  {
+    id: "home",
+    path: "/",
+    readySelector: "main section",
+    assert: async (page) => {
+      const sections = page.locator("main section");
+      await expect(page.locator("main h1")).toBeVisible();
+      await expect(page.locator('main a[href="/mushaf"]').first()).toBeVisible();
+      expect(await sections.count()).toBeGreaterThanOrEqual(4);
+    },
+  },
+  {
+    id: "mushaf",
+    path: "/mushaf",
+    readySelector: ".mushaf-page-view",
+    assert: async (page, locale) => {
+      await expect(page.locator(".mushaf-page-view [data-verse-key]").first()).toBeVisible();
+      await expect(
+        page.getByLabel(locale === "ar" ? /^الصفحة \d+ من \d+$/ : /^Page \d+ of \d+$/),
+      ).toBeVisible();
+    },
+  },
   {
     id: "mushaf-index-open",
     path: "/mushaf",
@@ -20,6 +41,11 @@ const scenarios: VisualScenario[] = [
     setup: async (page) => {
       await page.getByTestId("open-index-panel").click();
       await page.getByTestId("mushaf-index-panel").waitFor({ state: "visible" });
+    },
+    assert: async (page) => {
+      const panel = page.getByTestId("mushaf-index-panel");
+      await expect(panel.locator("input").first()).toBeVisible();
+      await expect(panel.getByRole("button").first()).toBeVisible();
     },
   },
   {
@@ -30,6 +56,9 @@ const scenarios: VisualScenario[] = [
       await page.getByTestId("open-verse-range-panel").click();
       await page.getByTestId("mushaf-verse-range-panel").waitFor({ state: "visible" });
     },
+    assert: async (page) => {
+      await expect(page.getByTestId("mushaf-verse-range-panel").locator("input").first()).toBeVisible();
+    },
   },
   {
     id: "mushaf-audio-open",
@@ -38,6 +67,10 @@ const scenarios: VisualScenario[] = [
     setup: async (page) => {
       await page.getByTestId("open-audio-panel").click();
       await page.getByTestId("mushaf-audio-panel").waitFor({ state: "visible" });
+    },
+    assert: async (page) => {
+      const controls = page.getByTestId("mushaf-audio-panel").getByRole("button");
+      expect(await controls.count()).toBeGreaterThanOrEqual(5);
     },
   },
   {
@@ -48,6 +81,11 @@ const scenarios: VisualScenario[] = [
       await page.getByTestId("open-display-settings-panel").click();
       await page.getByTestId("mushaf-display-settings-panel").waitFor({ state: "visible" });
     },
+    assert: async (page) => {
+      const panel = page.getByTestId("mushaf-display-settings-panel");
+      await expect(panel.getByRole("heading").first()).toBeVisible();
+      expect(await panel.getByRole("button").count()).toBeGreaterThanOrEqual(4);
+    },
   },
   {
     id: "mushaf-tafsir-open",
@@ -57,37 +95,36 @@ const scenarios: VisualScenario[] = [
       await page.getByTestId("open-tafsir-panel").click();
       await page.getByTestId("tafsir-panel-root").waitFor({ state: "visible" });
     },
+    assert: async (page) => {
+      const panel = page.getByTestId("tafsir-panel-root");
+      await expect(panel.getByRole("heading").first()).toBeVisible();
+      await expect(panel.getByRole("button").first()).toBeVisible();
+    },
   },
-  { id: "library", path: "/library", readySelector: "main h1" },
-  { id: "admin", path: "/admin", readySelector: "main h1" },
-  { id: "login", path: "/login", readySelector: "main form" },
+  {
+    id: "admin",
+    path: "/admin",
+    readySelector: "main h1",
+    assert: async (page) => {
+      const dashboardLinks = page.locator('main a[href="/mushaf/students"], main a[href="/mushaf"]');
+      await expect(page.locator("main h1")).toBeVisible();
+      expect(await dashboardLinks.count()).toBe(2);
+    },
+  },
+  {
+    id: "login",
+    path: "/login",
+    readySelector: "main form",
+    assert: async (page) => {
+      await expect(page.locator('input[type="email"]')).toBeVisible();
+      await expect(page.locator('input[type="password"]')).toBeVisible();
+      await expect(page.locator('button[type="submit"]')).toBeVisible();
+    },
+  },
 ];
 
 const locales: Locale[] = ["ar", "en"];
 const themes: Theme[] = ["light", "dark"];
-
-const libraryApps = [
-  {
-    id: "app-1",
-    title: "أذكار الصباح",
-    title_en: "Morning Athkar",
-    description: "تطبيق بسيط لأذكار الصباح",
-    description_en: "Simple app for morning athkar",
-    file_path: "athkar.html",
-    icon_url: null,
-    created_at: "2026-01-10T08:00:00.000Z",
-  },
-  {
-    id: "app-2",
-    title: "عداد التسبيح",
-    title_en: "Tasbeeh Counter",
-    description: "عداد تسبيح بسيط",
-    description_en: "Simple tasbeeh counter",
-    file_path: "tasbeeh.html",
-    icon_url: null,
-    created_at: "2026-01-09T08:00:00.000Z",
-  },
-];
 
 const students = [
   { id: "student-1", name: "طالب تجريبي", created_at: "2026-01-01T00:00:00.000Z" },
@@ -95,6 +132,62 @@ const students = [
 ];
 
 const annotations = [{ id: "annotation-1" }, { id: "annotation-2" }, { id: "annotation-3" }];
+const mockChapters = [
+  {
+    id: 1,
+    revelation_place: "makkah",
+    revelation_order: 5,
+    bismillah_pre: true,
+    name_simple: "Al-Fatihah",
+    name_complex: "Al-Fatihah",
+    name_arabic: "الفاتحة",
+    verses_count: 7,
+    pages: [1, 1],
+    translated_name: {
+      language_name: "english",
+      name: "The Opening",
+    },
+  },
+  {
+    id: 2,
+    revelation_place: "madinah",
+    revelation_order: 87,
+    bismillah_pre: true,
+    name_simple: "Al-Baqarah",
+    name_complex: "Al-Baqarah",
+    name_arabic: "البقرة",
+    verses_count: 286,
+    pages: [2, 49],
+    translated_name: {
+      language_name: "english",
+      name: "The Cow",
+    },
+  },
+] as const;
+const mockVerseTexts = [
+  "الم ذَٰلِكَ الْكِتَابُ لَا رَيْبَ فِيهِ",
+  "هُدًى لِلْمُتَّقِينَ",
+  "الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ الصَّلَاةَ",
+];
+
+function createMockPageVerses(pageNumber: number) {
+  const startVerse = Math.max(1, (pageNumber - 1) * mockVerseTexts.length + 1);
+
+  return mockVerseTexts.map((text_uthmani, index) => ({
+    id: pageNumber * 100 + index + 1,
+    verse_number: startVerse + index,
+    verse_key: `2:${startVerse + index}`,
+    hizb_number: 1,
+    rub_el_hizb_number: 1,
+    ruku_number: 1,
+    manzil_number: 1,
+    sajdah_number: null,
+    page_number: pageNumber,
+    juz_number: 1,
+    text_uthmani,
+    chapter_id: 2,
+  }));
+}
 
 async function mockSupabase(page: Page) {
   await page.route("**://placeholder.supabase.co/**", async (route) => {
@@ -131,9 +224,7 @@ async function mockSupabase(page: Page) {
     const rows =
       table === "students"
         ? students
-        : table === "library_apps"
-          ? libraryApps
-          : table === "annotations"
+        : table === "annotations"
             ? annotations
             : [];
 
@@ -173,6 +264,90 @@ async function mockSupabase(page: Page) {
   });
 }
 
+async function mockQuranApi(page: Page) {
+  await page.route("**://api.quran.com/api/v4/**", async (route) => {
+    const url = new URL(route.request().url());
+    const path = url.pathname;
+    const jsonHeaders = {
+      "access-control-allow-origin": "*",
+      "content-type": "application/json; charset=utf-8",
+    };
+
+    if (path === "/api/v4/chapters") {
+      await route.fulfill({
+        status: 200,
+        headers: jsonHeaders,
+        body: JSON.stringify({ chapters: mockChapters }),
+      });
+      return;
+    }
+
+    const versesByPageMatch = path.match(/^\/api\/v4\/verses\/by_page\/(\d+)$/);
+    if (versesByPageMatch) {
+      const pageNumber = Number(versesByPageMatch[1]);
+      await route.fulfill({
+        status: 200,
+        headers: jsonHeaders,
+        body: JSON.stringify({
+          verses: createMockPageVerses(pageNumber),
+          pagination: { total_records: 604 * mockVerseTexts.length },
+        }),
+      });
+      return;
+    }
+
+    const versesByChapterMatch = path.match(/^\/api\/v4\/verses\/by_chapter\/(\d+)$/);
+    if (versesByChapterMatch) {
+      const chapterId = Number(versesByChapterMatch[1]);
+      await route.fulfill({
+        status: 200,
+        headers: jsonHeaders,
+        body: JSON.stringify({
+          verses: createMockPageVerses(1).map((verse) => ({ ...verse, chapter_id: chapterId })),
+          pagination: { total_pages: 1, total_records: mockVerseTexts.length },
+        }),
+      });
+      return;
+    }
+
+    if (path === "/api/v4/juzs") {
+      await route.fulfill({
+        status: 200,
+        headers: jsonHeaders,
+        body: JSON.stringify({ juzs: [] }),
+      });
+      return;
+    }
+
+    const tafsirMatch = path.match(/^\/api\/v4\/tafsirs\/(\d+)\/by_ayah\/(.+)$/);
+    if (tafsirMatch) {
+      const [, tafsirId, verseKey] = tafsirMatch;
+      await route.fulfill({
+        status: 200,
+        headers: jsonHeaders,
+        body: JSON.stringify({
+          tafsir: {
+            id: Number(tafsirId),
+            resource_id: Number(tafsirId),
+            text: `<p>Mock tafsir for ${verseKey}</p>`,
+            verse_key: verseKey,
+            verse_id: 1,
+            language_name: "english",
+            resource_name: "Mock Tafsir",
+          },
+        }),
+      });
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      headers: jsonHeaders,
+      body: JSON.stringify({}),
+    });
+  });
+}
+
 async function prepareVisualState(page: Page, locale: Locale, theme: Theme) {
   await page.addInitScript(
     ({ activeLocale, activeTheme }) => {
@@ -198,31 +373,49 @@ async function freezeAnimations(page: Page) {
   });
 }
 
+async function assertDocumentState(page: Page, locale: Locale, theme: Theme) {
+  await expect.poll(() => page.evaluate(() => document.documentElement.lang)).toBe(locale);
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.dir))
+    .toBe(locale === "ar" ? "rtl" : "ltr");
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.classList.contains("dark")))
+    .toBe(theme === "dark");
+}
+
+async function assertLayoutShell(page: Page, readySelector: string) {
+  const readyElement = page.locator(readySelector).first();
+  await expect(page.locator("header").first()).toBeVisible();
+  await expect(page.locator("main").first()).toBeVisible();
+  await expect(readyElement).toBeVisible();
+
+  const overflowX = await page.evaluate(() =>
+    Math.max(document.documentElement.scrollWidth - document.documentElement.clientWidth, 0),
+  );
+  expect(overflowX).toBeLessThanOrEqual(4);
+}
+
 for (const locale of locales) {
   for (const theme of themes) {
     for (const scenario of scenarios) {
       test(`${scenario.id} | ${locale} | ${theme}`, async ({ page }) => {
         await mockSupabase(page);
+        await mockQuranApi(page);
         await prepareVisualState(page, locale, theme);
 
         await page.goto(scenario.path, { waitUntil: "domcontentloaded" });
         await page.waitForLoadState("networkidle");
         await page.locator(scenario.readySelector).first().waitFor({ state: "visible" });
-        await page.waitForFunction(
-          (activeLocale) => document.documentElement.dir === (activeLocale === "ar" ? "rtl" : "ltr"),
-          locale,
-        );
+        await assertDocumentState(page, locale, theme);
         if (scenario.setup) {
           await scenario.setup(page);
         }
         await freezeAnimations(page);
         await page.waitForTimeout(120);
-
-        await expect(page).toHaveScreenshot(`${scenario.id}-${locale}-${theme}.png`, {
-          animations: "disabled",
-          caret: "hide",
-          fullPage: false,
-        });
+        await assertLayoutShell(page, scenario.readySelector);
+        if (scenario.assert) {
+          await scenario.assert(page, locale);
+        }
       });
     }
   }

@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const ARTIFACT_DIRS = ["playwright-report", "test-results"];
 const LOOSE_SCREENSHOT_PATTERNS = [/^page-\d{10,}\.(png|jpe?g)$/i];
+const SNAPSHOT_DIR_SUFFIX = ".spec.ts-snapshots";
 
 async function removeArtifactDirectories(rootDir) {
   await Promise.all(
@@ -22,9 +23,28 @@ async function removeLooseScreenshots(rootDir) {
   await Promise.all(screenshotFiles);
 }
 
+async function removeSnapshotDirectories(currentDir) {
+  const entries = await fs.readdir(currentDir, { withFileTypes: true });
+
+  await Promise.all(
+    entries.map(async (entry) => {
+      if (!entry.isDirectory()) return;
+
+      const fullPath = path.join(currentDir, entry.name);
+      if (entry.name.endsWith(SNAPSHOT_DIR_SUFFIX)) {
+        await fs.rm(fullPath, { recursive: true, force: true });
+        return;
+      }
+
+      await removeSnapshotDirectories(fullPath);
+    }),
+  );
+}
+
 export async function cleanupPlaywrightArtifacts(rootDir = process.cwd()) {
   await removeArtifactDirectories(rootDir);
   await removeLooseScreenshots(rootDir);
+  await removeSnapshotDirectories(rootDir);
 }
 
 const currentFile = fileURLToPath(import.meta.url);

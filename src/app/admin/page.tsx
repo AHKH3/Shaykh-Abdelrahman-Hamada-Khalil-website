@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Library, BookOpen, LogOut, Users, Settings } from "lucide-react";
+import { BookOpen, LogOut, Users, Settings } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/context";
 import Header from "@/components/layout/Header";
@@ -12,19 +12,17 @@ import Header from "@/components/layout/Header";
 export default function AdminPage() {
   const { t, locale } = useI18n();
   const router = useRouter();
-  const [stats, setStats] = useState({ students: 0, apps: 0, annotations: 0 });
+  const [stats, setStats] = useState({ students: 0, annotations: 0 });
 
   useEffect(() => {
     const loadStats = async () => {
       const supabase = createClient();
-      const [students, apps, annotations] = await Promise.all([
+      const [students, annotations] = await Promise.all([
         supabase.from("students").select("id", { count: "exact", head: true }),
-        supabase.from("library_apps").select("id", { count: "exact", head: true }),
         supabase.from("annotations").select("id", { count: "exact", head: true }),
       ]);
       setStats({
         students: students.count || 0,
-        apps: apps.count || 0,
         annotations: annotations.count || 0,
       });
     };
@@ -48,16 +46,6 @@ export default function AdminPage() {
       icon: Users,
       href: "/mushaf/students",
       color: "bg-info/15 text-info",
-    },
-    {
-      title: t.admin.manageLibrary,
-      description:
-        locale === "ar"
-          ? `${stats.apps} تطبيقات`
-          : `${stats.apps} applications`,
-      icon: Library,
-      href: "/admin/library",
-      color: "bg-secondary/20 text-secondary",
     },
     {
       title: t.nav.mushaf,

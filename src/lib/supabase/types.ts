@@ -17,18 +17,6 @@ export interface Annotation {
   created_at: string;
 }
 
-export interface LibraryApp {
-  id: string;
-  title: string;
-  title_en: string | null;
-  description: string;
-  description_en: string | null;
-  icon_url: string | null;
-  file_path: string;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface ReadingProgress {
   id: string;
   last_page: number;
@@ -49,11 +37,6 @@ export interface Database {
         Row: Annotation;
         Insert: Omit<Annotation, "id" | "created_at">;
         Update: Partial<Omit<Annotation, "id" | "created_at">>;
-      };
-      library_apps: {
-        Row: LibraryApp;
-        Insert: Omit<LibraryApp, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<LibraryApp, "id" | "created_at" | "updated_at">>;
       };
       reading_progress: {
         Row: ReadingProgress;

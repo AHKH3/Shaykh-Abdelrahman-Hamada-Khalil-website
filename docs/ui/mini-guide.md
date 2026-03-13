@@ -53,7 +53,7 @@
 2. `npm run ui:contrast:check`
 3. `npm run visual:test`
 
-## Baseline Update Workflow
-1. `npm run visual:update`
-2. Review diffs in `tests/visual/ui-regression.spec.ts-snapshots`.
-3. Re-run `npm run visual:test` to confirm clean pass.
+## Failure Artifact Workflow
+1. Run `npm run visual:test`.
+2. If the suite fails, inspect `playwright-report/` and `test-results/`.
+3. Run `npm run visual:cleanup` after you finish debugging.

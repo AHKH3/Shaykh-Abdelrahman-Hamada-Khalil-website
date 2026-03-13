@@ -14,14 +14,18 @@ import type {
   TafsirScope,
   TafsirScopeMode,
 } from "@/lib/hooks/useTafsirWorkspace";
-import ModalShell from "@/components/ui/ModalShell";
 import MushafButton from "../ui/MushafButton";
 import MushafCloseButton from "../ui/MushafCloseButton";
 import TafsirInspectorContent from "./TafsirInspectorContent";
+import {
+  getSidebarKeyboardResizeDelta,
+  getSidebarPointerResizeDelta,
+  resolveSidebarDockSide,
+  type SidebarDockSide,
+} from "./tafsir-sidebar-resize";
 
 interface TafsirDockedSidebarProps {
   isOpen: boolean;
-  mode: "docked" | "sheet";
   width: number;
   minWidth: number;
   maxWidth: number;
@@ -46,7 +50,6 @@ function clamp(value: number, min: number, max: number): number {
 
 export default function TafsirDockedSidebar({
   isOpen,
-  mode,
   width,
   minWidth,
   maxWidth,
@@ -65,7 +68,10 @@ export default function TafsirDockedSidebar({
   hasPageScope,
 }: TafsirDockedSidebarProps) {
   const { t, locale } = useI18n();
-  const resizeStartRef = useRef<{ x: number; width: number } | null>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const resizeStartRef = useRef<{ x: number; width: number; dockSide: SidebarDockSide } | null>(
+    null
+  );
   const [isResourceOpen, setIsResourceOpen] = useState(false);
   const [resourceSearch, setResourceSearch] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -82,20 +88,26 @@ export default function TafsirDockedSidebar({
     }
   }, [availableTafsirs, onSelectTafsirId, selectedTafsirId]);
 
-  const handleResizeStart = (event: ReactPointerEvent<HTMLButtonElement>) => {
-    if (mode !== "docked") return;
+  const getDockSide = (): SidebarDockSide => {
+    const rect = sidebarRef.current?.getBoundingClientRect();
+    if (!rect) return "right";
+    return resolveSidebarDockSide(rect, window.innerWidth);
+  };
 
+  const handleResizeStart = (event: ReactPointerEvent<HTMLButtonElement>) => {
     resizeStartRef.current = {
       x: event.clientX,
       width,
+      dockSide: getDockSide(),
     };
 
     const onPointerMove = (moveEvent: PointerEvent) => {
       if (!resizeStartRef.current) return;
-      // In RTL (Arabic), moving left (smaller clientX) should increase width
-      // x is starting X, moveEvent.clientX is current X
-      // if we move left, clientX < x, so (x - clientX) is positive
-      const delta = resizeStartRef.current.x - moveEvent.clientX;
+      const delta = getSidebarPointerResizeDelta(
+        resizeStartRef.current.x,
+        moveEvent.clientX,
+        resizeStartRef.current.dockSide
+      );
       onWidthChange(clamp(resizeStartRef.current.width + delta, minWidth, maxWidth));
     };
 
@@ -114,8 +126,7 @@ export default function TafsirDockedSidebar({
 
     event.preventDefault();
     const step = 12;
-    // In RTL, left arrow increases width, right arrow decreases
-    const delta = event.key === "ArrowLeft" ? step : -step;
+    const delta = getSidebarKeyboardResizeDelta(event.key, step, getDockSide());
     onWidthChange(clamp(width + delta, minWidth, maxWidth));
   };
 
@@ -154,7 +165,7 @@ export default function TafsirDockedSidebar({
     <div
       data-testid="tafsir-panel-root"
       className="flex h-full min-h-0 flex-col border-s border-primary/10 bg-card/95 backdrop-blur-xl shadow-[-20px_0_50px_-20px_rgba(0,0,0,0.1)] transition-all"
-      style={mode === "docked" ? { width } : undefined}
+      style={{ width }}
     >
       {/* Header Overhaul */}
       <div className="relative overflow-hidden bg-primary/5 px-4 py-4 border-b border-primary/10">
@@ -283,23 +294,8 @@ export default function TafsirDockedSidebar({
     </div>
   );
 
-  if (mode === "sheet") {
-    return (
-      <ModalShell
-        isOpen={isOpen}
-        onClose={onClose}
-        zIndex={70}
-        containerClassName="flex h-full items-stretch justify-end p-0"
-        panelClassName="h-full w-full max-w-[min(92vw,520px)]"
-        backdropClassName="bg-black/35"
-      >
-        {panelBody}
-      </ModalShell>
-    );
-  }
-
   return (
-    <div className="relative hidden h-full xl:flex">
+    <div ref={sidebarRef} className="relative hidden h-full lg:flex">
       <button
         type="button"
         className="mushaf-tafsir-resizer"

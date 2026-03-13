@@ -24,6 +24,8 @@ import {
   TOTAL_PAGES,
   getAudioUrl,
   getVersesByRange,
+  DEFAULT_ARABIC_TAFSIR_ID,
+  DEFAULT_ENGLISH_TAFSIR_ID,
   type Verse,
   type Chapter,
 } from "@/lib/quran/api";
@@ -115,7 +117,9 @@ export default function MushafViewer() {
   const [viewportWidth, setViewportWidth] = useState<number>(
     typeof window === "undefined" ? 1440 : window.innerWidth
   );
-  const [selectedTafsirId, setSelectedTafsirId] = useState<number>(locale === "ar" ? 169 : 168);
+  const [selectedTafsirId, setSelectedTafsirId] = useState<number>(
+    locale === "ar" ? DEFAULT_ARABIC_TAFSIR_ID : DEFAULT_ENGLISH_TAFSIR_ID
+  );
   const [tafsirSidebarWidth, setTafsirSidebarWidth] = useState(400);
   const [selectedReciter, setSelectedReciter] = useState(1);
   const [showAudioPlayer, setShowAudioPlayer] = useState(false);
@@ -214,8 +218,7 @@ export default function MushafViewer() {
     toggleFollowMode: toggleTafsirFollowMode,
   } = tafsirWorkspace;
 
-  const isDesktopDockedTafsir = viewportWidth >= 1280;
-  const isTabletTafsirSheet = viewportWidth >= 1024 && viewportWidth < 1280;
+  const isDockedTafsirLayout = viewportWidth >= 1024;
   const isMobileTafsirSheet = viewportWidth < 1024;
   const activeDisplayVerseKey = useMemo(
     () =>
@@ -278,10 +281,10 @@ export default function MushafViewer() {
   useEffect(() => {
     setSelectedTafsirId((current) => {
       if (locale === "ar" && current !== 169 && current !== 14 && current !== 15 && current !== 16 && current !== 90 && current !== 91 && current !== 93 && current !== 94) {
-        return 169;
+        return DEFAULT_ARABIC_TAFSIR_ID;
       }
       if (locale !== "ar" && current !== 168 && current !== 817) {
-        return 168;
+        return DEFAULT_ENGLISH_TAFSIR_ID;
       }
       return current;
     });
@@ -1334,10 +1337,9 @@ export default function MushafViewer() {
           </div>
         </div>
 
-        {isDesktopDockedTafsir ? (
+        {isDockedTafsirLayout ? (
           <TafsirDockedSidebar
             isOpen={isTafsirOpen}
-            mode="docked"
             width={Math.min(tafsirSidebarWidth, viewportWidth / 2)}
             minWidth={360}
             maxWidth={viewportWidth / 2}
@@ -1465,29 +1467,6 @@ export default function MushafViewer() {
         repeatMode={repeatMode}
         onSetRepeatMode={handleSetRepeatMode}
       />
-
-      {isTabletTafsirSheet ? (
-        <TafsirDockedSidebar
-          isOpen={isTafsirOpen}
-          mode="sheet"
-          width={tafsirSidebarWidth}
-          minWidth={360}
-          maxWidth={520}
-          onWidthChange={setTafsirSidebarWidth}
-          scopeMode={tafsirScopeMode}
-          onScopeModeChange={setTafsirScopeMode}
-          followMode={tafsirFollowMode}
-          onToggleFollowMode={toggleTafsirFollowMode}
-          scope={activeTafsirScope}
-          selectedTafsirId={selectedTafsirId}
-          onSelectTafsirId={setSelectedTafsirId}
-          onClose={closeTafsir}
-          onPlayVerse={playVerse}
-          onJumpToVerse={handleJumpToVerseFromTafsir}
-          hasRangeScope={hasRangeScope}
-          hasPageScope={hasPageScope}
-        />
-      ) : null}
 
       {isMobileTafsirSheet ? (
         <TafsirBottomSheet

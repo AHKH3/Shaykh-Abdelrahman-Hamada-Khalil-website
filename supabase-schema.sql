@@ -22,19 +22,6 @@ CREATE TABLE IF NOT EXISTS annotations (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Library apps table
-CREATE TABLE IF NOT EXISTS library_apps (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  title TEXT NOT NULL,
-  title_en TEXT,
-  description TEXT NOT NULL DEFAULT '',
-  description_en TEXT,
-  icon_url TEXT,
-  file_path TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
 -- Reading progress table (single user)
 CREATE TABLE IF NOT EXISTS reading_progress (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -51,20 +38,7 @@ CREATE INDEX IF NOT EXISTS idx_annotations_page ON annotations(student_id, page_
 -- Row Level Security (RLS)
 ALTER TABLE students ENABLE ROW LEVEL SECURITY;
 ALTER TABLE annotations ENABLE ROW LEVEL SECURITY;
-ALTER TABLE library_apps ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reading_progress ENABLE ROW LEVEL SECURITY;
-
--- Policies: library_apps is readable by everyone, writable by authenticated users
-CREATE POLICY "Library apps are publicly readable"
-  ON library_apps FOR SELECT
-  TO anon, authenticated
-  USING (true);
-
-CREATE POLICY "Library apps are writable by authenticated users"
-  ON library_apps FOR ALL
-  TO authenticated
-  USING (true)
-  WITH CHECK (true);
 
 -- Policies: students and annotations writable by authenticated users only
 CREATE POLICY "Students are manageable by authenticated users"
@@ -107,8 +81,3 @@ CREATE POLICY "Users can manage their own bookmarks"
   ON user_bookmarks FOR ALL TO authenticated
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
-
--- Storage bucket for library app HTML files
--- Note: Create a bucket named "library-apps" in Supabase Dashboard > Storage
--- Set it as PUBLIC for the files to be accessible via iframe
--- Allowed MIME types: text/html, image/png, image/jpeg, image/svg+xml, image/webp

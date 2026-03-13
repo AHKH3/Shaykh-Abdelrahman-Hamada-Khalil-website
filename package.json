@@ -14,7 +14,7 @@
     "playwright:install": "playwright install chromium",
     "visual:cleanup": "node scripts/cleanup-playwright-artifacts.mjs",
     "visual:test": "node scripts/run-visual-tests.mjs",
-    "visual:update": "node scripts/run-visual-tests.mjs --update-snapshots",
+    "visual:update": "node scripts/run-visual-tests.mjs",
     "ui:verify": "npm run ui:guardrails && npm run ui:contrast:check && npm run visual:test"
   },
   "dependencies": {

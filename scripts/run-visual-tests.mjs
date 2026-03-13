@@ -42,7 +42,7 @@ try {
   console.error(error);
 }
 
-if (!keepArtifacts) {
+if (!keepArtifacts && exitCode === 0) {
   try {
     await cleanupPlaywrightArtifacts();
   } catch (error) {

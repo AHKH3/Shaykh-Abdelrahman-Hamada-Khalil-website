@@ -52,14 +52,6 @@ export default function Footer() {
                   {t.nav.mushaf}
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/library"
-                  className="text-base text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {t.nav.library}
-                </Link>
-              </li>
             </ul>
           </div>
 

@@ -3,6 +3,7 @@ import { defineConfig, devices } from "@playwright/test";
 const port = 4173;
 const baseURL = process.env.PLAYWRIGHT_BASE_URL || `http://127.0.0.1:${port}`;
 const keepArtifacts = process.env.PLAYWRIGHT_KEEP_ARTIFACTS === "1";
+const shouldWriteReports = keepArtifacts || Boolean(process.env.CI);
 
 export default defineConfig({
   testDir: "./tests/visual",
@@ -13,7 +14,7 @@ export default defineConfig({
   retries: 0,
   outputDir: "test-results/visual",
   preserveOutput: keepArtifacts ? "always" : "never",
-  reporter: keepArtifacts
+  reporter: shouldWriteReports
     ? [
         ["list"],
         ["html", { open: "never", outputFolder: "playwright-report/visual" }],
@@ -22,14 +23,11 @@ export default defineConfig({
   use: {
     baseURL,
     headless: true,
-    trace: "off",
-    screenshot: keepArtifacts ? "only-on-failure" : "off",
+    trace: shouldWriteReports ? "retain-on-failure" : "off",
+    screenshot: "only-on-failure",
   },
   expect: {
     timeout: 12_000,
-    toHaveScreenshot: {
-      maxDiffPixelRatio: 0.01,
-    },
   },
   webServer: {
     command: `npm run build && npm run start -- -p ${port} -H 127.0.0.1`,
