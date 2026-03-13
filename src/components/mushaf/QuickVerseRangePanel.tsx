@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Search, X, Plus, Minus, BookOpen, History } from "lucide-react";
+import { Plus, Minus, BookOpen, History } from "lucide-react";
 import type { Chapter } from "@/lib/quran/api";
 import { validateVerseRange } from "@/lib/quran/api";
 import { useI18n } from "@/lib/i18n/context";
@@ -226,7 +226,7 @@ export function VerseRangeForm({
       : null;
 
   return (
-    <div className="flex h-full flex-col" dir={isRtl ? "rtl" : "ltr"}>
+    <div data-testid="mushaf-verse-range-panel" className="flex h-full flex-col" dir={isRtl ? "rtl" : "ltr"}>
       <div className="flex-1 space-y-4 overflow-y-auto p-5">
         <div>
           <label className="mb-2 block text-sm font-semibold text-foreground">{t.mushaf.selectSurah}</label>
@@ -263,7 +263,7 @@ export function VerseRangeForm({
                   <div className="max-h-[280px] overflow-y-auto">
                     {recentChapters.length > 0 && !searchQuery && (
                       <div className="border-b border-border/60">
-                        <div className="sticky top-0 bg-muted/60 px-3 py-1.5 text-xs font-semibold text-muted-foreground">
+                        <div className="mushaf-text-compact sticky top-0 bg-muted/60 px-3 py-1.5 font-semibold text-muted-foreground">
                           {isRtl ? "السور الأخيرة" : "Recent"}
                         </div>
                         {recentChapters.map((chapter) => (
@@ -272,9 +272,9 @@ export function VerseRangeForm({
                             onClick={() => selectChapter(chapter)}
                             className="flex w-full items-center gap-2 rounded-none bg-transparent px-3 py-2 text-start text-sm font-normal transition-colors hover:bg-accent"
                           >
-                            <span className="w-6 text-xs text-muted-foreground">{chapter.id}.</span>
+                            <span className="mushaf-text-meta w-6 text-muted-foreground">{chapter.id}.</span>
                             <span className="font-medium">{chapter.name_arabic}</span>
-                            <span className="ms-auto text-xs text-muted-foreground">
+                            <span className="mushaf-text-meta ms-auto text-muted-foreground">
                               {chapter.verses_count} {isRtl ? "آية" : "v."}
                             </span>
                           </MushafButton>
@@ -283,7 +283,7 @@ export function VerseRangeForm({
                     )}
 
                     {!searchQuery && recentChapters.length > 0 && (
-                      <div className="sticky top-0 bg-muted/60 px-3 py-1.5 text-xs font-semibold text-muted-foreground">
+                      <div className="mushaf-text-compact sticky top-0 bg-muted/60 px-3 py-1.5 font-semibold text-muted-foreground">
                         {isRtl ? "جميع السور" : "All Surahs"}
                       </div>
                     )}
@@ -294,12 +294,12 @@ export function VerseRangeForm({
                         onClick={() => selectChapter(chapter)}
                         className="flex w-full items-center gap-2 rounded-none bg-transparent px-3 py-2 text-start text-sm font-normal transition-colors hover:bg-accent"
                       >
-                        <span className="w-6 text-xs text-muted-foreground">{chapter.id}.</span>
+                        <span className="mushaf-text-meta w-6 text-muted-foreground">{chapter.id}.</span>
                         <span className="font-medium">{chapter.name_arabic}</span>
                         {chapter.translated_name?.name ? (
-                          <span className="hidden text-xs text-muted-foreground sm:inline">— {chapter.translated_name.name}</span>
+                          <span className="mushaf-text-meta hidden text-muted-foreground sm:inline">— {chapter.translated_name.name}</span>
                         ) : null}
-                        <span className="ms-auto text-xs text-muted-foreground">
+                        <span className="mushaf-text-meta ms-auto text-muted-foreground">
                           {chapter.verses_count} {isRtl ? "آية" : "v."}
                         </span>
                       </MushafButton>
@@ -317,7 +317,7 @@ export function VerseRangeForm({
           </div>
 
           {selectedChapter && (
-            <p className="mt-2 text-xs text-muted-foreground">
+            <p className="mushaf-text-meta mt-2 text-muted-foreground">
               <span className="font-semibold text-foreground">
                 {isRtl ? selectedChapter.name_arabic : selectedChapter.name_simple}
               </span>
@@ -349,7 +349,7 @@ export function VerseRangeForm({
             >
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-end">
                 <div className="min-w-0">
-                  <label className="mb-2 block text-xs font-semibold text-muted-foreground">
+                  <label className="mushaf-text-compact mb-2 block font-semibold text-muted-foreground">
                     {t.mushaf.from} {isRtl ? "الآية" : "verse"}
                   </label>
                   <div className="flex min-w-0 items-center gap-2">
@@ -383,11 +383,11 @@ export function VerseRangeForm({
                 </div>
 
                 <div className="hidden items-center justify-center pb-2 sm:flex">
-                  <span className="text-xs font-semibold text-muted-foreground">{isRtl ? "إلى" : "to"}</span>
+                  <span className="mushaf-text-compact font-semibold text-muted-foreground">{isRtl ? "إلى" : "to"}</span>
                 </div>
 
                 <div className="min-w-0">
-                  <label className="mb-2 block text-xs font-semibold text-muted-foreground">
+                  <label className="mushaf-text-compact mb-2 block font-semibold text-muted-foreground">
                     {t.mushaf.to} {isRtl ? "الآية" : "verse"}
                   </label>
                   <div className="flex min-w-0 items-center gap-2">
@@ -447,7 +447,7 @@ export function VerseRangeForm({
                 <History size={15} className="text-primary flex-shrink-0" />
                 <span className="truncate whitespace-nowrap">{locale === "ar" ? "السجل" : "History"}</span>
               </span>
-              <span className="text-xs text-muted-foreground flex-shrink-0">
+              <span className="mushaf-text-compact text-muted-foreground flex-shrink-0">
                 {showHistory ? (locale === "ar" ? "إخفاء" : "Hide") : locale === "ar" ? "إظهار" : "Show"}
               </span>
             </span>

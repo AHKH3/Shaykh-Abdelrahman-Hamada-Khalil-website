@@ -171,7 +171,7 @@ export default function FloatingPanel({
               <span className="text-primary scale-110">{icon}</span>
               {title}
               {collapsedInfo?.rangeReference && isCollapsed && (
-                <span className="text-[10px] px-2 py-0.5 bg-primary/10 text-primary rounded-full font-bold me-2">
+                <span className="mushaf-text-overline px-2 py-0.5 bg-primary/10 text-primary rounded-full font-bold me-2">
                   {collapsedInfo.rangeReference}
                 </span>
               )}
@@ -299,7 +299,7 @@ export default function FloatingPanel({
           {/* Range reference and progress */}
           {collapsedInfo?.rangeReference && (
             <div className={`flex flex-col ${isVerticalEdge ? "items-center" : "items-start"}`}>
-              <span className="text-xs font-medium text-foreground whitespace-nowrap">
+              <span className="mushaf-text-compact font-medium text-foreground whitespace-nowrap">
                 {collapsedInfo.rangeReference}
               </span>
 
@@ -329,7 +329,7 @@ export default function FloatingPanel({
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="text-[10px] px-1.5 py-0.5 bg-primary/20 text-primary rounded-full font-medium"
+              className="mushaf-text-overline px-1.5 py-0.5 bg-primary/20 text-primary rounded-full font-medium"
             >
               {collapsedInfo.verseCount}
             </motion.span>
@@ -354,7 +354,7 @@ export default function FloatingPanel({
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className={`absolute bg-card/95 backdrop-blur-sm border border-border/60 rounded-lg shadow-lg px-3 py-2 text-xs text-muted-foreground whitespace-nowrap ${collapsedEdge === "right" ? "right-full mr-2" :
+              className={`absolute mushaf-text-compact bg-card/95 backdrop-blur-sm border border-border/60 rounded-lg shadow-lg px-3 py-2 text-muted-foreground whitespace-nowrap ${collapsedEdge === "right" ? "right-full mr-2" :
                 collapsedEdge === "left" ? "left-full ml-2" :
                   collapsedEdge === "top" ? "top-full mt-2" :
                     "bottom-full mb-2"
@@ -427,7 +427,7 @@ export default function FloatingPanel({
             <motion.span
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              className="text-xs px-2 py-0.5 bg-primary/20 text-primary rounded-full font-normal"
+              className="mushaf-text-overline px-2 py-0.5 bg-primary/20 text-primary rounded-full font-normal"
             >
               {collapsedInfo.rangeReference}
             </motion.span>

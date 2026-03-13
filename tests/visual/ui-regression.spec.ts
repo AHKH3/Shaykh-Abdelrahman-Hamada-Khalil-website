@@ -14,6 +14,42 @@ const scenarios: VisualScenario[] = [
   { id: "home", path: "/", readySelector: "main section" },
   { id: "mushaf", path: "/mushaf", readySelector: ".mushaf-page-view" },
   {
+    id: "mushaf-index-open",
+    path: "/mushaf",
+    readySelector: ".mushaf-page-view",
+    setup: async (page) => {
+      await page.getByTestId("open-index-panel").click();
+      await page.getByTestId("mushaf-index-panel").waitFor({ state: "visible" });
+    },
+  },
+  {
+    id: "mushaf-verse-range-open",
+    path: "/mushaf",
+    readySelector: ".mushaf-page-view",
+    setup: async (page) => {
+      await page.getByTestId("open-verse-range-panel").click();
+      await page.getByTestId("mushaf-verse-range-panel").waitFor({ state: "visible" });
+    },
+  },
+  {
+    id: "mushaf-audio-open",
+    path: "/mushaf",
+    readySelector: ".mushaf-page-view",
+    setup: async (page) => {
+      await page.getByTestId("open-audio-panel").click();
+      await page.getByTestId("mushaf-audio-panel").waitFor({ state: "visible" });
+    },
+  },
+  {
+    id: "mushaf-display-settings-open",
+    path: "/mushaf",
+    readySelector: ".mushaf-page-view",
+    setup: async (page) => {
+      await page.getByTestId("open-display-settings-panel").click();
+      await page.getByTestId("mushaf-display-settings-panel").waitFor({ state: "visible" });
+    },
+  },
+  {
     id: "mushaf-tafsir-open",
     path: "/mushaf",
     readySelector: ".mushaf-page-view",

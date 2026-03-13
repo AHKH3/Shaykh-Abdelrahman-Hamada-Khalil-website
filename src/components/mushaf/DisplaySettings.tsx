@@ -131,43 +131,43 @@ export default function DisplaySettings({
       containerClassName="flex items-end sm:items-center justify-center p-0 sm:p-4"
       panelClassName="bg-card/95 backdrop-blur-xl border border-white/10 dark:border-white/5 sm:border-primary/10 rounded-t-3xl sm:rounded-3xl shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)] overflow-hidden max-w-3xl w-full mx-auto max-h-[90vh] transition-all duration-500"
     >
-      <div className="flex items-center justify-between px-6 py-4 border-b border-primary/10 bg-primary/5 backdrop-blur-xl sticky top-0 z-10 relative">
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
-            <Settings size={20} className="animate-spin-slow" />
+      <div data-testid="mushaf-display-settings-panel" className="flex max-h-[90vh] flex-col">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-primary/10 bg-primary/5 backdrop-blur-xl sticky top-0 z-10 relative">
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+              <Settings size={20} className="animate-spin-slow" />
+            </div>
+            <div className="min-w-0">
+              <h3 id="display-settings-title" className="font-bold text-lg leading-none text-primary font-['Amiri',serif] truncate">
+                {t.mushaf.displaySettings}
+              </h3>
+              <p className="mushaf-text-meta text-muted-foreground mt-1 font-semibold uppercase tracking-wider">
+                {isArabic ? "العرض والقراءة والاختصارات" : "Display • Reading • Shortcuts"}
+              </p>
+            </div>
           </div>
-          <div className="min-w-0">
-            <h3 id="display-settings-title" className="font-bold text-lg leading-none text-primary font-['Amiri',serif] truncate">
-              {t.mushaf.displaySettings}
-            </h3>
-            <p className="text-[11px] text-muted-foreground mt-1 font-semibold uppercase tracking-wider">
-              {isArabic ? "العرض والقراءة والاختصارات" : "Display • Reading • Shortcuts"}
-            </p>
+          <div className="flex items-center gap-1.5">
+            <MushafButton
+              variant="ghost"
+              onClick={onResetToDefaults}
+              className="h-10 px-3 mushaf-text-compact font-bold bg-background/70 border border-border/40 hover:bg-primary/10"
+              title={isArabic ? "إعادة الإعدادات الافتراضية" : "Reset to defaults"}
+              aria-label={isArabic ? "إعادة الإعدادات الافتراضية" : "Reset to defaults"}
+            >
+              <RotateCcw size={14} />
+              <span>{isArabic ? "إعادة ضبط" : "Reset"}</span>
+            </MushafButton>
+            <MushafCloseButton
+              ref={closeButtonRef}
+              onClick={onClose}
+              iconSize={20}
+              aria-label={t.common.close}
+            />
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          <MushafButton
-            variant="ghost"
-            onClick={onResetToDefaults}
-            className="h-10 px-3 text-xs font-bold bg-background/70 border border-border/40 hover:bg-primary/10"
-            title={isArabic ? "إعادة الإعدادات الافتراضية" : "Reset to defaults"}
-            aria-label={isArabic ? "إعادة الإعدادات الافتراضية" : "Reset to defaults"}
-          >
-            <RotateCcw size={14} />
-            <span>{isArabic ? "إعادة ضبط" : "Reset"}</span>
-          </MushafButton>
-          <MushafCloseButton
-            ref={closeButtonRef}
-            onClick={onClose}
-            iconSize={20}
-            aria-label={t.common.close}
-          />
-        </div>
-      </div>
-
-      <div className="p-4 sm:p-5 overflow-y-auto max-h-[calc(90vh-82px)]" dir={isArabic ? "rtl" : "ltr"}>
-        <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-4">
+        <div className="p-4 sm:p-5 overflow-y-auto max-h-[calc(90vh-82px)]" dir={isArabic ? "rtl" : "ltr"}>
+          <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-4">
           <div className="space-y-4">
             <section className="rounded-2xl border border-border/40 bg-gradient-to-b from-background/80 to-muted/20 p-4 shadow-sm">
               <button
@@ -347,7 +347,7 @@ export default function DisplaySettings({
                   <Keyboard size={16} className="text-muted-foreground" />
                   {t.mushaf.keyboardShortcuts}
                 </span>
-                <span className="hidden sm:inline text-[11px] text-muted-foreground font-bold uppercase tracking-wider">
+                <span className="mushaf-text-overline hidden sm:inline text-muted-foreground font-bold uppercase tracking-wider">
                   {MUSHAF_SHORTCUTS.length}
                 </span>
                 <ChevronDown size={16} className={`sm:hidden text-muted-foreground transition-transform ${shouldShow("shortcuts") ? "rotate-180" : ""}`} />
@@ -375,6 +375,7 @@ export default function DisplaySettings({
                 </div>
               </div>
             </section>
+          </div>
           </div>
         </div>
       </div>

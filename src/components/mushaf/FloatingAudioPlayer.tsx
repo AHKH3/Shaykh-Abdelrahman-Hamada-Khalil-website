@@ -122,7 +122,7 @@ export default function FloatingAudioPlayer({
       defaultPanelHeight={320}
       zIndex={60}
     >
-      <div className="p-4 space-y-3" dir={isRtl ? "rtl" : "ltr"}>
+      <div data-testid="mushaf-audio-panel" className="p-4 space-y-3" dir={isRtl ? "rtl" : "ltr"}>
 
         {/* Now Playing Card */}
         <div className="rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/5 via-primary/10 to-transparent backdrop-blur-xl p-5 min-h-[90px] flex flex-col justify-center gap-2 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] relative overflow-hidden group/card">
@@ -132,11 +132,11 @@ export default function FloatingAudioPlayer({
           {currentVerseKey ? (
             <>
               <div className="flex items-center gap-2.5 relative z-10">
-                <span className="text-[10px] font-black text-primary/70 uppercase tracking-[0.2em]">
+                <span className="mushaf-text-overline font-black text-primary/70 uppercase tracking-[0.2em]">
                   {t.mushaf.nowPlaying}
                 </span>
                 <span
-                  className="text-[10px] font-bold text-white bg-primary px-3 py-0.5 rounded-full shadow-lg shadow-primary/20"
+                  className="mushaf-text-overline font-bold text-white bg-primary px-3 py-0.5 rounded-full shadow-lg shadow-primary/20"
                   dir="ltr"
                 >
                   {currentVerseKey}
@@ -184,7 +184,7 @@ export default function FloatingAudioPlayer({
               style={{ [isRtl ? "right" : "left"]: `calc(${progressPercent}% - 6px)` }}
             />
           </div>
-          <div className="flex justify-between text-[11px] text-muted-foreground tabular-nums" dir="ltr">
+          <div className="mushaf-text-meta flex justify-between text-muted-foreground tabular-nums" dir="ltr">
             <span>{formatTime(audioCurrentTime)}</span>
             <span>{formatTime(audioDuration)}</span>
           </div>
@@ -230,7 +230,7 @@ export default function FloatingAudioPlayer({
             variant={repeatMode !== "none" ? "primary" : "ghost"}
             onClick={cycleRepeat}
             icon={<RepeatIcon size={14} className={repeatMode !== "none" ? "animate-spin-slow" : ""} />}
-            className={`px-3 py-2 text-xs font-bold whitespace-nowrap flex-shrink-0 ${repeatMode === "none" ? "bg-muted/50 text-muted-foreground hover:bg-muted" : "shadow-lg shadow-primary/20"}`}
+            className={`px-3 py-2 mushaf-text-compact font-bold whitespace-nowrap flex-shrink-0 ${repeatMode === "none" ? "bg-muted/50 text-muted-foreground hover:bg-muted" : "shadow-lg shadow-primary/20"}`}
           >
             <span className="whitespace-nowrap">
               {repeatMode === "none"
@@ -252,7 +252,7 @@ export default function FloatingAudioPlayer({
                 key={s}
                 variant="ghost"
                 onClick={() => onSetSpeed(s)}
-                className={`px-2.5 py-1 text-[10px] font-black ${audioSpeed === s ? "bg-background text-primary shadow-sm ring-1 ring-border/50 hover:bg-background hover:text-primary" : "text-muted-foreground/70 hover:bg-background/50"}`}
+                className={`px-2.5 py-1 mushaf-text-compact font-black ${audioSpeed === s ? "bg-background text-primary shadow-sm ring-1 ring-border/50 hover:bg-background hover:text-primary" : "text-muted-foreground/70 hover:bg-background/50"}`}
               >
                 {s}×
               </MushafButton>
@@ -284,7 +284,7 @@ export default function FloatingAudioPlayer({
               {/* Verse Repeat Count */}
               {repeatMode === "verse" && onSetVerseRepeatCount && (
                 <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <label className="mushaf-text-compact flex items-center gap-2 text-muted-foreground">
                     <Repeat size={12} />
                     {locale === "ar" ? "تكرار كل آية" : "Repeat each verse"} ({locale === "ar" ? "مرات" : "times"})
                   </label>
@@ -294,7 +294,7 @@ export default function FloatingAudioPlayer({
                         key={count}
                         variant={verseRepeatCount === count ? "primary" : "ghost"}
                         onClick={() => onSetVerseRepeatCount(count)}
-                        className={`flex-1 px-2 py-1.5 text-xs border ${verseRepeatCount === count ? "" : "bg-muted hover:bg-muted/80 border-border"}`}
+                        className={`flex-1 px-2 py-1.5 mushaf-text-compact border ${verseRepeatCount === count ? "" : "bg-muted hover:bg-muted/80 border-border"}`}
                       >
                         {count}x
                       </MushafButton>
@@ -306,7 +306,7 @@ export default function FloatingAudioPlayer({
               {/* Range Repeat Count */}
               {repeatMode === "range" && onSetRangeRepeatCount && (
                 <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <label className="mushaf-text-compact flex items-center gap-2 text-muted-foreground">
                     <Repeat size={12} />
                     {locale === "ar" ? "تكرار المدى" : "Repeat range"} ({locale === "ar" ? "مرات" : "times"})
                   </label>
@@ -316,7 +316,7 @@ export default function FloatingAudioPlayer({
                         key={count}
                         variant={rangeRepeatCount === count ? "primary" : "ghost"}
                         onClick={() => onSetRangeRepeatCount(count)}
-                        className={`flex-1 px-2 py-1.5 text-xs border ${rangeRepeatCount === count ? "" : "bg-muted hover:bg-muted/80 border-border"}`}
+                        className={`flex-1 px-2 py-1.5 mushaf-text-compact border ${rangeRepeatCount === count ? "" : "bg-muted hover:bg-muted/80 border-border"}`}
                       >
                         {count}x
                       </MushafButton>
@@ -328,7 +328,7 @@ export default function FloatingAudioPlayer({
               {/* Pause Between Verses */}
               {onSetPauseBetweenVerses && (
                 <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <label className="mushaf-text-compact flex items-center gap-2 text-muted-foreground">
                     <Timer size={12} />
                     {locale === "ar" ? "وقفة بين الآيات" : "Pause between verses"} ({locale === "ar" ? "ثانية" : "sec"})
                   </label>
@@ -338,7 +338,7 @@ export default function FloatingAudioPlayer({
                         key={seconds}
                         variant={pauseBetweenVerses === seconds ? "primary" : "ghost"}
                         onClick={() => onSetPauseBetweenVerses(seconds)}
-                        className={`flex-1 px-2 py-1.5 text-xs border ${pauseBetweenVerses === seconds ? "" : "bg-muted hover:bg-muted/80 border-border"}`}
+                        className={`flex-1 px-2 py-1.5 mushaf-text-compact border ${pauseBetweenVerses === seconds ? "" : "bg-muted hover:bg-muted/80 border-border"}`}
                       >
                         {seconds === 0 ? (locale === "ar" ? "بدون" : "None") : `${seconds}s`}
                       </MushafButton>
@@ -373,7 +373,7 @@ export default function FloatingAudioPlayer({
               style={{ width: `${audioVolume * 100}%` }}
             />
           </div>
-          <span className="text-[11px] text-muted-foreground tabular-nums w-7 text-end">
+          <span className="mushaf-text-meta text-muted-foreground tabular-nums w-7 text-end">
             {Math.round(audioVolume * 100)}
           </span>
         </div>
@@ -383,7 +383,7 @@ export default function FloatingAudioPlayer({
 
         {/* Reciter Selector */}
         <div>
-          <label className="block text-[10px] font-black text-muted-foreground/60 mb-2 uppercase tracking-widest px-1">
+          <label className="mushaf-text-overline block font-black text-muted-foreground/60 mb-2 uppercase tracking-widest px-1">
             {t.mushaf.selectReciter}
           </label>
           <div className="relative group">

@@ -150,14 +150,14 @@ export default function TafsirInspectorContent({
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-background" dir={dir}>
       {entries.length > 0 ? (
-        <div className="sticky top-0 z-10 border-b border-primary/10 bg-card/95 px-3 py-2 backdrop-blur-md">
-          <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="sticky top-0 z-10 border-b border-primary/10 bg-card/60 px-3 py-2 backdrop-blur-xl">
+          <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
             {entries.map((entry) => (
               <MushafButton
                 key={`nav-${entry.verseKey}`}
                 variant="ghost"
                 onClick={() => handleJump(entry.verseKey)}
-                className="h-auto flex-shrink-0 rounded-lg border border-primary/10 bg-primary/5 px-2.5 py-1 text-xs font-bold"
+                className="h-auto flex-shrink-0 rounded-xl border border-primary/10 bg-primary/5 px-3 py-1.5 mushaf-text-compact font-black shadow-sm transition-all hover:bg-primary/10 hover:border-primary/20 active:scale-95"
               >
                 {entry.verseKey}
               </MushafButton>
@@ -180,11 +180,11 @@ export default function TafsirInspectorContent({
               <AlertCircle size={16} />
               {locale === "ar" ? "تعذر تحميل المحتوى" : "Unable to load content"}
             </p>
-            <p className="mt-1 text-xs opacity-90">{error}</p>
+            <p className="mushaf-text-meta mt-1 opacity-90">{error}</p>
             <MushafButton
               variant="ghost"
               onClick={() => void loadChunk(true, 0)}
-              className="mt-3 h-auto rounded-lg border border-destructive/20 px-3 py-1.5 text-xs"
+              className="mt-3 h-auto rounded-lg border border-destructive/20 px-3 py-1.5 mushaf-text-compact"
             >
               {t.common.retry}
             </MushafButton>
@@ -201,32 +201,37 @@ export default function TafsirInspectorContent({
           <article
             id={verseAnchorId(entry.verseKey)}
             key={entry.verseKey}
-            className="rounded-2xl border border-primary/10 bg-card shadow-sm"
+            className="group relative rounded-3xl border border-primary/10 bg-card/70 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] backdrop-blur-sm overflow-hidden"
           >
-            <header className="flex items-center justify-between gap-2 border-b border-primary/10 bg-primary/5 px-4 py-2.5">
-              <span className="rounded-full border border-primary/15 bg-background px-2.5 py-1 text-[11px] font-black text-primary" dir="ltr">
-                {entry.verseKey}
-              </span>
-              <div className="flex items-center gap-1.5">
+            <header className="flex items-center justify-between gap-3 bg-primary/[0.03] px-5 py-3 relative">
+              {/* Refined Verse Key Tag */}
+              <div className="mushaf-engraved-container flex items-center justify-center px-4 py-1.5 min-w-[70px]">
+                <span className="relative z-10 text-sm font-black text-primary tracking-wider" dir="ltr">
+                  {entry.verseKey}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
                 <MushafButton
                   variant="icon"
                   onClick={() => onPlayVerse(entry.verseKey)}
-                  className="h-8 w-8 p-0"
+                  className="h-9 w-9 p-0 rounded-xl bg-primary/5 hover:bg-primary/10 text-primary transition-all active:scale-90"
                   title={t.mushaf.audio}
-                  icon={<Play size={14} />}
+                  icon={<Play size={16} className="fill-current" />}
                 />
                 <MushafButton
                   variant="icon"
                   onClick={() => handleJump(entry.verseKey)}
-                  className="h-8 w-8 p-0"
+                  className="h-9 w-9 p-0 rounded-xl bg-primary/5 hover:bg-primary/10 text-primary transition-all active:scale-90"
                   title={locale === "ar" ? "الانتقال للآية" : "Jump to verse"}
-                  icon={<MapPinned size={14} />}
+                  icon={<MapPinned size={16} />}
                 />
               </div>
             </header>
             <div
-              className="prose prose-sm max-w-none p-4 font-['Amiri',serif] leading-loose text-foreground/90 dark:prose-invert"
+              className="prose prose-sm max-w-none p-6 font-['Amiri',serif] text-xl leading-[2.5] text-foreground/90 dark:prose-invert selection:bg-primary/20"
               dir={dir}
+              style={{ textAlign: dir === 'rtl' ? 'justify' : 'left' }}
               dangerouslySetInnerHTML={{ __html: entry.tafsir.text }}
             />
           </article>

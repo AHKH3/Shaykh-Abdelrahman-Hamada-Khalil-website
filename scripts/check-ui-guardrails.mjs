@@ -35,6 +35,13 @@ const rules = [
     appliesTo: () => true,
   },
   {
+    id: "mushaf-micro-text",
+    message:
+      "Use `mushaf-text-overline`, `mushaf-text-meta`, or `mushaf-text-compact` instead of raw `text-[10px]`, `text-[11px]`, or `text-xs` in mushaf components.",
+    pattern: /(?:^|[\s"'`])(?:[a-z-]+:)*text-(?:xs|\[(?:10|11)px\])(?=$|[\s"'`])/g,
+    appliesTo: (relativePath) => relativePath.startsWith("src/components/mushaf/"),
+  },
+  {
     id: "raw-tailwind-color",
     message: "Avoid raw palette classes. Use design tokens/semantic colors instead.",
     pattern:

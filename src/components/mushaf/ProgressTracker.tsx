@@ -104,8 +104,8 @@ export default function ProgressTracker({ currentPage }: ProgressTrackerProps) {
                 {/* Progress */}
                 <div>
                     <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs text-muted-foreground">{t.mushaf.progress}</span>
-                        <span className="text-xs font-medium">{progress}%</span>
+                        <span className="mushaf-text-meta text-muted-foreground">{t.mushaf.progress}</span>
+                        <span className="mushaf-text-meta font-medium">{progress}%</span>
                     </div>
                     <div className="h-2 bg-muted rounded-full overflow-hidden">
                         <motion.div
@@ -121,9 +121,9 @@ export default function ProgressTracker({ currentPage }: ProgressTrackerProps) {
                 <div className="flex items-center gap-2">
                     <Flame size={14} className="text-warning" />
                     <div>
-                        <span className="text-xs text-muted-foreground">{t.mushaf.streak}</span>
+                        <span className="mushaf-text-meta text-muted-foreground">{t.mushaf.streak}</span>
                         <span className="text-sm font-medium">{streak}</span>
-                        <span className="text-xs text-muted-foreground">{t.mushaf.days}</span>
+                        <span className="mushaf-text-meta text-muted-foreground">{t.mushaf.days}</span>
                     </div>
                 </div>
 
@@ -131,9 +131,9 @@ export default function ProgressTracker({ currentPage }: ProgressTrackerProps) {
                 <div className="flex items-center gap-2">
                     <BookOpen size={14} className="text-muted-foreground" />
                     <div>
-                        <span className="text-xs text-muted-foreground">{locale === "ar" ? "صفحات مقروءة" : "Pages Read"}</span>
+                        <span className="mushaf-text-meta text-muted-foreground">{locale === "ar" ? "صفحات مقروءة" : "Pages Read"}</span>
                         <span className="text-sm font-medium">{pagesRead.size}</span>
-                        <span className="text-xs text-muted-foreground">/ 604</span>
+                        <span className="mushaf-text-meta text-muted-foreground">/ 604</span>
                     </div>
                 </div>
             </div>

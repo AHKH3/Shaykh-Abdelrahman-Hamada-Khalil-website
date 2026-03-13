@@ -76,7 +76,7 @@ export function RangeHistory({ onSelectRange }: RangeHistoryProps) {
                 <p className="truncate text-sm font-semibold text-foreground whitespace-nowrap">
                   {item.chapterName} {item.fromVerse}-{item.toVerse}
                 </p>
-                <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+                <div className="mushaf-text-meta mt-1 flex items-center gap-1 text-muted-foreground">
                   <Clock size={12} />
                   <span>{getRelativeTime(item.timestamp, locale)}</span>
                   <span>•</span>
@@ -94,7 +94,7 @@ export function RangeHistory({ onSelectRange }: RangeHistoryProps) {
           clearRangeHistory();
           refreshRanges();
         }}
-        className="flex w-full items-center justify-center gap-2 border-border/40 bg-muted/30 px-3 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive border shadow-sm"
+        className="flex w-full items-center justify-center gap-2 border-border/40 bg-muted/30 px-3 py-2 mushaf-text-compact font-semibold text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive border shadow-sm"
       >
         <Trash2 size={13} />
         {t.mushaf.clearHistory}

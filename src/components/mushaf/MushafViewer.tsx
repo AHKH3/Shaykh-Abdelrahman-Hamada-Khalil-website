@@ -1133,6 +1133,7 @@ export default function MushafViewer() {
                 type="button"
                 title="فهرس السور"
                 onClick={() => setShowIndex(true)}
+                data-testid="open-index-panel"
                 className="group relative flex items-center gap-3 px-4 py-2 rounded-xl bg-transparent hover:bg-primary/5 border border-transparent hover:border-primary/10 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary/50 cursor-pointer active:scale-[0.98]"
               >
                 <span className="flex w-full min-w-0 items-center gap-3 whitespace-nowrap relative z-10">
@@ -1140,7 +1141,7 @@ export default function MushafViewer() {
                     <Layers size={16} strokeWidth={2} />
                   </span>
                   <span className="flex min-w-0 items-center gap-2.5 leading-none whitespace-nowrap">
-                    <span className="text-[10px] text-primary/60 group-hover:text-primary/80 uppercase font-black tracking-[0.1em] px-1.5 py-0.5 rounded-md bg-transparent group-hover:bg-primary/5 transition-colors whitespace-nowrap">{t.mushaf.surah}</span>
+                    <span className="mushaf-text-overline text-primary/60 group-hover:text-primary/80 uppercase font-black tracking-[0.1em] px-1.5 py-0.5 rounded-md bg-transparent group-hover:bg-primary/5 transition-colors whitespace-nowrap">{t.mushaf.surah}</span>
                     <span className="text-xl font-bold font-['Amiri',serif] text-foreground/90 group-hover:text-foreground drop-shadow-sm whitespace-nowrap truncate pt-1 transition-colors">
                       {currentSurah?.name_arabic || ""}
                     </span>
@@ -1155,7 +1156,7 @@ export default function MushafViewer() {
                 variant="primary"
                 onClick={handleBackToPages}
                 icon={isRtl ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-                className="text-xs px-3 py-2"
+                className="mushaf-text-compact px-3 py-2"
               >
                 {t.mushaf.backToPages}
               </MushafButton>
@@ -1169,6 +1170,7 @@ export default function MushafViewer() {
               onClick={() => setShowVerseRangePanel(!showVerseRangePanel)}
               icon={<BookOpen size={16} />}
               title={t.mushaf.verseRange}
+              data-testid="open-verse-range-panel"
               className="hover:bg-primary/10 rounded-xl"
             />
             <MushafButton
@@ -1205,6 +1207,7 @@ export default function MushafViewer() {
               onClick={() => setShowAudioPlayer((v) => !v)}
               icon={<Volume2 size={16} />}
               title={locale === "ar" ? t.mushaf.audioPlayer : t.mushaf.audioPlayer}
+              data-testid="open-audio-panel"
               className="hover:bg-primary/10 rounded-xl"
             />
             <MushafButton
@@ -1221,6 +1224,7 @@ export default function MushafViewer() {
               onClick={() => setShowDisplaySettings(true)}
               icon={<Settings size={16} />}
               title={t.mushaf.displaySettings}
+              data-testid="open-display-settings-panel"
               className="hover:bg-primary/10 rounded-xl"
             />
             <div className="w-px h-5 bg-primary/10 mx-1" />
@@ -1371,15 +1375,15 @@ export default function MushafViewer() {
             aria-live="polite"
             aria-label={locale === "ar" ? `الصفحة ${currentPage} من ${TOTAL_PAGES}` : `Page ${currentPage} of ${TOTAL_PAGES}`}
           >
-            <span className="block text-[10px] sm:text-xs font-semibold text-muted-foreground leading-none">
+            <span className="mushaf-text-overline block font-semibold text-muted-foreground leading-none">
               {t.mushaf.page}
             </span>
             <div className="mt-0.5 sm:mt-1 flex items-baseline justify-center gap-1 leading-none">
               <span className="text-base sm:text-lg font-black text-primary tabular-nums">
                 {currentPage}
               </span>
-              <span className="text-[11px] sm:text-xs font-medium text-muted-foreground/70">/</span>
-              <span className="text-xs sm:text-sm font-semibold text-muted-foreground tabular-nums">
+              <span className="mushaf-text-meta font-medium text-muted-foreground/70">/</span>
+              <span className="mushaf-text-compact font-semibold text-muted-foreground tabular-nums">
                 {TOTAL_PAGES}
               </span>
             </div>

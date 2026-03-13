@@ -98,11 +98,11 @@ export default function BookmarksPanel({ isOpen, onClose, onNavigate }: Bookmark
               >
                 <div className="flex flex-col gap-1 whitespace-nowrap">
                   <p className="text-base font-bold text-foreground group-hover/item:text-primary transition-colors whitespace-nowrap">{bookmark.verseKey}</p>
-                  <p className="text-[11px] font-black text-primary/60 uppercase tracking-widest flex items-center gap-1.5 whitespace-nowrap">
+                  <p className="mushaf-text-overline font-black text-primary/60 uppercase tracking-widest flex items-center gap-1.5 whitespace-nowrap">
                     <span className="w-1 h-1 rounded-full bg-primary/40 flex-shrink-0" />
                     {t.mushaf.page} {bookmark.pageNumber}
                   </p>
-                  {bookmark.note && <p className="text-xs text-muted-foreground/80 truncate mt-1 italic border-s-2 border-primary/20 ps-2">{bookmark.note}</p>}
+                  {bookmark.note && <p className="mushaf-text-meta text-muted-foreground/80 truncate mt-1 italic border-s-2 border-primary/20 ps-2">{bookmark.note}</p>}
                 </div>
               </MushafButton>
 

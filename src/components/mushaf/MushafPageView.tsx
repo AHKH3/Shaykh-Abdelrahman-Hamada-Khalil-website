@@ -81,7 +81,7 @@ function MushafPageViewComponent({
       {verses.length === 0 ? (
         <div className="rounded-3xl border border-border/40 p-6 sm:p-8 bg-card shadow-[0_10px_50px_-15px_rgba(0,0,0,0.15)] flex flex-col items-center justify-center min-h-[360px] text-muted-foreground text-center gap-2">
           <p className="text-sm italic">{endOfMushafLabel}</p>
-          <p className="text-xs opacity-70">
+          <p className="mushaf-text-meta opacity-70">
             {locale === "ar" ? "لم يتم تحميل محتوى الصفحة بعد" : "Page content is not loaded yet"}
           </p>
         </div>

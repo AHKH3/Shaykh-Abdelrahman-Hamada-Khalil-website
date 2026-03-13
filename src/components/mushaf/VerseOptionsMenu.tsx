@@ -54,10 +54,10 @@ export default function VerseOptionsMenu({
         >
             <div className="px-5 py-3 mb-2 border-b border-primary/10 bg-primary/5 backdrop-blur-xl relative">
                 <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
-                <span id="verse-options-menu-title" className="text-[10px] font-black text-primary/60 uppercase tracking-[0.2em]">
+                <span id="verse-options-menu-title" className="mushaf-text-overline font-black text-primary/60 uppercase tracking-[0.2em]">
                     {t.mushaf.verse} {verseKey}
                 </span>
-                <p className="mt-1.5 text-xs text-foreground/90 line-clamp-2 font-['Amiri',serif] leading-relaxed" dir="rtl">
+                <p className="mushaf-text-compact mt-1.5 text-foreground/90 line-clamp-2 font-['Amiri',serif] leading-relaxed" dir="rtl">
                     {verseText}
                 </p>
             </div>
