@@ -140,9 +140,16 @@ export default function MushafViewer() {
   const audioVolumeRef = useRef(1);
   const audioSpeedRef = useRef(1);
   const repeatModeRef = useRef<"none" | "one" | "all" | "verse" | "range">("none");
-  const verseRepeatCountRef = useRef(3);
-  const rangeRepeatCountRef = useRef(3);
-  const pauseBetweenVersesRef = useRef(2);
+  const verseRepeatCountRef = useRef(1);
+  const rangeRepeatCountRef = useRef(1);
+  const pauseBetweenVersesRef = useRef(0);
+
+  // Mutable refs for tracking current state without closure issues
+  const currentVersesRef = useRef<Verse[]>(verses);
+  const currentViewModeRef = useRef<"pages" | "range">("pages");
+  const currentRangeDataRef = useRef<any>(null);
+
+  useEffect(() => { currentVersesRef.current = verses; }, [verses]);
 
   // Verse options menu
   const [verseMenuPosition, setVerseMenuPosition] = useState<{ x: number; y: number } | null>(null);
@@ -191,6 +198,9 @@ export default function MushafViewer() {
     verses: Verse[];
     chapterInfo?: Chapter;
   } | null>(null);
+
+  useEffect(() => { currentViewModeRef.current = viewMode; }, [viewMode]);
+  useEffect(() => { currentRangeDataRef.current = rangeData; }, [rangeData]);
   const [lastPageBeforeRange, setLastPageBeforeRange] = useState(1);
   // Cache stored in ref only — no state needed, avoids unnecessary re-renders
   const pageVersesCacheRef = useRef<Record<number, Verse[]>>({});
@@ -736,8 +746,12 @@ export default function MushafViewer() {
       const rangeRepeatCount = rangeRepeatCountRef.current;
       const pauseBetweenVerses = pauseBetweenVersesRef.current;
 
-      const allVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
-      const currentIndex = allVerses.findIndex((v) => v.verse_key === verseKey);
+      const currentViewMode = currentViewModeRef.current;
+      const currentRangeData = currentRangeDataRef.current;
+      const currentVerses = currentVersesRef.current;
+
+      const allVerses = currentViewMode === "range" && currentRangeData ? currentRangeData.verses : currentVerses;
+      const currentIndex = allVerses.findIndex((v: Verse) => v.verse_key === verseKey);
 
       // Handle verse repeat mode
       if (mode === "verse") {
@@ -774,7 +788,7 @@ export default function MushafViewer() {
         } else if (mode === "all" && allVerses.length > 0) {
           // Wrap around to the first verse
           playVerse(allVerses[0].verse_key);
-        } else if (viewMode === "pages" && requestedPageRef.current < TOTAL_PAGES) {
+        } else if (currentViewMode === "pages" && requestedPageRef.current < TOTAL_PAGES) {
           // Smart Auto-Page Flip
           const nextPageToLoad = requestedPageRef.current + 1;
           goToPage(nextPageToLoad);
@@ -833,8 +847,12 @@ export default function MushafViewer() {
 
   const handleNextVerse = () => {
     if (!currentAudioVerse) return;
-    const allVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
-    const idx = allVerses.findIndex((v) => v.verse_key === currentAudioVerse);
+    const currentViewMode = currentViewModeRef.current;
+    const currentRangeData = currentRangeDataRef.current;
+    const currentVerses = currentVersesRef.current;
+
+    const allVerses = currentViewMode === "range" && currentRangeData ? currentRangeData.verses : currentVerses;
+    const idx = allVerses.findIndex((v: Verse) => v.verse_key === currentAudioVerse);
     if (idx >= 0 && idx < allVerses.length - 1) {
       const nextVerseKey = allVerses[idx + 1].verse_key;
       setSelectedVerseForTafsir(nextVerseKey);
@@ -845,8 +863,12 @@ export default function MushafViewer() {
 
   const handlePrevVerse = () => {
     if (!currentAudioVerse) return;
-    const allVerses = viewMode === "range" && rangeData ? rangeData.verses : verses;
-    const idx = allVerses.findIndex((v) => v.verse_key === currentAudioVerse);
+    const currentViewMode = currentViewModeRef.current;
+    const currentRangeData = currentRangeDataRef.current;
+    const currentVerses = currentVersesRef.current;
+
+    const allVerses = currentViewMode === "range" && currentRangeData ? currentRangeData.verses : currentVerses;
+    const idx = allVerses.findIndex((v: Verse) => v.verse_key === currentAudioVerse);
     if (idx > 0) {
       const nextVerseKey = allVerses[idx - 1].verse_key;
       setSelectedVerseForTafsir(nextVerseKey);

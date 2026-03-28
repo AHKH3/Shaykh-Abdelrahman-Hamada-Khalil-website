@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AlertCircle, Loader2, MapPinned, Play } from "lucide-react";
+import { AlertCircle, Loader2, MapPinned, Play, Settings } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import type { TafsirScope } from "@/lib/hooks/useTafsirWorkspace";
 import {
@@ -17,6 +17,9 @@ interface TafsirInspectorContentProps {
   selectedTafsirId: number;
   onPlayVerse: (verseKey: string) => void;
   onJumpToVerse: (verseKey: string) => void;
+  onToggleSettings?: () => void;
+  headerContent?: React.ReactNode;
+  tafsirFontSizeClass?: string;
 }
 
 function verseAnchorId(verseKey: string): string {
@@ -29,6 +32,9 @@ export default function TafsirInspectorContent({
   selectedTafsirId,
   onPlayVerse,
   onJumpToVerse,
+  onToggleSettings,
+  headerContent,
+  tafsirFontSizeClass,
 }: TafsirInspectorContentProps) {
   const { t, locale, dir } = useI18n();
   const requestControllerRef = useRef<AbortController | null>(null);
@@ -149,24 +155,40 @@ export default function TafsirInspectorContent({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-background" dir={dir}>
-      {entries.length > 0 ? (
-        <div className="sticky top-0 z-10 border-b border-primary/10 bg-card/60 px-3 py-2 backdrop-blur-xl">
-          <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
+      <div className="sticky top-0 z-20 flex min-h-[56px] items-center gap-3 border-b border-primary/10 bg-background/80 px-4 py-3 backdrop-blur-xl shadow-sm">
+        {headerContent}
+        
+        {entries.length > 0 && <div className="w-px h-6 rounded-full bg-primary/20 shrink-0 mx-1" />}
+
+        {entries.length > 0 ? (
+          <div className="flex flex-1 items-center gap-2 overflow-x-auto custom-scrollbar pr-2" style={{ scrollbarWidth: 'none' }}>
             {entries.map((entry) => (
               <MushafButton
                 key={`nav-${entry.verseKey}`}
                 variant="ghost"
                 onClick={() => handleJump(entry.verseKey)}
-                className="h-auto flex-shrink-0 rounded-xl border border-primary/10 bg-primary/5 px-3 py-1.5 mushaf-text-compact font-black shadow-sm transition-all hover:bg-primary/10 hover:border-primary/20 active:scale-95"
+                className="h-8 shrink-0 rounded-lg border border-primary/10 bg-primary/5 px-3 py-1 text-[13px] font-black tracking-widest shadow-sm transition-all hover:bg-primary/10 hover:border-primary/20 hover:text-primary active:scale-95 text-primary/80"
               >
-                {entry.verseKey}
+                <div dir="ltr">{entry.verseKey}</div>
               </MushafButton>
             ))}
           </div>
-        </div>
-      ) : null}
+        ) : (
+          <div className="flex-1" />
+        )}
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-4 space-y-3">
+        {onToggleSettings && (
+          <MushafButton
+            variant="icon"
+            onClick={onToggleSettings}
+            className="h-8 w-8 shrink-0 rounded-lg border border-primary/10 bg-primary/5 text-primary/70 shadow-sm transition-all hover:bg-primary/10 hover:border-primary/20 hover:text-primary active:scale-95"
+            title={locale === "ar" ? "الإعدادات" : "Settings"}
+            icon={<Settings size={16} />}
+          />
+        )}
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto custom-scrollbar p-6 space-y-12">
         {loading && entries.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-muted-foreground">
             <Loader2 size={26} className="animate-spin text-primary" />
@@ -201,37 +223,27 @@ export default function TafsirInspectorContent({
           <article
             id={verseAnchorId(entry.verseKey)}
             key={entry.verseKey}
-            className="group relative rounded-3xl border border-primary/10 bg-card/70 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] backdrop-blur-sm overflow-hidden"
+            className="group relative scroll-mt-20"
           >
-            <header className="flex items-center justify-between gap-3 bg-primary/[0.03] px-5 py-3 relative">
-              {/* Refined Verse Key Tag */}
-              <div className="mushaf-engraved-container flex items-center justify-center px-4 py-1.5 min-w-[70px]">
-                <span className="relative z-10 text-sm font-black text-primary tracking-wider" dir="ltr">
+            <header className="flex items-center gap-3 mb-6 select-none opacity-80 transition-opacity hover:opacity-100">
+              <button
+                onClick={() => onPlayVerse(entry.verseKey)}
+                className="flex items-center gap-2 rounded-full bg-primary/5 px-3.5 py-1.5 text-primary transition-all hover:bg-primary/10 group/btn hover:scale-105 active:scale-95"
+                title={t.mushaf.audio}
+              >
+                <Play size={10} className="fill-current opacity-60 transition-opacity group-hover/btn:opacity-100" />
+                <span className="text-sm font-black tracking-widest pt-0.5" style={{ fontFamily: 'var(--font-ui-naskh)' }} dir="ltr">
                   {entry.verseKey}
                 </span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <MushafButton
-                  variant="icon"
-                  onClick={() => onPlayVerse(entry.verseKey)}
-                  className="h-9 w-9 p-0 rounded-xl bg-primary/5 hover:bg-primary/10 text-primary transition-all active:scale-90"
-                  title={t.mushaf.audio}
-                  icon={<Play size={16} className="fill-current" />}
-                />
-                <MushafButton
-                  variant="icon"
-                  onClick={() => handleJump(entry.verseKey)}
-                  className="h-9 w-9 p-0 rounded-xl bg-primary/5 hover:bg-primary/10 text-primary transition-all active:scale-90"
-                  title={locale === "ar" ? "الانتقال للآية" : "Jump to verse"}
-                  icon={<MapPinned size={16} />}
-                />
-              </div>
+              </button>
+              
+              <div className="h-px flex-1 bg-gradient-to-r from-primary/10 to-transparent" />
             </header>
+
             <div
-              className="prose prose-sm max-w-none p-6 font-['Amiri',serif] text-xl leading-[2.5] text-foreground/90 dark:prose-invert selection:bg-primary/20"
+              className={`prose prose-sm max-w-none px-4 ${tafsirFontSizeClass || 'text-[1.5rem]'} leading-[2.5] text-foreground/90 dark:prose-invert`}
               dir={dir}
-              style={{ textAlign: dir === 'rtl' ? 'justify' : 'left' }}
+              style={{ textAlign: dir === 'rtl' ? 'justify' : 'left', fontFamily: 'var(--font-ui-naskh)' }}
               dangerouslySetInnerHTML={{ __html: entry.tafsir.text }}
             />
           </article>

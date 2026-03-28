@@ -122,21 +122,40 @@ export default function FloatingAudioPlayer({
       defaultPanelHeight={320}
       zIndex={60}
     >
-      <div data-testid="mushaf-audio-panel" className="p-4 space-y-3" dir={isRtl ? "rtl" : "ltr"}>
+      <div data-testid="mushaf-audio-panel" className="p-4 space-y-4" dir={isRtl ? "rtl" : "ltr"}>
+
+        {/* Reciter Selector (Moved to Top) */}
+        <div className="relative group p-1 mushaf-engraved-container flex items-center rounded-xl transition-all focus-within:shadow-[inset_0_4px_8px_-2px_rgba(0,0,0,0.15)] focus-within:border-primary/40">
+          <select
+            value={selectedReciter}
+            onChange={(e) => onSetReciter(Number(e.target.value))}
+            className="w-full bg-transparent border-none outline-none text-[13px] font-bold text-primary/90 hover:text-primary transition-colors cursor-pointer appearance-none px-3 py-2"
+            dir={isRtl ? "rtl" : "ltr"}
+          >
+            {RECITERS.map((r) => (
+              <option key={r.id} value={r.id} className="bg-card text-foreground font-bold py-2">
+                {isRtl ? `${r.name}` : `${r.nameEn}`}
+              </option>
+            ))}
+          </select>
+          <div className={`absolute pointer-events-none transition-transform group-hover:scale-110 flex items-center justify-center p-2 rounded-lg bg-primary/5 group-hover:bg-primary/10 ${isRtl ? "left-2" : "right-2"}`}>
+            <ChevronDown size={14} className="text-primary/70" />
+          </div>
+        </div>
 
         {/* Now Playing Card */}
-        <div className="rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/5 via-primary/10 to-transparent backdrop-blur-xl p-5 min-h-[90px] flex flex-col justify-center gap-2 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] relative overflow-hidden group/card">
-          <div className="absolute top-0 end-0 p-2 opacity-10 group-hover/card:opacity-20 transition-opacity">
-            <Music2 size={40} className="text-primary" />
+        <div className="rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/5 via-primary/[0.02] to-transparent backdrop-blur-md p-5 flex flex-col justify-center gap-3 relative overflow-hidden group/card shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+          <div className="absolute top-0 end-0 p-3 opacity-5 group-hover/card:opacity-10 transition-opacity">
+            <Music2 size={60} className="text-primary" />
           </div>
           {currentVerseKey ? (
             <>
               <div className="flex items-center gap-2.5 relative z-10">
-                <span className="mushaf-text-overline font-black text-primary/70 uppercase tracking-[0.2em]">
+                <span className="mushaf-text-overline font-black text-primary/60 uppercase tracking-[0.2em] bg-primary/5 px-2 py-1 rounded-md">
                   {t.mushaf.nowPlaying}
                 </span>
                 <span
-                  className="mushaf-text-overline font-bold text-white bg-primary px-3 py-0.5 rounded-full shadow-lg shadow-primary/20"
+                  className="mushaf-text-meta font-bold text-primary bg-primary/10 border border-primary/10 px-2.5 py-0.5 rounded-full shadow-sm"
                   dir="ltr"
                 >
                   {currentVerseKey}
@@ -144,7 +163,7 @@ export default function FloatingAudioPlayer({
               </div>
               {currentVerseText && (
                 <p
-                  className="text-xl text-foreground font-['Amiri',serif] leading-relaxed line-clamp-2 relative z-10 drop-shadow-sm"
+                  className="text-lg text-foreground/90 font-['Amiri',serif] leading-relaxed line-clamp-2 relative z-10 drop-shadow-sm mt-1"
                   dir="rtl"
                 >
                   {currentVerseText}
@@ -152,8 +171,8 @@ export default function FloatingAudioPlayer({
               )}
             </>
           ) : (
-            <p className="text-sm text-muted-foreground/60 text-center flex items-center justify-center gap-3 italic py-4">
-              <Music2 size={20} className="opacity-40 animate-pulse text-primary" />
+            <p className="text-sm text-primary/50 text-center flex items-center justify-center gap-2 italic py-4">
+              <Music2 size={16} className="opacity-40 animate-pulse text-primary" />
               {t.mushaf.noVerseSelected}
             </p>
           )}
@@ -191,35 +210,35 @@ export default function FloatingAudioPlayer({
         </div>
 
         {/* Main Controls */}
-        <div className="flex items-center justify-center gap-6 py-2">
+        <div className="flex items-center justify-center gap-6 py-4">
           <MushafButton
-            variant="icon"
-            onClick={isRtl ? onNextVerse : onPrevVerse}
+            variant="ghost"
+            onClick={onPrevVerse}
             disabled={!currentVerseKey}
-            icon={<SkipBack size={22} className="group-active:scale-90 transition-transform" />}
-            className="p-3 bg-transparent hover:bg-primary/10 transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed group"
-            title={isRtl ? t.mushaf.nextVerse : t.mushaf.prevVerse}
+            icon={<SkipBack size={26} className="rtl:rotate-180 transition-transform" />}
+            className="w-14 h-14 flex items-center justify-center rounded-full bg-transparent hover:bg-primary/10 transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed group text-primary/80 hover:text-primary active:scale-90"
+            title={t.mushaf.prevVerse}
           />
 
-          <MushafButton
-            variant={isPlaying ? "ghost" : "primary"}
+          <button
             onClick={isPlaying ? onPause : onPlay}
-            className={`w-14 h-14 flex items-center justify-center rounded-2xl shadow-[0_10px_25px_-5px_rgba(var(--color-primary-rgb),0.4)] hover:shadow-[0_15px_30px_-5px_rgba(var(--color-primary-rgb),0.5)] transition-all duration-300 active:scale-95 ${isPlaying ? "bg-primary text-white ring-4 ring-primary/20 hover:bg-primary hover:text-white" : "bg-primary text-white"}`}
+            className={`w-16 h-16 flex items-center justify-center rounded-full transition-all duration-300 active:scale-95 bg-primary text-primary-foreground shadow-[0_8px_20px_-6px_rgba(var(--color-primary-rgb),0.5)] hover:shadow-[0_12px_25px_-6px_rgba(var(--color-primary-rgb),0.6)] hover:-translate-y-0.5 outline-none`}
             title={isPlaying ? t.mushaf.pause : t.mushaf.audio}
-            icon={isPlaying ? (
+          >
+            {isPlaying ? (
               <Pause size={28} fill="currentColor" className="animate-in fade-in zoom-in duration-300" />
             ) : (
               <Play size={28} fill="currentColor" className="translate-x-0.5 animate-in fade-in zoom-in duration-300" />
             )}
-          />
+          </button>
 
           <MushafButton
-            variant="icon"
-            onClick={isRtl ? onPrevVerse : onNextVerse}
+            variant="ghost"
+            onClick={onNextVerse}
             disabled={!currentVerseKey}
-            icon={<SkipForward size={22} className="group-active:scale-90 transition-transform" />}
-            className="p-3 bg-transparent hover:bg-primary/10 transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed group"
-            title={isRtl ? t.mushaf.prevVerse : t.mushaf.nextVerse}
+            icon={<SkipForward size={26} className="rtl:rotate-180 transition-transform" />}
+            className="w-14 h-14 flex items-center justify-center rounded-full bg-transparent hover:bg-primary/10 transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed group text-primary/80 hover:text-primary active:scale-90"
+            title={t.mushaf.nextVerse}
           />
         </div>
 
@@ -227,10 +246,10 @@ export default function FloatingAudioPlayer({
         <div className="flex items-center justify-between gap-2">
           {/* Repeat toggle */}
           <MushafButton
-            variant={repeatMode !== "none" ? "primary" : "ghost"}
+            variant="ghost"
             onClick={cycleRepeat}
-            icon={<RepeatIcon size={14} className={repeatMode !== "none" ? "animate-spin-slow" : ""} />}
-            className={`px-3 py-2 mushaf-text-compact font-bold whitespace-nowrap flex-shrink-0 ${repeatMode === "none" ? "bg-muted/50 text-muted-foreground hover:bg-muted" : "shadow-lg shadow-primary/20"}`}
+            icon={<RepeatIcon size={14} className={`shrink-0 ${repeatMode !== "none" ? "animate-spin-slow text-primary" : "text-primary/50"}`} />}
+            className={`h-9 px-3 text-[13px] font-bold rounded-full transition-all ${repeatMode === "none" ? "bg-primary/5 text-primary/70 hover:bg-primary/10 hover:text-primary" : "shadow-sm bg-primary/10 border border-primary/20 text-primary hover:bg-primary/15"}`}
           >
             <span className="whitespace-nowrap">
               {repeatMode === "none"
@@ -246,13 +265,13 @@ export default function FloatingAudioPlayer({
           </MushafButton>
 
           {/* Speed buttons */}
-          <div className="flex items-center gap-1 bg-muted/40 backdrop-blur-sm rounded-xl p-1 border border-border/30">
+          <div className="flex items-center gap-1 bg-primary/5 rounded-full p-1 border border-transparent">
             {SPEEDS.map((s) => (
               <MushafButton
                 key={s}
                 variant="ghost"
                 onClick={() => onSetSpeed(s)}
-                className={`px-2.5 py-1 mushaf-text-compact font-black ${audioSpeed === s ? "bg-background text-primary shadow-sm ring-1 ring-border/50 hover:bg-background hover:text-primary" : "text-muted-foreground/70 hover:bg-background/50"}`}
+                className={`h-7 px-2.5 text-[11px] font-black tracking-widest rounded-full transition-all ${audioSpeed === s ? "bg-card text-primary shadow-sm border border-primary/10" : "text-primary/50 hover:bg-primary/10 hover:text-primary"}`}
               >
                 {s}×
               </MushafButton>
@@ -262,11 +281,11 @@ export default function FloatingAudioPlayer({
           {/* Advanced repeat toggle */}
           {(repeatMode === "verse" || repeatMode === "range") && onSetVerseRepeatCount && (
             <MushafButton
-              variant="icon"
+              variant="ghost"
               active={showAdvancedRepeat}
               onClick={() => setShowAdvancedRepeat(!showAdvancedRepeat)}
-              icon={showAdvancedRepeat ? <ChevronUp size={14} /> : <Settings2 size={14} />}
-              className="p-1.5"
+              icon={showAdvancedRepeat ? <ChevronUp size={16} /> : <Settings2 size={16} />}
+              className={`h-9 w-9 p-0 flex items-center justify-center rounded-full transition-all ${showAdvancedRepeat ? "bg-primary/10 text-primary shadow-inner" : "bg-primary/5 text-primary/70 hover:bg-primary/10 hover:text-primary"}`}
               title={locale === "ar" ? "إعدادات التكرار المتقدمة" : "Advanced repeat settings"}
             />
           )}
@@ -284,17 +303,17 @@ export default function FloatingAudioPlayer({
               {/* Verse Repeat Count */}
               {repeatMode === "verse" && onSetVerseRepeatCount && (
                 <div className="space-y-2">
-                  <label className="mushaf-text-compact flex items-center gap-2 text-muted-foreground">
+                  <label className="text-[11px] font-black text-primary/50 uppercase tracking-widest flex items-center gap-2 mb-2 px-1">
                     <Repeat size={12} />
                     {locale === "ar" ? "تكرار كل آية" : "Repeat each verse"} ({locale === "ar" ? "مرات" : "times"})
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {[1, 2, 3, 5, 10].map((count) => (
                       <MushafButton
                         key={count}
-                        variant={verseRepeatCount === count ? "primary" : "ghost"}
+                        variant="ghost"
                         onClick={() => onSetVerseRepeatCount(count)}
-                        className={`flex-1 px-2 py-1.5 mushaf-text-compact border ${verseRepeatCount === count ? "" : "bg-muted hover:bg-muted/80 border-border"}`}
+                        className={`h-8 px-3 text-[13px] font-bold rounded-full transition-all ${verseRepeatCount === count ? "bg-primary/10 text-primary shadow-sm border border-primary/20" : "bg-primary/5 text-primary/60 hover:bg-primary/10 hover:text-primary border border-transparent"}`}
                       >
                         {count}x
                       </MushafButton>
@@ -306,17 +325,17 @@ export default function FloatingAudioPlayer({
               {/* Range Repeat Count */}
               {repeatMode === "range" && onSetRangeRepeatCount && (
                 <div className="space-y-2">
-                  <label className="mushaf-text-compact flex items-center gap-2 text-muted-foreground">
+                  <label className="text-[11px] font-black text-primary/50 uppercase tracking-widest flex items-center gap-2 mb-2 px-1">
                     <Repeat size={12} />
                     {locale === "ar" ? "تكرار المدى" : "Repeat range"} ({locale === "ar" ? "مرات" : "times"})
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {[1, 2, 3, 5, 10].map((count) => (
                       <MushafButton
                         key={count}
-                        variant={rangeRepeatCount === count ? "primary" : "ghost"}
+                        variant="ghost"
                         onClick={() => onSetRangeRepeatCount(count)}
-                        className={`flex-1 px-2 py-1.5 mushaf-text-compact border ${rangeRepeatCount === count ? "" : "bg-muted hover:bg-muted/80 border-border"}`}
+                        className={`h-8 px-3 text-[13px] font-bold rounded-full transition-all ${rangeRepeatCount === count ? "bg-primary/10 text-primary shadow-sm border border-primary/20" : "bg-primary/5 text-primary/60 hover:bg-primary/10 hover:text-primary border border-transparent"}`}
                       >
                         {count}x
                       </MushafButton>
@@ -328,17 +347,17 @@ export default function FloatingAudioPlayer({
               {/* Pause Between Verses */}
               {onSetPauseBetweenVerses && (
                 <div className="space-y-2">
-                  <label className="mushaf-text-compact flex items-center gap-2 text-muted-foreground">
+                  <label className="text-[11px] font-black text-primary/50 uppercase tracking-widest flex items-center gap-2 mb-2 px-1">
                     <Timer size={12} />
                     {locale === "ar" ? "وقفة بين الآيات" : "Pause between verses"} ({locale === "ar" ? "ثانية" : "sec"})
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {[0, 1, 2, 3, 5].map((seconds) => (
                       <MushafButton
                         key={seconds}
-                        variant={pauseBetweenVerses === seconds ? "primary" : "ghost"}
+                        variant="ghost"
                         onClick={() => onSetPauseBetweenVerses(seconds)}
-                        className={`flex-1 px-2 py-1.5 mushaf-text-compact border ${pauseBetweenVerses === seconds ? "" : "bg-muted hover:bg-muted/80 border-border"}`}
+                        className={`h-8 px-3 text-[13px] font-bold rounded-full transition-all ${pauseBetweenVerses === seconds ? "bg-primary/10 text-primary shadow-sm border border-primary/20" : "bg-primary/5 text-primary/60 hover:bg-primary/10 hover:text-primary border border-transparent"}`}
                       >
                         {seconds === 0 ? (locale === "ar" ? "بدون" : "None") : `${seconds}s`}
                       </MushafButton>
@@ -352,14 +371,16 @@ export default function FloatingAudioPlayer({
 
         {/* Volume */}
         <div className="flex items-center gap-2.5">
+          {/* Volume icon */}
           <MushafButton
-            variant="icon"
+            variant="ghost"
             onClick={() => onSetVolume(audioVolume > 0 ? 0 : 1)}
-            icon={<VolumeIcon size={16} />}
-            className="flex-shrink-0"
+            icon={<VolumeIcon size={16} className="text-primary/70" />}
+            className="w-8 h-8 flex items-center justify-center p-0 rounded-lg hover:bg-primary/10"
             title={t.mushaf.volume}
           />
-          <div className="relative flex-1 h-1.5 bg-muted rounded-full cursor-pointer group"
+          {/* Volume slider */}
+          <div className="relative flex-1 h-2 bg-primary/10 rounded-full cursor-pointer group flex items-center"
             onClick={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
               const clickX = isRtl
@@ -369,41 +390,15 @@ export default function FloatingAudioPlayer({
             }}
           >
             <div
-              className="absolute inset-y-0 start-0 bg-muted-foreground/60 group-hover:bg-primary rounded-full transition-colors"
+              className="absolute inset-y-0 start-0 bg-primary/60 group-hover:bg-primary rounded-full transition-colors"
               style={{ width: `${audioVolume * 100}%` }}
             />
           </div>
-          <span className="mushaf-text-meta text-muted-foreground tabular-nums w-7 text-end">
-            {Math.round(audioVolume * 100)}
+          <span className="text-[11px] font-black text-primary/50 w-7 text-end tabular-nums tracking-widest">
+            {Math.round(audioVolume * 100)}%
           </span>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-border" />
-
-        {/* Reciter Selector */}
-        <div>
-          <label className="mushaf-text-overline block font-black text-muted-foreground/60 mb-2 uppercase tracking-widest px-1">
-            {t.mushaf.selectReciter}
-          </label>
-          <div className="relative group">
-            <select
-              value={selectedReciter}
-              onChange={(e) => onSetReciter(Number(e.target.value))}
-              className="w-full bg-muted/30 backdrop-blur-md border border-border/40 hover:border-primary/40 rounded-xl px-4 py-3 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300 pe-10 font-medium cursor-pointer"
-              dir={isRtl ? "rtl" : "ltr"}
-            >
-              {RECITERS.map((r) => (
-                <option key={r.id} value={r.id} className="bg-card">
-                  {isRtl ? `${r.name} — ${r.style}` : `${r.nameEn} — ${r.styleEn}`}
-                </option>
-              ))}
-            </select>
-            <div className={`absolute top-1/2 -translate-y-1/2 pointer-events-none transition-transform group-hover:scale-110 ${isRtl ? "left-3" : "right-3"}`}>
-              <ChevronDown size={14} className="text-primary/60" />
-            </div>
-          </div>
-        </div>
       </div>
     </FloatingPanel>
   );

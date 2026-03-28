@@ -6,7 +6,7 @@ import type {
   PointerEvent as ReactPointerEvent,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, LockOpen, ChevronDown, Check, Search } from "lucide-react";
+import { Lock, LockOpen, ChevronDown, Check, Search, BookOpen } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import { TAFSIR_RESOURCES } from "@/lib/quran/api";
 import type {
@@ -17,7 +17,6 @@ import type {
 import MushafButton from "../ui/MushafButton";
 import MushafCloseButton from "../ui/MushafCloseButton";
 import TafsirInspectorContent from "./TafsirInspectorContent";
-import TafsirPanelIcon from "./TafsirPanelIcon";
 import {
   getSidebarKeyboardResizeDelta,
   getSidebarPointerResizeDelta,
@@ -68,14 +67,24 @@ export default function TafsirDockedSidebar({
   hasRangeScope,
   hasPageScope,
 }: TafsirDockedSidebarProps) {
-  const { t, locale } = useI18n();
+  const { t, locale, dir } = useI18n();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const resizeStartRef = useRef<{ x: number; width: number; dockSide: SidebarDockSide } | null>(
     null
   );
   const [isResourceOpen, setIsResourceOpen] = useState(false);
   const [resourceSearch, setResourceSearch] = useState("");
+  const [showSettings, setShowSettings] = useState(false);
+  const [tafsirFontSize, setTafsirFontSize] = useState("text-[1.5rem]");
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const fontSizes = useMemo(() => [
+    { label: locale === 'ar' ? "صغير جداً" : "X-Small", value: "text-[1.1rem]" },
+    { label: locale === 'ar' ? "صغير" : "Small", value: "text-[1.3rem]" },
+    { label: locale === 'ar' ? "متوسط" : "Medium", value: "text-[1.5rem]" },
+    { label: locale === 'ar' ? "كبير" : "Large", value: "text-[1.7rem]" },
+    { label: locale === 'ar' ? "كبير جداً" : "X-Large", value: "text-[1.9rem]" },
+  ], [locale]);
 
   const availableTafsirs = useMemo(
     () => Object.values(TAFSIR_RESOURCES).filter((resource) => resource.language === locale),
@@ -162,128 +171,124 @@ export default function TafsirDockedSidebar({
     return null;
   }
 
+  const dropdownNode = (
+    <div className="relative shrink-0 p-1 mushaf-engraved-container flex items-center" ref={dropdownRef}>
+      <button
+        type="button"
+        title={t.mushaf.selectTafsir}
+        onClick={() => setIsResourceOpen(!isResourceOpen)}
+        className="group relative flex items-center gap-2 rounded-xl bg-transparent px-3 py-1.5 hover:bg-primary/5 border border-transparent hover:border-primary/10 transition-all duration-300 outline-none cursor-pointer active:scale-[0.98]"
+      >
+        <BookOpen size={14} className="text-primary/70 shrink-0 group-hover:text-primary transition-colors" />
+        <span className="truncate flex-1 text-[13px] font-bold text-primary/90 group-hover:text-primary pt-px transition-colors max-w-[150px]">{selectedTafsir?.name || t.common.loading}</span>
+        <ChevronDown size={14} className={`text-primary/50 shrink-0 group-hover:text-primary transition-all duration-300 ${isResourceOpen ? "rotate-180" : ""}`} />
+      </button>
+
+      <AnimatePresence>
+        {isResourceOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="absolute top-full mt-2 w-64 z-[var(--z-context-menu)] bg-card/95 backdrop-blur-md border border-border/40 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] py-2 overflow-hidden"
+            style={{ [dir === 'rtl' ? 'right' : 'left']: 0 }}
+          >
+            <div className="px-3 pb-2 mb-2 border-b border-border/40">
+              <div className="relative mushaf-engraved-container flex items-center rounded-xl overflow-hidden focus-within:border-primary/40 focus-within:shadow-[inset_0_4px_8px_-2px_rgba(0,0,0,0.15)] transition-all duration-300">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/50" size={14} />
+                <input 
+                  autoFocus
+                  type="text"
+                  className="w-full h-9 bg-transparent border-none rounded-xl ltr:pl-9 rtl:pr-9 px-3 text-[13px] font-bold outline-none placeholder:text-primary/30 text-foreground"
+                  placeholder={locale === 'ar' ? 'بحث...' : 'Search...'}
+                  value={resourceSearch}
+                  onChange={(e) => setResourceSearch(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="max-h-[300px] overflow-y-auto custom-scrollbar px-1.5 space-y-0.5">
+              {filteredTafsirs.map((resource) => (
+                <button
+                  key={resource.id}
+                  onClick={() => {
+                    onSelectTafsirId(resource.id);
+                    setIsResourceOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-[13px] font-bold transition-all cursor-pointer ${selectedTafsirId === resource.id ? "bg-primary/10 text-primary" : "text-foreground/70 hover:bg-primary/5 hover:text-foreground"}`}
+                >
+                  <span className="truncate">{resource.name}</span>
+                  {selectedTafsirId === resource.id && <Check size={14} />}
+                </button>
+              ))}
+              {filteredTafsirs.length === 0 && (
+                <div className="p-4 text-center text-[13px] text-muted-foreground font-medium">
+                  {locale === 'ar' ? 'لا توجد نتائج' : 'No results found'}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+
   const panelBody = (
     <div
       data-testid="tafsir-panel-root"
-      className="flex h-full min-h-0 flex-col border-s border-primary/10 bg-card/95 backdrop-blur-xl shadow-[-20px_0_50px_-20px_rgba(0,0,0,0.1)] transition-all"
+      className="flex h-full min-h-0 flex-col border-s border-primary/10 bg-background shadow-[0_0_40px_-15px_rgba(0,0,0,0.1)] transition-all"
       style={{ width }}
     >
-      {/* Header Overhaul */}
-      <div className="relative overflow-hidden bg-primary/5 px-4 py-4 border-b border-primary/10">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent pointer-events-none" />
-        
-        <div className="relative z-10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="mushaf-engraved-container flex h-10 w-10 items-center justify-center text-primary shadow-sm">
-              <TafsirPanelIcon size={20} className="drop-shadow-sm" />
-            </div>
-            <div className="min-w-0">
-              <p className="mushaf-text-overline font-black uppercase tracking-[0.2em] text-primary/50 leading-none mb-1">
-                {t.mushaf.openTafsirPanel}
-              </p>
-              <h3 className="font-['Amiri',serif] text-xl font-bold text-foreground leading-none">{t.mushaf.tafsir}</h3>
-            </div>
-          </div>
-          <MushafCloseButton onClick={onClose} title={t.common.close} />
-        </div>
-      </div>
-
-      <div className="space-y-4 border-b border-primary/10 bg-background/40 p-4">
-        {/* Resource Selector Overhaul */}
-        <div className="relative" ref={dropdownRef}>
-          <label className="mushaf-text-overline mb-2 block font-black uppercase tracking-wider text-primary/60">
-            {t.mushaf.selectTafsir}
-          </label>
-          
-          <button
-            type="button"
-            onClick={() => setIsResourceOpen(!isResourceOpen)}
-            className="flex h-11 w-full items-center justify-between gap-2 border border-primary/10 bg-card rounded-xl px-4 text-sm font-bold shadow-sm transition-all hover:bg-primary/5 hover:border-primary/20 active:scale-[0.98] outline-none"
+      <AnimatePresence>
+        {showSettings && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden border-b border-primary/10 bg-card/60 backdrop-blur-md"
           >
-            <span className="truncate text-primary">{selectedTafsir?.name || t.common.loading}</span>
-            <ChevronDown size={14} className={`transition-transform duration-300 text-primary/60 ${isResourceOpen ? "rotate-180" : ""}`} />
-          </button>
-
-          <AnimatePresence>
-            {isResourceOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="absolute top-full left-0 right-0 mt-2 z-[var(--z-context-menu)] bg-card/95 backdrop-blur-2xl border border-primary/10 rounded-2xl shadow-[0_15px_50px_-15px_rgba(0,0,0,0.3)] overflow-hidden"
-              >
-                <div className="p-2 border-b border-primary/5">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/40" size={14} />
-                    <input 
-                      autoFocus
-                      type="text"
-                      className="w-full h-9 bg-primary/5 border-none rounded-lg ps-9 pe-4 mushaf-text-compact font-bold outline-none placeholder:text-primary/30"
-                      placeholder={locale === 'ar' ? 'بحث...' : 'Search...'}
-                      value={resourceSearch}
-                      onChange={(e) => setResourceSearch(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="max-h-[300px] overflow-y-auto custom-scrollbar p-1">
-                  {filteredTafsirs.map((resource) => (
-                    <button
-                      key={resource.id}
-                      onClick={() => {
-                        onSelectTafsirId(resource.id);
-                        setIsResourceOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all hover:bg-primary/5 group ${selectedTafsirId === resource.id ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-primary"}`}
+            <div className="p-5 space-y-6">
+              <div>
+                <label className="text-[11px] font-black text-primary/50 uppercase tracking-widest mb-3 block px-1">
+                  نطاق التفسير
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {tabs.map((tab) => (
+                    <MushafButton
+                      key={tab.key}
+                      variant="ghost"
+                      active={scopeMode === tab.key}
+                      onClick={() => onScopeModeChange(tab.key)}
+                      disabled={!tab.enabled}
+                      className={`h-9 px-5 text-[13px] font-black rounded-lg transition-all ${scopeMode === tab.key ? 'shadow-sm bg-primary/10 border border-primary/10' : 'bg-primary/5 border border-transparent'} disabled:opacity-30`}
                     >
-                      <span className="truncate">{resource.name}</span>
-                      {selectedTafsirId === resource.id && <Check size={14} />}
-                    </button>
+                      {tab.label}
+                    </MushafButton>
                   ))}
-                  {filteredTafsirs.length === 0 && (
-                    <div className="p-4 text-center mushaf-text-compact text-muted-foreground font-medium">
-                      {locale === 'ar' ? 'لا توجد نتائج' : 'No results found'}
-                    </div>
-                  )}
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+              </div>
 
-        {/* Improved Controls */}
-        <div className="space-y-3">
-          <div className="flex flex-wrap gap-2">
-            {tabs.map((tab) => (
-              <MushafButton
-                key={tab.key}
-                variant="ghost"
-                active={scopeMode === tab.key}
-                onClick={() => onScopeModeChange(tab.key)}
-                disabled={!tab.enabled}
-                className={`h-9 px-4 mushaf-text-compact font-black rounded-lg transition-all ${scopeMode === tab.key ? 'shadow-sm bg-primary/10' : 'bg-primary/5'} disabled:opacity-30`}
-              >
-                {tab.label}
-              </MushafButton>
-            ))}
-          </div>
-
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-               <MushafButton
-                variant={followMode === "locked" ? "primary" : "ghost"}
-                onClick={onToggleFollowMode}
-                icon={followMode === "locked" ? <Lock size={14} /> : <LockOpen size={14} />}
-                className={`h-9 px-4 mushaf-text-compact font-black rounded-lg transition-all ${followMode === "locked" ? 'shadow-md ring-4 ring-primary/10' : 'bg-primary/5'}`}
-              >
-                {followMode === "locked" ? t.mushaf.unlock : t.mushaf.lock}
-              </MushafButton>
-              <span className="mushaf-text-overline font-black uppercase tracking-widest text-primary/40">
-                {followMode === "locked" ? t.mushaf.lock : t.mushaf.follow}
-              </span>
+              <div>
+                <label className="text-[11px] font-black text-primary/50 uppercase tracking-widest mb-3 block px-1">
+                  حجم الخط
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {fontSizes.map((size) => (
+                    <MushafButton
+                      key={size.value}
+                      variant="ghost"
+                      active={tafsirFontSize === size.value}
+                      onClick={() => setTafsirFontSize(size.value)}
+                      className={`h-9 px-4 text-[13px] font-bold rounded-lg transition-all ${tafsirFontSize === size.value ? 'shadow-sm bg-primary/10 border border-primary/10' : 'bg-primary/5 border border-transparent'} disabled:opacity-30`}
+                    >
+                      {size.label}
+                    </MushafButton>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <TafsirInspectorContent
         isOpen={isOpen}
@@ -291,7 +296,24 @@ export default function TafsirDockedSidebar({
         selectedTafsirId={selectedTafsirId}
         onPlayVerse={onPlayVerse}
         onJumpToVerse={onJumpToVerse}
+        headerContent={dropdownNode}
+        onToggleSettings={() => setShowSettings((prev) => !prev)}
+        tafsirFontSizeClass={tafsirFontSize}
       />
+
+      <div className="border-t border-primary/10 bg-primary/5 p-3 flex items-center justify-center gap-2 shrink-0">
+        <button
+          onClick={onToggleFollowMode}
+          className="flex items-center gap-2 group cursor-pointer"
+        >
+          <div className={`flex items-center justify-center w-8 h-4 rounded-full transition-colors ${followMode === "locked" ? "bg-primary" : "bg-primary/20"}`}>
+            <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform ${followMode === "locked" ? "translate-x-[6px] rtl:-translate-x-[6px]" : "-translate-x-[6px] rtl:translate-x-[6px]"}`} />
+          </div>
+          <span className="text-xs font-bold text-muted-foreground group-hover:text-primary transition-colors">
+            {t.mushaf.follow}
+          </span>
+        </button>
+      </div>
     </div>
   );
 
