@@ -568,6 +568,13 @@ export default function MushafViewer() {
     }
   };
 
+  const handleCloseVerseRange = () => {
+    setShowVerseRangePanel(false);
+    if (viewMode === "range") {
+      handleBackToPages();
+    }
+  };
+
   // Navigation mapping from search/index
   const handleNavigateFromIndex = useCallback((pageNumber: number, verseKey?: string) => {
     if (viewMode === "range") {
@@ -1130,47 +1137,40 @@ export default function MushafViewer() {
           }}
           className="flex items-center justify-between py-3"
         >
-          <div className="flex items-center gap-4">
-            <div className="p-1 mushaf-engraved-container flex items-center">
-              <button
-                type="button"
-                title="فهرس السور"
-                onClick={() => setShowIndex(true)}
-                data-testid="open-index-panel"
-                className="group relative flex items-center gap-3 px-4 py-2 rounded-xl bg-transparent hover:bg-primary/5 border border-transparent hover:border-primary/10 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary/50 cursor-pointer active:scale-[0.98]"
-              >
-                <span className="flex w-full min-w-0 items-center gap-3 whitespace-nowrap relative z-10">
-                  <span className="w-8 h-8 flex-shrink-0 rounded-lg bg-primary/5 group-hover:bg-primary/10 flex items-center justify-center text-primary/80 group-hover:text-primary transition-all duration-300">
-                    <Layers size={16} strokeWidth={2} />
-                  </span>
-                  <span className="flex min-w-0 items-center gap-2.5 leading-none whitespace-nowrap">
-                    <span className="mushaf-text-overline text-primary/60 group-hover:text-primary/80 uppercase font-black tracking-[0.1em] px-1.5 py-0.5 rounded-md bg-transparent group-hover:bg-primary/5 transition-colors whitespace-nowrap">{t.mushaf.surah}</span>
-                    <span className="text-xl font-bold font-['Amiri',serif] text-foreground/90 group-hover:text-foreground drop-shadow-sm whitespace-nowrap truncate pt-1 transition-colors">
-                      {currentSurah?.name_arabic || ""}
-                    </span>
-                  </span>
-                  <ChevronDown size={14} className="text-primary/40 group-hover:text-primary transition-all duration-300 ms-1 flex-shrink-0" />
+          <div className="p-1 mushaf-engraved-container flex items-center">
+            <button
+              type="button"
+              title="فهرس السور"
+              onClick={() => setShowIndex(true)}
+              data-testid="open-index-panel"
+              className="group relative flex items-center gap-3 px-4 py-2 rounded-xl bg-transparent hover:bg-primary/5 border border-transparent hover:border-primary/10 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary/50 cursor-pointer active:scale-[0.98]"
+            >
+              <span className="flex w-full min-w-0 items-center gap-3 whitespace-nowrap relative z-10">
+                <span className="w-8 h-8 flex-shrink-0 rounded-lg bg-primary/5 group-hover:bg-primary/10 flex items-center justify-center text-primary/80 group-hover:text-primary transition-all duration-300">
+                  <Layers size={16} strokeWidth={2} />
                 </span>
-              </button>
-            </div>
-
-            {viewMode === "range" && rangeData && (
-              <MushafButton
-                variant="primary"
-                onClick={handleBackToPages}
-                icon={isRtl ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-                className="mushaf-text-compact px-3 py-2"
-              >
-                {t.mushaf.backToPages}
-              </MushafButton>
-            )}
+                <span className="flex min-w-0 items-center gap-2.5 leading-none whitespace-nowrap">
+                  <span className="mushaf-text-overline text-primary/60 group-hover:text-primary/80 uppercase font-black tracking-[0.1em] px-1.5 py-0.5 rounded-md bg-transparent group-hover:bg-primary/5 transition-colors whitespace-nowrap">{t.mushaf.surah}</span>
+                  <span className="text-xl font-bold font-['Amiri',serif] text-foreground/90 group-hover:text-foreground drop-shadow-sm whitespace-nowrap truncate pt-1 transition-colors">
+                    {currentSurah?.name_arabic || ""}
+                  </span>
+                </span>
+                <ChevronDown size={14} className="text-primary/40 group-hover:text-primary transition-all duration-300 ms-1 flex-shrink-0" />
+              </span>
+            </button>
           </div>
 
           <div className="flex items-center gap-2 p-1 mushaf-engraved-container">
             <MushafButton
               variant="icon"
               active={showVerseRangePanel}
-              onClick={() => setShowVerseRangePanel(!showVerseRangePanel)}
+              onClick={() => {
+                if (viewMode === "range" && showVerseRangePanel) {
+                  handleCloseVerseRange();
+                } else {
+                  setShowVerseRangePanel(!showVerseRangePanel);
+                }
+              }}
               icon={<BookOpen size={16} />}
               title={t.mushaf.verseRange}
               data-testid="open-verse-range-panel"
@@ -1418,7 +1418,7 @@ export default function MushafViewer() {
       {/* Floating Verse Range Panel */}
       <FloatingVerseRangePanel
         isOpen={showVerseRangePanel}
-        onClose={() => setShowVerseRangePanel(false)}
+        onClose={handleCloseVerseRange}
         chapters={chapters}
         onSelectRange={handleSelectRange}
         initialChapterId={rangeData?.chapterId}
