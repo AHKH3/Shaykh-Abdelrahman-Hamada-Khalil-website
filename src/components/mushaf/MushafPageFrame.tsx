@@ -29,13 +29,12 @@ export default function MushafPageFrame({
 }: MushafPageFrameProps) {
     return (
         <div className="relative group/frame mx-auto w-full transition-all duration-700">
-            {/* Background deep glow effects */}
-            <div className="absolute -inset-2 bg-gradient-to-tr from-primary/10 via-background to-primary/5 blur-3xl opacity-60 group-hover/frame:opacity-100 transition-opacity duration-1000 rounded-[3rem] -z-20 pointer-events-none" />
-            <div className="absolute -inset-1 bg-gradient-to-br from-primary/15 via-transparent to-primary/5 blur-xl opacity-50 group-hover/frame:opacity-80 transition-opacity duration-700 rounded-[2.5rem] -z-10 pointer-events-none" />
-            <div className="absolute -inset-[1px] bg-gradient-to-b from-primary/30 to-border/40 rounded-[2rem] -z-10 pointer-events-none" />
+            {/* Background deep glow effects — pointer-events:none keeps them paint-only */}
+            <div className="absolute -inset-2 bg-gradient-to-tr from-primary/10 via-background to-primary/5 blur-3xl opacity-50 group-hover/frame:opacity-80 transition-opacity duration-700 rounded-[3rem] -z-20 pointer-events-none" />
+            <div className="absolute -inset-[1px] bg-gradient-to-b from-primary/20 to-border/30 rounded-[2rem] -z-10 pointer-events-none" />
 
-            {/* Main Container */}
-            <div className="bg-card/95 backdrop-blur-xl border border-white/10 dark:border-white/5 sm:border-primary/10 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),_inset_0_1px_0_rgba(255,255,255,0.1)] hover:shadow-[0_25px_70px_-15px_rgba(var(--color-primary-rgb),0.08),_inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-700 overflow-hidden relative">
+            {/* Main Container — no backdrop-blur here; it has an opaque background */}
+            <div className="bg-card border border-primary/10 sm:border-primary/10 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] hover:shadow-[0_25px_70px_-15px_rgba(var(--color-primary-rgb),0.07)] transition-shadow duration-500 overflow-hidden relative">
 
                 {/* Subtle top inner highlight */}
                 <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60 pointer-events-none" />

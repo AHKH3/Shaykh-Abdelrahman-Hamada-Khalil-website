@@ -35,7 +35,7 @@ describe("tafsir-service", () => {
     getTafsirMock.mockImplementation(async (verseKey, tafsirId) => {
       return {
         id: Number(verseKey.split(":")[1]),
-        resource_id: tafsirId,
+        resource_id: tafsirId as number,
         text: `<p>${verseKey}</p>`,
         verse_key: verseKey,
         verse_id: Number(verseKey.split(":")[1]),

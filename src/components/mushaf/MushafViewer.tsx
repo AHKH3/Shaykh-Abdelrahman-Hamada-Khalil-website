@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useEffectEvent, useMemo, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
@@ -51,7 +51,8 @@ import TafsirDockedSidebar from "./tafsir/TafsirDockedSidebar";
 import TafsirBottomSheet from "./tafsir/TafsirBottomSheet";
 import TafsirPanelIcon from "./tafsir/TafsirPanelIcon";
 
-const PRELOAD_RADIUS = 3;
+const PRELOAD_RADIUS = 2;
+const PAGE_CACHE_LIMIT = 15;
 type ReadingMode = "normal" | "sepia" | "green" | "purple" | "blue" | "red" | "pink" | "highContrast";
 type PageWidth = "normal" | "wide" | "full";
 
@@ -191,8 +192,9 @@ export default function MushafViewer() {
     chapterInfo?: Chapter;
   } | null>(null);
   const [lastPageBeforeRange, setLastPageBeforeRange] = useState(1);
-  const [, setPageVersesCache] = useState<Record<number, Verse[]>>({});
+  // Cache stored in ref only — no state needed, avoids unnecessary re-renders
   const pageVersesCacheRef = useRef<Record<number, Verse[]>>({});
+  const pageCacheOrderRef = useRef<number[]>([]); // LRU order tracking
   const activePageRequestIdRef = useRef(0);
   const requestedPageRef = useRef(1);
   const highlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -201,11 +203,14 @@ export default function MushafViewer() {
     fallbackTried: boolean;
   } | null>(null);
 
-  const tafsirWorkspace = useTafsirWorkspace({
+  // Memoize sources object so useTafsirWorkspace doesn't recompute on every render
+  const tafsirSources = useMemo(() => ({
     currentAudioVerse,
     highlightedVerse,
     selectedVerse: selectedVerseForTafsir,
-  });
+  }), [currentAudioVerse, highlightedVerse, selectedVerseForTafsir]);
+
+  const tafsirWorkspace = useTafsirWorkspace(tafsirSources);
   const {
     isOpen: isTafsirOpen,
     scopeMode: tafsirScopeMode,
@@ -371,12 +376,29 @@ export default function MushafViewer() {
   }, [locale]);
 
   const mergeCache = useCallback((entries: Record<number, Verse[]>) => {
-    if (Object.keys(entries).length === 0) return pageVersesCacheRef.current;
+    const newKeys = Object.keys(entries);
+    if (newKeys.length === 0) return pageVersesCacheRef.current;
 
-    const nextCache = { ...pageVersesCacheRef.current, ...entries };
-    pageVersesCacheRef.current = nextCache;
-    setPageVersesCache(nextCache);
-    return nextCache;
+    const cache = pageVersesCacheRef.current;
+    const order = pageCacheOrderRef.current;
+
+    // Add new entries and track order for LRU eviction
+    for (const key of newKeys) {
+      const pageNum = Number(key);
+      cache[pageNum] = entries[pageNum];
+      // Move to end of order (most recently used)
+      const existingIdx = order.indexOf(pageNum);
+      if (existingIdx !== -1) order.splice(existingIdx, 1);
+      order.push(pageNum);
+    }
+
+    // Evict oldest pages when cache exceeds limit
+    while (order.length > PAGE_CACHE_LIMIT) {
+      const evicted = order.shift();
+      if (evicted !== undefined) delete cache[evicted];
+    }
+
+    return cache;
   }, []);
 
   const fetchMissingPages = useCallback(async (pages: number[]) => {
@@ -696,8 +718,15 @@ export default function MushafViewer() {
       setAudioDuration(audio.duration);
     };
 
+    // Throttle time updates to max once per 500ms to avoid re-rendering
+    // MushafViewer (1500+ line component) 4x per second
+    let lastUpdateTime = 0;
     audio.ontimeupdate = () => {
-      setAudioCurrentTime(audio.currentTime);
+      const now = Date.now();
+      if (now - lastUpdateTime >= 500) {
+        lastUpdateTime = now;
+        setAudioCurrentTime(audio.currentTime);
+      }
     };
 
     audio.play().catch(console.error);
@@ -895,19 +924,18 @@ export default function MushafViewer() {
     return true;
   }, [activeDisplayVerseKey, rangeData, verses, viewMode]);
 
-  // Auto-scroll
+  // Auto-scroll using requestAnimationFrame (smooth, no CPU spinning)
   useEffect(() => {
-    let scrollInterval: NodeJS.Timeout;
-    if (autoScroll && scrollContainerRef.current) {
-      scrollInterval = setInterval(() => {
-        if (scrollContainerRef.current) {
-          scrollContainerRef.current.scrollTop += scrollSpeed;
-        }
-      }, 50);
-    }
-    return () => {
-      if (scrollInterval) clearInterval(scrollInterval);
+    if (!autoScroll) return;
+    let rafId: number;
+    const step = () => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTop += scrollSpeed;
+      }
+      rafId = requestAnimationFrame(step);
     };
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
   }, [autoScroll, scrollSpeed]);
 
   useEffect(() => {
@@ -1107,36 +1135,25 @@ export default function MushafViewer() {
         />
       </div>
 
-      <motion.div
-        initial={false}
-        animate={{
-          height: isHeaderVisible ? "auto" : 0,
-          opacity: isHeaderVisible ? 1 : 0.96,
-          borderBottomWidth: isHeaderVisible ? 1 : 0,
+      {/* Header: grid-template-rows collapse — removes space from layout without layout thrashing */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateRows: isHeaderVisible ? "1fr" : "0fr",
+          transition: "grid-template-rows 0.32s cubic-bezier(0.22, 1, 0.36, 1)",
         }}
-        transition={{
-          height: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
-          opacity: { duration: 0.22, ease: [0.4, 0, 0.2, 1] },
-          borderBottomWidth: { duration: 0.28, ease: [0.4, 0, 0.2, 1] },
-        }}
-        className={`mushaf-top-bar relative z-[var(--z-floating)] border-primary/10 bg-card/60 px-6 shadow-sm backdrop-blur-xl ${showScreenModeMenu ? "overflow-visible" : "overflow-hidden"} ${isHeaderVisible ? "" : "pointer-events-none"}`}
+        className="relative z-[var(--z-floating)]"
       >
-        {/* Subtle top inner glow */}
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
-
-        <motion.div
-          initial={false}
-          animate={{
-            y: isHeaderVisible ? 0 : -14,
-            opacity: isHeaderVisible ? 1 : 0,
-            scale: isHeaderVisible ? 1 : 0.985,
-          }}
-          transition={{
-            duration: isHeaderVisible ? 0.38 : 0.24,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className="flex items-center justify-between py-3"
+        <div
+          className={`mushaf-top-bar border-b border-primary/10 bg-card/60 px-6 shadow-sm backdrop-blur-md ${showScreenModeMenu ? "overflow-visible" : "overflow-hidden"} transition-opacity duration-250 ${isHeaderVisible ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+          style={{ minHeight: 0 }}
         >
+          {/* Subtle top inner glow */}
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
+
+          <div
+            className="flex items-center justify-between py-3"
+          >
           <div className="p-1 mushaf-engraved-container flex items-center">
             <button
               type="button"
@@ -1267,9 +1284,10 @@ export default function MushafViewer() {
                 </motion.div>
               )}
             </div>
+            </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
       {/* Main Content */}
       <div className="mushaf-reading-layout flex-1 bg-background/50">

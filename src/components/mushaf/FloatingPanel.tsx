@@ -386,6 +386,8 @@ export default function FloatingPanel({
         zIndex,
         minWidth,
         maxWidth: Math.min(minWidth + 80, typeof window !== "undefined" ? window.innerWidth - 20 : 400),
+        // Promote to own compositing layer — prevents full-page repaints during drag
+        willChange: "transform",
       }}
       initial={{ x: position.x, y: position.y, opacity: 0, scale: 0.94 }}
       animate={{ x: position.x, y: position.y, opacity: 1, scale: 1 }}
@@ -396,7 +398,7 @@ export default function FloatingPanel({
         const newY = position.y + info.offset.y;
         onDragEnd(newX, newY);
       }}
-      className={`bg-card/95 backdrop-blur-md border border-border/40 rounded-2xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.2)] ${allowOverflow ? "overflow-visible" : "overflow-hidden"}`}
+      className={`bg-card/95 backdrop-blur-sm border border-border/40 rounded-2xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.2)] ${allowOverflow ? "overflow-visible" : "overflow-hidden"}`}
     >
       {/* Active range indicator border */}
       {collapsedInfo?.rangeReference && (
