@@ -16,6 +16,7 @@ interface MushafPageViewProps {
   onVerseClick: (verseKey: string) => void;
   onVerseDoubleClick: (verseKey: string) => void;
   onVerseNumberClick: (verse: Verse, event: ReactMouseEvent) => void;
+  renderVerseText?: (verse: Verse, activeKey: string | null) => React.ReactNode;
 }
 
 function groupVersesBySurah(verses: Verse[], chapters: Chapter[]) {
@@ -51,6 +52,7 @@ function MushafPageViewComponent({
   onVerseClick,
   onVerseDoubleClick,
   onVerseNumberClick,
+  renderVerseText,
 }: MushafPageViewProps) {
   const groupedVerses = groupVersesBySurah(verses, chapters);
   const juz = verses[0]?.juz_number;
@@ -66,7 +68,9 @@ function MushafPageViewComponent({
       onClick={() => onVerseClick(verse.verse_key)}
       onDoubleClick={() => onVerseDoubleClick(verse.verse_key)}
     >
-      <span className={activeVerseKey === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
+      {renderVerseText ? renderVerseText(verse, activeVerseKey) : (
+        <span className={activeVerseKey === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>
+      )}{" "}
       <span
         className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-secondary text-primary/60 hover:drop-shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.35)] cursor-pointer select-none"
         onClick={(event) => onVerseNumberClick(verse, event)}

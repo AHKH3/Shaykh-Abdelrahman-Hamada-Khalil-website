@@ -266,6 +266,186 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
     [currentAudioVerse, highlightedVerse, selectedVerseForTafsir]
   );
 
+  // --- Student Mode Features ---
+  const [studentName, setStudentName] = useState<string>("");
+  const { annotations, addAnnotation, deleteAnnotation, clearTemporaryAnnotations } = useStudentAnnotations(studentId, currentPage);
+  const [showAnnotationModal, setShowAnnotationModal] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [newAnnotationComment, setNewAnnotationComment] = useState("");
+  const [isTemporaryAnnotation, setIsTemporaryAnnotation] = useState(false);
+  
+  const [selectionRange, setSelectionRange] = useState<{
+    verseKey: string;
+    text: string;
+    startOffset: number;
+    endOffset: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (studentId) {
+      const getStudentName = async () => {
+        const supabase = createClient();
+        const { data } = await supabase.from("students").select("name").eq("id", studentId).single();
+        if (data) setStudentName(data.name);
+      };
+      getStudentName();
+    }
+  }, [studentId]);
+
+  const handleMouseUpSelection = useCallback(() => {
+    if (readOnly || !studentId) return;
+
+    setTimeout(() => {
+      const selection = window.getSelection();
+      if (!selection || selection.isCollapsed) return;
+
+      const range = selection.getRangeAt(0);
+      const container = range.commonAncestorContainer;
+      
+      const verseElement = (container.nodeType === 3 ? container.parentElement : container) as HTMLElement;
+      const closestVerse = verseElement.closest('[data-verse-key]');
+      if (!closestVerse) return;
+
+      const verseKey = closestVerse.getAttribute('data-verse-key');
+      if (!verseKey) return;
+
+      // Ensure we only select from the main verse text span, not the verse number
+      const verseSpan = closestVerse.querySelector('span:first-child');
+      if (!verseSpan || !verseSpan.contains(container)) return;
+
+      const fullVerseText = verseSpan.textContent || "";
+      const selectedText = selection.toString();
+
+      let preSelectionRange = range.cloneRange();
+      preSelectionRange.selectNodeContents(verseSpan);
+      preSelectionRange.setEnd(range.startContainer, range.startOffset);
+      const startOffset = preSelectionRange.toString().length;
+      const endOffset = startOffset + selectedText.length;
+
+      setSelectionRange({
+        verseKey,
+        text: selectedText,
+        startOffset,
+        endOffset
+      });
+      
+      const rect = range.getBoundingClientRect();
+      // Show custom popup for creating annotation instead of VerseOptionsMenu
+      setVerseMenuPosition({ x: rect.left + rect.width / 2, y: rect.bottom + window.scrollY + 10 });
+    }, 10);
+  }, [readOnly, studentId]);
+
+  const renderVerseWithAnnotations = (verse: Verse, activeKey: string | null) => {
+    const verseAnnotations = annotations.filter(a => a.verse_key === verse.verse_key);
+    if (!verseAnnotations.length) {
+      return (
+        <span className={activeKey === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>
+      );
+    }
+
+    // Sort by start_offset
+    const sorted = [...verseAnnotations].sort((a, b) => a.start_offset - b.start_offset);
+    const elements: React.ReactNode[] = [];
+    let currentIndex = 0;
+
+    sorted.forEach((ann, idx) => {
+      if (ann.start_offset > currentIndex) {
+        elements.push(
+          <span key={`text-${idx}`}>{verse.text_uthmani.slice(currentIndex, ann.start_offset)}</span>
+        );
+      }
+      elements.push(
+        <span 
+          key={`ann-${ann.id}`}
+          className={`relative group inline-block ${ann.is_temporary ? 'bg-yellow-400/30 dark:bg-yellow-400/40 text-yellow-900 dark:text-yellow-100' : 'bg-red-400/30 dark:bg-red-400/40 text-red-900 dark:text-red-100'} rounded-[0.2em] px-0.5 mx-0.5`}
+        >
+          {verse.text_uthmani.slice(ann.start_offset, ann.end_offset)}
+          {ann.comment && (
+            <span className="absolute bottom-full start-1/2 -translate-x-1/2 mb-1 hidden group-hover:block bg-popover text-popover-foreground text-xs p-2 rounded shadow-xl whitespace-nowrap z-50 border border-border">
+              {ann.comment}
+            </span>
+          )}
+          {!readOnly && (
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                deleteAnnotation(ann.id);
+              }}
+              className="absolute -top-3 -end-3 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center w-5 h-5 shadow-sm"
+              style={{ zIndex: 60 }}
+              title={locale === "ar" ? "حذف الملاحظة" : "Delete Annotation"}
+            >
+              <Trash2 size={12} strokeWidth={3} />
+            </button>
+          )}
+        </span>
+      );
+      currentIndex = Math.max(currentIndex, ann.end_offset);
+    });
+
+    if (currentIndex < verse.text_uthmani.length) {
+      elements.push(
+        <span key="text-end">{verse.text_uthmani.slice(currentIndex)}</span>
+      );
+    }
+
+    return (
+      <span className={activeKey === verse.verse_key ? "drop-shadow-sm" : ""}>
+        {elements}
+      </span>
+    );
+  };
+
+  const exportAsImage = async () => {
+    if (!scrollContainerRef.current) return;
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(scrollContainerRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "var(--background)"
+      });
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = `مصحف-الطالب-${studentName}-صفحة-${currentPage}.png`;
+      link.click();
+    } catch (err) {
+      console.error("Export error", err);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const exportAsPDF = async () => {
+    if (!scrollContainerRef.current) return;
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(scrollContainerRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "var(--background)"
+      });
+      const image = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(image, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`مصحف-الطالب-${studentName}-صفحة-${currentPage}.pdf`);
+    } catch (err) {
+      console.error("Export error", err);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const copyShareLink = () => {
+    const link = `${window.location.origin}/mushaf/share/${studentId}?page=${currentPage}`;
+    navigator.clipboard.writeText(link);
+    showToast(locale === "ar" ? "تم نسخ رابط المشاركة" : "Share link copied!", "success");
+  };
+  // --- End Student Features ---
 
   // Handle focus mode - add class to body to hide site header only in focus mode
   useEffect(() => {
@@ -1332,6 +1512,65 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
         </div>
       </div>
 
+      {/* Student Mode Toolbar */}
+      {studentId && (
+        <div className="bg-primary/5 border-b border-primary/10 px-6 py-2 flex items-center justify-between text-sm z-[var(--z-floating)] relative">
+          <div className="flex items-center gap-3">
+            <span className="flex w-6 h-6 bg-primary/20 text-primary rounded-full items-center justify-center">
+              <User size={14} />
+            </span>
+            <span className="font-semibold text-foreground/80">
+              {locale === "ar" ? "مصحف الطالب:" : "Student Mushaf:"} <span className="text-primary">{studentName || "..."}</span>
+            </span>
+            {readOnly && (
+               <span className="px-2 py-0.5 rounded bg-muted/50 text-muted-foreground text-xs font-semibold">
+                 {locale === "ar" ? "للقراءة فقط" : "Read Only"}
+               </span>
+            )}
+          </div>
+          
+          <div className="flex items-center gap-2">
+            {!readOnly && (
+              <>
+                <button
+                  onClick={exportAsImage}
+                  disabled={isExporting}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-background border border-border/50 hover:bg-muted/50 rounded shadow-sm transition-colors"
+                >
+                  <ImageIcon size={14} className="text-primary" />
+                  <span>{locale === "ar" ? "صورة" : "Image"}</span>
+                </button>
+                <button
+                  onClick={exportAsPDF}
+                  disabled={isExporting}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-background border border-border/50 hover:bg-muted/50 rounded shadow-sm transition-colors"
+                >
+                  <FileText size={14} className="text-primary" />
+                  <span>{locale === "ar" ? "PDF" : "PDF"}</span>
+                </button>
+                <button
+                  onClick={copyShareLink}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 rounded shadow-sm transition-colors"
+                >
+                  <LinkIcon size={14} />
+                  <span>{locale === "ar" ? "رابط المشاركة" : "Share Link"}</span>
+                </button>
+              </>
+            )}
+            {readOnly && (
+               <button
+                  onClick={exportAsImage}
+                  disabled={isExporting}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-background border border-border/50 hover:bg-muted/50 rounded shadow-sm transition-colors"
+                >
+                  <ImageIcon size={14} className="text-primary" />
+                  <span>{locale === "ar" ? "صورة" : "Image"}</span>
+                </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="mushaf-reading-layout flex-1 bg-background/50">
         <div className="flex-1 overflow-auto custom-scrollbar" ref={scrollContainerRef}>
@@ -1365,7 +1604,9 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                         onClick={() => handleVerseClick(verse.verse_key)}
                         onDoubleClick={() => handleVerseDoubleClick(verse.verse_key)}
                       >
-                        <span className={activeDisplayVerseKey === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>{" "}
+                        {studentId ? renderVerseWithAnnotations(verse, activeDisplayVerseKey) : (
+                          <span className={activeDisplayVerseKey === verse.verse_key ? "drop-shadow-sm" : ""}>{verse.text_uthmani}</span>
+                        )}{" "}
                         <span
                           className="inline-flex items-center justify-center font-sans mx-1.5 transition-all duration-300 hover:scale-110 hover:text-secondary text-primary/60 hover:drop-shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.35)] cursor-pointer select-none"
                           onClick={(e) => handleVerseNumberClick(verse, e)}
@@ -1378,7 +1619,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                 </MushafPageFrame>
               ) : null
             ) : (
-              // Normal Pages Mode
+              /* Normal Pages Mode */
               <div>
                 <MushafPageView
                   pageNumber={currentPage}
@@ -1392,6 +1633,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                   onVerseClick={handleVerseClick}
                   onVerseDoubleClick={handleVerseDoubleClick}
                   onVerseNumberClick={handleVerseNumberClick}
+                  renderVerseText={studentId ? renderVerseWithAnnotations : undefined}
                 />
               </div>
             )}
@@ -1548,7 +1790,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
       ) : null}
 
       <VerseOptionsMenu
-        position={verseMenuPosition}
+        position={!selectionRange ? verseMenuPosition : null}
         verseKey={selectedVerseForMenu?.verse_key ?? ""}
         verseText={selectedVerseForMenu?.text_uthmani ?? ""}
         onTafsir={() => {
@@ -1600,6 +1842,79 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
           setSelectedVerseForMenu(null);
         }}
       />
+
+      {/* Selection Annotation Popup */}
+      <AnimatePresence>
+        {selectionRange && verseMenuPosition && !readOnly && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            style={{
+              position: "absolute",
+              left: verseMenuPosition.x,
+              top: verseMenuPosition.y,
+              transform: "translateX(-50%)",
+            }}
+            className="z-[var(--z-context-menu)] bg-card rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-border/50 p-3 min-w-[280px]"
+          >
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{locale === "ar" ? "نص محدد" : "Selected Text"}</span>
+                <MushafCloseButton onClick={() => setSelectionRange(null)} />
+              </div>
+              <p className="text-lg font-['Amiri',serif] leading-relaxed text-center px-4" dir="rtl">{selectionRange.text}</p>
+              
+              <div className="flex items-center gap-2">
+                 <button
+                   onClick={() => setIsTemporaryAnnotation(false)}
+                   className={`flex-1 py-1.5 px-2 rounded font-medium text-xs transition-colors ${!isTemporaryAnnotation ? 'bg-red-500 text-white' : 'bg-muted text-muted-foreground'}`}
+                 >
+                   {locale === "ar" ? "خطأ دائم" : "Permanent"}
+                 </button>
+                 <button
+                   onClick={() => setIsTemporaryAnnotation(true)}
+                   className={`flex-1 py-1.5 px-2 rounded font-medium text-xs transition-colors ${isTemporaryAnnotation ? 'bg-yellow-500 text-white' : 'bg-muted text-muted-foreground'}`}
+                 >
+                   {locale === "ar" ? "ملاحظة مؤقتة" : "Temporary"}
+                 </button>
+              </div>
+
+              <textarea
+                value={newAnnotationComment}
+                onChange={(e) => setNewAnnotationComment(e.target.value)}
+                placeholder={locale === "ar" ? "أضف تعليقاً (اختياري)..." : "Add a comment (optional)..."}
+                className="w-full h-20 text-sm p-2 bg-background border border-border/50 rounded-lg resize-none focus:outline-none focus:ring-1 focus:ring-primary"
+                dir={locale === "ar" ? "rtl" : "ltr"}
+              />
+
+              <button
+                onClick={async () => {
+                  const success = await addAnnotation({
+                    verseKey: selectionRange.verseKey,
+                    text: selectionRange.text,
+                    startOffset: selectionRange.startOffset,
+                    endOffset: selectionRange.endOffset,
+                    comment: newAnnotationComment,
+                    isTemporary: isTemporaryAnnotation,
+                  });
+                  if (success) {
+                    showToast(locale === "ar" ? "تم حفظ التعليق" : "Annotation saved", "success");
+                    setSelectionRange(null);
+                    setNewAnnotationComment("");
+                  } else {
+                    showToast(locale === "ar" ? "حدث خطأ أثناء الحفظ" : "Failed to save annotation", "error");
+                  }
+                }}
+                className="w-full py-2 bg-primary text-primary-foreground font-semibold rounded-lg text-sm transition-colors hover:bg-primary/90 shadow-sm"
+              >
+                {locale === "ar" ? "حفظ التعليق" : "Save Annotation"}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <ToastContainer toasts={toasts} removeToast={removeToast} />
 
