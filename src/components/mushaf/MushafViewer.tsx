@@ -15,6 +15,14 @@ import {
   Maximize2,
   Scan,
   ChevronDown,
+  Highlighter,
+  Eraser,
+  Image as ImageIcon,
+  FileText,
+  Link as LinkIcon,
+  Trash2,
+  MessageSquare,
+  User,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import {
@@ -50,6 +58,12 @@ import { resolveVerseKeysFromVerses } from "@/lib/quran/tafsir-service";
 import TafsirDockedSidebar from "./tafsir/TafsirDockedSidebar";
 import TafsirBottomSheet from "./tafsir/TafsirBottomSheet";
 import TafsirPanelIcon from "./tafsir/TafsirPanelIcon";
+import { useStudentAnnotations } from "@/lib/hooks/useStudentAnnotations";
+import { createClient } from "@/lib/supabase/client";
+import ModalShell from "@/components/ui/ModalShell";
+import MushafCloseButton from "@/components/mushaf/ui/MushafCloseButton";
+import html2canvas from "html2canvas-pro";
+import { jsPDF } from "jspdf";
 
 const PRELOAD_RADIUS = 2;
 const PAGE_CACHE_LIMIT = 15;
@@ -104,7 +118,14 @@ function parseStoredDisplaySettings(raw: string | null): DisplaySettingsState | 
   }
 }
 
-export default function MushafViewer() {
+interface MushafViewerProps {
+  /** When provided, enables student mode (annotations, export, share link) */
+  studentId?: string;
+  /** When true (public share link), student features are visible but read-only */
+  readOnly?: boolean;
+}
+
+export default function MushafViewer({ studentId, readOnly = false }: MushafViewerProps = {}) {
   const { t, locale } = useI18n();
   const [currentPage, setCurrentPage] = useState(1);
   const [verses, setVerses] = useState<Verse[]>([]);
