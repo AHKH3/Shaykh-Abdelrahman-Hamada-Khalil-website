@@ -267,6 +267,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
   );
 
   // --- Student Mode Features ---
+  const mushafRef = useRef<HTMLDivElement>(null);
   const [studentName, setStudentName] = useState<string>("");
   const { annotations, addAnnotation, deleteAnnotation, clearTemporaryAnnotations } = useStudentAnnotations(studentId, currentPage);
   const [showAnnotationModal, setShowAnnotationModal] = useState(false);
@@ -283,12 +284,12 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
 
   useEffect(() => {
     if (studentId) {
-      const getStudentName = async () => {
+      const fetchStudent = async () => {
         const supabase = createClient();
         const { data } = await supabase.from("students").select("name").eq("id", studentId).single();
         if (data) setStudentName(data.name);
       };
-      getStudentName();
+      fetchStudent();
     }
   }, [studentId]);
 
@@ -1572,7 +1573,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
       )}
 
       {/* Main Content */}
-      <div className="mushaf-reading-layout flex-1 bg-background/50">
+      <div className="mushaf-reading-layout flex-1 bg-background/50" ref={mushafRef}>
         <div className="flex-1 overflow-auto custom-scrollbar" ref={scrollContainerRef}>
           <div className={`${getPageWidthClass(pageWidth)} mx-auto px-4 sm:px-8 py-10`}>
             {viewMode === "range" ? (

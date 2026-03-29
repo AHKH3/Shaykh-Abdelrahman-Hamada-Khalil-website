@@ -6,7 +6,7 @@ import Header from "@/components/layout/Header";
 import MushafViewer from "@/components/mushaf/MushafViewer";
 import { createClient } from "@/lib/supabase/client";
 
-export default function StudentMushafPage() {
+export default function SharedMushafPage() {
   const params = useParams();
   const router = useRouter();
   const studentId = params.id as string;
@@ -14,6 +14,7 @@ export default function StudentMushafPage() {
 
   useEffect(() => {
     const checkStudent = async () => {
+      // In sharing mode, we might just use anon API key for read-only access
       const supabase = createClient();
       const { count } = await supabase
         .from("students")
@@ -23,7 +24,7 @@ export default function StudentMushafPage() {
       setIsValidStudent(count === 1);
       
       if (count === 0) {
-        router.push("/mushaf/students");
+        router.push("/mushaf");
       }
     };
     checkStudent();
@@ -44,8 +45,8 @@ export default function StudentMushafPage() {
     <>
       <Header />
       <main className="pt-[var(--header-height)] min-h-screen flex flex-col">
-        {/* Pass studentId to the unified MushafViewer to enable annotations and student tools */}
-        <MushafViewer studentId={studentId} readOnly={false} />
+        {/* Pass studentId and readOnly=true so guests can see annotations but not edit */}
+        <MushafViewer studentId={studentId} readOnly={true} />
       </main>
     </>
   );
