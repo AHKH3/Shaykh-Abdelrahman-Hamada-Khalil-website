@@ -405,6 +405,10 @@ export function getAudioUrl(
   const paddedChapter = chapterId.toString().padStart(3, "0");
   const paddedVerse = verseNumber.toString().padStart(3, "0");
   const reciter = RECITERS.find((r) => r.id === reciterId) || RECITERS[0];
+  
+  if (reciter.slug.startsWith("http")) {
+    return `${reciter.slug}/${paddedChapter}${paddedVerse}.mp3`;
+  }
   return `https://everyayah.com/data/${reciter.slug}/${paddedChapter}${paddedVerse}.mp3`;
 }
 
@@ -454,16 +458,48 @@ export async function getTafsir(
 
 // Reciters — everyayah.com slugs
 export const RECITERS: Reciter[] = [
+  // Top reciters with fixed URLs
   { id: 1,  name: "مشاري العفاسي",           nameEn: "Mishary Alafasy",        slug: "Alafasy_128kbps",                       style: "مرتل",  styleEn: "Murattal" },
-  { id: 2,  name: "عبد الباسط عبد الصمد",      nameEn: "Abdul Basit Abdul Samad",slug: "AbdulSamad_64kbps_QuranExplorer.com",   style: "مرتل",  styleEn: "Murattal" },
-  { id: 3,  name: "المنشاوي - مرتل",         nameEn: "Al-Minshawi (Murattal)", slug: "Minshawy_Murattal_128kbps",             style: "مرتل",  styleEn: "Murattal" },
-  { id: 4,  name: "المنشاوي - مجود",         nameEn: "Al-Minshawi (Mujawwad)", slug: "Minshawy_Mujawwad_192kbps",             style: "مجود",  styleEn: "Mujawwad" },
-  { id: 5,  name: "الحصري - مرتل",           nameEn: "Al-Husary (Murattal)",   slug: "Husary_128kbps",                        style: "مرتل",  styleEn: "Murattal" },
-  { id: 6,  name: "الحصري - مجود",           nameEn: "Al-Husary (Mujawwad)",   slug: "Husary_Mujawwad_128kbps",               style: "مجود",  styleEn: "Mujawwad" },
-  { id: 7,  name: "الحصري - معلم",           nameEn: "Al-Husary (Muallim)",    slug: "Husary_Muallim_128kbps",                style: "معلم",  styleEn: "Muallim"  },
-  { id: 8,  name: "عبد الرحمن السديس",       nameEn: "Abdul Rahman Al-Sudais", slug: "Abdurrahmaan_As-Sudais_192kbps",        style: "مرتل",  styleEn: "Murattal" },
-  { id: 9,  name: "أحمد العجمي",              nameEn: "Ahmed Al-Ajmi",          slug: "Ahmed_ibn_Ali_al-Ajamy_128kbps",        style: "مرتل",  styleEn: "Murattal" },
-  { id: 10, name: "علي الحذيفي",             nameEn: "Ali Al-Hudhaify",        slug: "Hudhaify_128kbps",                      style: "مرتل",  styleEn: "Murattal" },
+  { id: 2,  name: "عبد الباسط عبد الصمد - مرتل", nameEn: "Abdul Basit (Murattal)",slug: "Abdul_Basit_Murattal_192kbps",          style: "مرتل",  styleEn: "Murattal" },
+  { id: 3,  name: "عبد الباسط عبد الصمد - مجود", nameEn: "Abdul Basit (Mujawwad)",slug: "Abdul_Basit_Mujawwad_128kbps",          style: "مجود",  styleEn: "Mujawwad" },
+  { id: 4,  name: "المنشاوي - مرتل",         nameEn: "Al-Minshawi (Murattal)", slug: "Minshawy_Murattal_128kbps",             style: "مرتل",  styleEn: "Murattal" },
+  { id: 5,  name: "المنشاوي - مجود",         nameEn: "Al-Minshawi (Mujawwad)", slug: "Minshawy_Mujawwad_192kbps",             style: "مجود",  styleEn: "Mujawwad" },
+  { id: 6,  name: "المنشاوي - معلم (مع الأطفال)", nameEn: "Al-Minshawi (Teacher)",  slug: "Minshawy_Teacher_128kbps",              style: "معلم",  styleEn: "Muallim" },
+  { id: 7,  name: "الحصري - مرتل",           nameEn: "Al-Husary (Murattal)",   slug: "Husary_128kbps",                        style: "مرتل",  styleEn: "Murattal" },
+  { id: 8,  name: "الحصري - مجود",           nameEn: "Al-Husary (Mujawwad)",   slug: "Husary_128kbps_Mujawwad",               style: "مجود",  styleEn: "Mujawwad" },
+  { id: 9,  name: "الحصري - معلم",           nameEn: "Al-Husary (Teacher)",    slug: "Husary_Muallim_128kbps",                style: "معلم",  styleEn: "Muallim" },
+  { id: 10, name: "عبد الرحمن السديس",       nameEn: "Abdul Rahman Al-Sudais", slug: "Abdurrahmaan_As-Sudais_192kbps",        style: "مرتل",  styleEn: "Murattal" },
+  { id: 11, name: "أحمد العجمي",              nameEn: "Ahmed Al-Ajmi",          slug: "ahmed_ibn_ali_al_ajamy_128kbps",        style: "مرتل",  styleEn: "Murattal" },
+  { id: 12, name: "علي الحذيفي",             nameEn: "Ali Al-Hudhaify",        slug: "Hudhaify_128kbps",                      style: "مرتل",  styleEn: "Murattal" },
+  { id: 13, name: "سعود الشريم",             nameEn: "Saoud Ash-Shuraym",      slug: "Saood_ash-Shuraym_128kbps",             style: "مرتل",  styleEn: "Murattal" },
+  { id: 14, name: "عبد الله بصفر",           nameEn: "Abdullah Basfar",        slug: "Abdullah_Basfar_192kbps",               style: "مرتل",  styleEn: "Murattal" },
+  { id: 15, name: "أبو بكر الشاطري",         nameEn: "Abu Bakr Ash-Shatri",    slug: "Abu_Bakr_Ash-Shaatree_128kbps",         style: "مرتل",  styleEn: "Murattal" },
+  { id: 16, name: "ماهر المعيقلي",           nameEn: "Maher Al Muaiqly",       slug: "MaherAlMuaiqly128kbps",                 style: "مرتل",  styleEn: "Murattal" },
+  { id: 17, name: "محمد أيوب",               nameEn: "Muhammad Ayyoub",        slug: "Muhammad_Ayyoub_128kbps",               style: "مرتل",  styleEn: "Murattal" },
+  { id: 18, name: "محمد جبريل",              nameEn: "Muhammad Jibreel",       slug: "Muhammad_Jibreel_128kbps",              style: "مرتل",  styleEn: "Murattal" },
+  { id: 19, name: "صلاح بو خاطر",            nameEn: "Salah Bukhatir",         slug: "Salaah_AbdulRahman_Bukhatir_128kbps",   style: "مرتل",  styleEn: "Murattal" },
+  { id: 20, name: "عبد الله عواد الجهني",    nameEn: "Abdullah Al-Juhany",     slug: "Abdullaah_3awwaad_Al-Juhaynee_128kbps", style: "مرتل",  styleEn: "Murattal" },
+  { id: 21, name: "عبد الله المطرود",        nameEn: "Abdullah Matroud",       slug: "Abdullah_Matroud_128kbps",              style: "مرتل",  styleEn: "Murattal" },
+  { id: 22, name: "سعد الغامدي",             nameEn: "Saad Al Ghamidi",        slug: "Ghamadi_40kbps",                        style: "مرتل",  styleEn: "Murattal" },
+  { id: 23, name: "هاني الرفاعي",            nameEn: "Hani Rifai",             slug: "Hani_Rifai_192kbps",                    style: "مرتل",  styleEn: "Murattal" },
+  { id: 24, name: "محمد الطبلاوي",           nameEn: "Mohammad al Tablaway",   slug: "Mohammad_al_Tablaway_128kbps",          style: "مرتل",  styleEn: "Murattal" },
+  { id: 25, name: "مصطفى إسماعيل",           nameEn: "Mustafa Ismail",         slug: "Mustafa_Ismail_48kbps",                 style: "مرتل",  styleEn: "Murattal" },
+  { id: 26, name: "ياسر الدوسري",            nameEn: "Yasser Ad-Dussary",      slug: "Yasser_Ad-Dussary_128kbps",             style: "مرتل",  styleEn: "Murattal" },
+  { id: 27, name: "ناصر القطامي",            nameEn: "Nasser Alqatami",        slug: "Nasser_Alqatami_128kbps",               style: "مرتل",  styleEn: "Murattal" },
+  { id: 28, name: "أحمد نعينع",              nameEn: "Ahmed Neana",            slug: "Ahmed_Neana_128kbps",                   style: "مرتل",  styleEn: "Murattal" },
+  { id: 29, name: "خليفة الطنيجي",           nameEn: "Khalefa Al-Tunaiji",     slug: "khalefa_al_tunaiji_64kbps",             style: "مرتل",  styleEn: "Murattal" },
+  { id: 30, name: "محمود علي البنا",         nameEn: "Mahmoud Ali Al-Banna",   slug: "mahmoud_ali_al_banna_32kbps",           style: "مرتل",  styleEn: "Murattal" },
+  { id: 31, name: "فارس عباد",               nameEn: "Fares Abbad",            slug: "Fares_Abbad_64kbps",                    style: "مرتل",  styleEn: "Murattal" },
+  { id: 32, name: "إبراهيم الأخضر",           nameEn: "Ibrahim Akhdar",         slug: "Ibrahim_Akhdar_32kbps",                 style: "مرتل",  styleEn: "Murattal" },
+  { id: 33, name: "محسن القاسم",             nameEn: "Muhsin Al Qasim",        slug: "Muhsin_Al_Qasim_192kbps",               style: "مرتل",  styleEn: "Murattal" },
+  { id: 34, name: "صلاح البدير",             nameEn: "Salah Al Budair",        slug: "Salah_Al_Budair_128kbps",               style: "مرتل",  styleEn: "Murattal" },
+  { id: 35, name: "محمد عبد الكريم",         nameEn: "Muhammad AbdulKareem",   slug: "Muhammad_AbdulKareem_128kbps",          style: "مرتل",  styleEn: "Murattal" },
+  { id: 36, name: "علي حجاج السويسي",        nameEn: "Ali Hajjaj AlSuesy",     slug: "Ali_Hajjaj_AlSuesy_128kbps",            style: "مرتل",  styleEn: "Murattal" },
+  { id: 37, name: "سهل ياسين",               nameEn: "Sahl Yassin",            slug: "Sahl_Yassin_128kbps",                   style: "مرتل",  styleEn: "Murattal" },
+  { id: 38, name: "ياسر سلامة",              nameEn: "Yaser Salamah",          slug: "Yaser_Salamah_128kbps",                 style: "مرتل",  styleEn: "Murattal" },
+  { id: 39, name: "أكرم العلاقمي",           nameEn: "Akram Al Alaqimy",       slug: "Akram_AlAlaqimy_128kbps",               style: "مرتل",  styleEn: "Murattal" },
+  { id: 40, name: "علي جابر",                nameEn: "Ali Jaber",              slug: "Ali_Jaber_64kbps",                      style: "مرتل",  styleEn: "Murattal" },
+  { id: 41, name: "أيمن سويد",               nameEn: "Ayman Sowaid",           slug: "Ayman_Sowaid_64kbps",                   style: "مرتل",  styleEn: "Murattal" }
 ];
 
 // Surah page mapping (first page of each surah)
