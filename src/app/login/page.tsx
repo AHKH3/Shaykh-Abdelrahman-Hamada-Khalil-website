@@ -24,19 +24,22 @@ export default function LoginPage() {
 
     try {
       const supabase = createClient();
+      console.log("Supabase URL prefix:", process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 15));
       const { error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (authError) {
-        setError(t.login.error);
+        // Show raw error message for debugging
+        setError(`${authError.message} (Status: ${authError.status})`);
       } else {
         router.push("/admin");
         router.refresh();
       }
-    } catch {
-      setError(t.login.error);
+    } catch (err: any) {
+      console.error("Login error:", err);
+      setError(err?.message || "Unknown error");
     } finally {
       setLoading(false);
     }
