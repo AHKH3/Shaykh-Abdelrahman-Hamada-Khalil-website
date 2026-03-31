@@ -399,53 +399,63 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
   };
 
   const exportAsImage = async () => {
-    if (!scrollContainerRef.current) return;
+    if (!mushafRef.current) return;
     setIsExporting(true);
     try {
-      const canvas = await html2canvas(scrollContainerRef.current, {
+      const canvas = await html2canvas(mushafRef.current, {
         scale: 2,
         useCORS: true,
-        backgroundColor: "var(--background)"
+        backgroundColor: "#ffffff",
       });
-      const image = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      link.href = image;
-      link.download = `مصحف-الطالب-${studentName}-صفحة-${currentPage}.png`;
+      link.download = `${studentName || "mushaf"}-page-${currentPage}.png`;
+      link.href = canvas.toDataURL("image/png");
       link.click();
     } catch (err) {
-      console.error("Export error", err);
+      console.error("Export failed:", err);
+      // Fallback or silently fail to avoid crashing the app
     } finally {
       setIsExporting(false);
     }
   };
 
   const exportAsPDF = async () => {
-    if (!scrollContainerRef.current) return;
+    if (!mushafRef.current) return;
     setIsExporting(true);
     try {
-      const canvas = await html2canvas(scrollContainerRef.current, {
+      const canvas = await html2canvas(mushafRef.current, {
         scale: 2,
         useCORS: true,
-        backgroundColor: "var(--background)"
+        backgroundColor: "#ffffff",
       });
-      const image = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: canvas.width > canvas.height ? "landscape" : "portrait",
+        unit: "mm",
+        format: "a4",
+      });
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(image, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`مصحف-الطالب-${studentName}-صفحة-${currentPage}.pdf`);
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`${studentName || "mushaf"}-page-${currentPage}.pdf`);
     } catch (err) {
-      console.error("Export error", err);
+      console.error("Export failed:", err);
     } finally {
       setIsExporting(false);
     }
   };
 
-  const copyShareLink = () => {
-    const link = `${window.location.origin}/mushaf/share/${studentId}?page=${currentPage}`;
-    navigator.clipboard.writeText(link);
-    showToast(locale === "ar" ? "تم نسخ رابط المشاركة" : "Share link copied!", "success");
+  const copyShareLink = async () => {
+    if (!studentId) return;
+    const shareUrl = `${window.location.origin}/mushaf/share/${studentId}`;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setToasts(prev => [...prev, { id: Date.now().toString(), message: locale === "ar" ? "تم نسخ الرابط" : "Link copied", type: "success" }]);
+    } catch (err) {
+      console.error("Failed to copy link:", err);
+    }
   };
+
   // --- End Student Features ---
 
   // Handle focus mode - add class to body to hide site header only in focus mode
@@ -1533,6 +1543,29 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
           <div className="flex items-center gap-2">
             {!readOnly && (
               <>
+                <div className="flex bg-background border border-border/50 rounded overflow-hidden shadow-sm mx-2">
+                  <button
+                    onClick={() => setIsTemporaryAnnotation(false)}
+                    className={`px-3 py-1.5 text-xs font-medium flex-1 transition-colors ${!isTemporaryAnnotation ? 'bg-primary/10 text-primary' : 'hover:bg-muted/50 text-muted-foreground'}`}
+                  >
+                    {locale === "ar" ? "تعليق دائم" : "Perm. Note"}
+                  </button>
+                  <button
+                    onClick={() => setIsTemporaryAnnotation(true)}
+                    className={`px-3 py-1.5 text-xs font-medium flex-1 transition-colors ${isTemporaryAnnotation ? 'bg-yellow-400/20 text-yellow-700' : 'hover:bg-muted/50 text-muted-foreground'}`}
+                  >
+                    {locale === "ar" ? "تحديد مؤقت" : "Temp Highlight"}
+                  </button>
+                </div>
+                
+                <button
+                  onClick={() => clearTemporaryAnnotations()}
+                  title={locale === "ar" ? "مسح التحديد المؤقت" : "Clear Temp Highlights"}
+                  className="p-1.5 text-xs font-medium bg-background border border-border/50 hover:bg-muted/50 text-muted-foreground hover:text-red-500 rounded shadow-sm transition-colors me-1"
+                >
+                  <Eraser size={14} />
+                </button>
+                
                 <button
                   onClick={exportAsImage}
                   disabled={isExporting}
