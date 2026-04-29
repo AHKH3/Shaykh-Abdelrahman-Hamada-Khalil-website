@@ -1562,6 +1562,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                 <button
                   onClick={() => clearTemporaryAnnotations()}
                   title={locale === "ar" ? "مسح التحديد المؤقت" : "Clear Temp Highlights"}
+                  aria-label={locale === "ar" ? "مسح التحديد المؤقت" : "Clear Temp Highlights"}
                   className="p-1.5 text-xs font-medium bg-background border border-border/50 hover:bg-muted/50 text-muted-foreground hover:text-red-500 rounded shadow-sm transition-colors me-1"
                 >
                   <Eraser size={14} />
