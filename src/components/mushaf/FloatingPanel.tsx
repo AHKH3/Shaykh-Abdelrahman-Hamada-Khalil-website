@@ -184,6 +184,7 @@ export default function FloatingPanel({
                     onClick={(e) => { e.stopPropagation(); togglePin(); }}
                     className={`p-1.5 rounded-lg transition-colors h-auto w-auto shadow-none border-transparent ${isPinned ? "bg-primary/20 text-primary hover:bg-primary/30" : "hover:bg-accent text-muted-foreground hover:text-foreground bg-transparent"}`}
                     title={pinTitle}
+                    aria-label={pinTitle}
                     icon={isPinned ? <PinOff size={15} /> : <Pin size={15} />}
                   />
                   <MushafButton
@@ -191,6 +192,7 @@ export default function FloatingPanel({
                     onClick={(e) => { e.stopPropagation(); handleCollapse(); }}
                     className="p-1.5 rounded-xl hover:bg-muted/80 transition-all text-muted-foreground hover:text-foreground h-auto w-auto shadow-none border-transparent bg-transparent"
                     title={collapseTitle}
+                    aria-label={collapseTitle}
                     icon={<ChevronDown size={18} />}
                   />
                   </>
@@ -443,6 +445,7 @@ export default function FloatingPanel({
             onClick={(e) => { e.stopPropagation(); togglePin(); }}
             className={`p-1.5 rounded-lg transition-colors h-auto w-auto shadow-none border-transparent ${isPinned ? "bg-primary/20 text-primary hover:bg-primary/30" : "hover:bg-accent text-muted-foreground hover:text-foreground bg-transparent"}`}
             title={pinTitle}
+            aria-label={pinTitle}
             icon={isPinned ? <PinOff size={13} /> : <Pin size={13} />}
           />
 
@@ -453,6 +456,7 @@ export default function FloatingPanel({
             onClick={(e) => { e.stopPropagation(); handleCollapse(); }}
             className="p-1.5 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground h-auto w-auto shadow-none border-transparent bg-transparent"
             title={collapseTitle}
+            aria-label={collapseTitle}
             icon={<ChevronDown size={13} />}
           />
 
