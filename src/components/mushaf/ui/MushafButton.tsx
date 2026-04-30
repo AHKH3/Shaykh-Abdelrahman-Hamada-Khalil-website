@@ -25,6 +25,7 @@ const MushafButton = forwardRef<HTMLButtonElement, MushafButtonProps>(
         return (
             <button
                 ref={ref}
+                aria-label={props["aria-label"] || props.title}
                 className={`${baseClasses} ${variantClasses[variant]} ${className || ""}`.trim()}
                 {...props}
             >

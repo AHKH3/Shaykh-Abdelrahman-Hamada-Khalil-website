@@ -376,6 +376,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               className="absolute -top-3 -end-3 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center w-5 h-5 shadow-sm"
               style={{ zIndex: 60 }}
               title={locale === "ar" ? "حذف الملاحظة" : "Delete Annotation"}
+              aria-label={locale === "ar" ? "حذف الملاحظة" : "Delete Annotation"}
             >
               <Trash2 size={12} strokeWidth={3} />
             </button>
@@ -1561,6 +1562,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                 <button
                   onClick={() => clearTemporaryAnnotations()}
                   title={locale === "ar" ? "مسح التحديد المؤقت" : "Clear Temp Highlights"}
+                  aria-label={locale === "ar" ? "مسح التحديد المؤقت" : "Clear Temp Highlights"}
                   className="p-1.5 text-xs font-medium bg-background border border-border/50 hover:bg-muted/50 text-muted-foreground hover:text-red-500 rounded shadow-sm transition-colors me-1"
                 >
                   <Eraser size={14} />
