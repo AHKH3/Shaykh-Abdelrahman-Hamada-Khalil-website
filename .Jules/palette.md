@@ -1,0 +1,3 @@
+## 2024-05-01 - [Add htmlFor and id to Form Inputs for Accessibility]
+**Learning:** Found that custom input components, like `EngravedInput` in this app, were not always properly associated with their labels using `htmlFor` and `id` properties. This prevents screen readers from announcing the label when the input receives focus and breaks clicking the label to focus the input.
+**Action:** Always ensure that form inputs have proper `id` properties and that their associated labels have matching `htmlFor` properties. When creating custom form components, make sure they support passing down the `id` prop to the native input element.
