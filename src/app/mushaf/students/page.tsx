@@ -186,6 +186,8 @@ export default function StudentsPage() {
                   </Link>
                   <button
                     onClick={() => deleteStudent(student.id)}
+                    aria-label={t.common.delete}
+                    title={t.common.delete}
                     className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100"
                   >
                     <Trash2 size={16} />
