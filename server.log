@@ -1,0 +1,13 @@
+
+> shaykh-abdelrahman-website@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+
+✓ Starting...
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 1896ms
+○ Compiling /mushaf ...
+ GET /mushaf 200 in 10.2s (compile: 9.0s, render: 1181ms)
