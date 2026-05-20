@@ -304,7 +304,9 @@ export default function TafsirDockedSidebar({
       <div className="border-t border-primary/10 bg-primary/5 p-3 flex items-center justify-center gap-2 shrink-0">
         <button
           onClick={onToggleFollowMode}
-          className="flex items-center gap-2 group cursor-pointer"
+          role="switch"
+          aria-checked={followMode === "locked"}
+          className="flex items-center gap-2 group cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
         >
           <div className={`flex items-center justify-center w-8 h-4 rounded-full transition-colors ${followMode === "locked" ? "bg-primary" : "bg-primary/20"}`}>
             <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform ${followMode === "locked" ? "translate-x-[6px] rtl:-translate-x-[6px]" : "-translate-x-[6px] rtl:translate-x-[6px]"}`} />
