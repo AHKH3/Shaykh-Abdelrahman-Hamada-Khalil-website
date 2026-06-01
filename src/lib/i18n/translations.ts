@@ -7,6 +7,9 @@ export const translations = {
       admin: "لوحة التحكم",
       login: "تسجيل الدخول",
       logout: "تسجيل الخروج",
+      toggleLanguage: "تغيير اللغة",
+      toggleTheme: "تبديل المظهر",
+      toggleMenu: "القائمة",
     },
     hero: {
       greeting: "السلام عليكم ورحمة الله وبركاته",
@@ -287,6 +290,9 @@ export const translations = {
       admin: "Dashboard",
       login: "Login",
       logout: "Logout",
+      toggleLanguage: "Toggle language",
+      toggleTheme: "Toggle theme",
+      toggleMenu: "Toggle menu",
     },
     hero: {
       greeting: "Assalamu Alaikum Wa Rahmatullahi Wa Barakatuh",

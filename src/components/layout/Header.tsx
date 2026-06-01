@@ -114,14 +114,16 @@ export default function Header() {
             <button
               onClick={toggleLocale}
               className="p-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              aria-label="Toggle language"
+              aria-label={t.nav.toggleLanguage}
+              title={t.nav.toggleLanguage}
             >
               <Languages size={20} />
             </button>
             <button
               onClick={toggleTheme}
               className="p-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              aria-label="Toggle theme"
+              aria-label={t.nav.toggleTheme}
+              title={t.nav.toggleTheme}
             >
               {!mounted ? (
                 <div className="w-5 h-5" /> // Placeholder to prevent layout shift
@@ -144,7 +146,8 @@ export default function Header() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              aria-label="Toggle menu"
+              aria-label={t.nav.toggleMenu}
+              title={t.nav.toggleMenu}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
             >
