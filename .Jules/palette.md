@@ -1,0 +1,3 @@
+## 2026-06-04 - Fully Accessible Custom Slider with RTL Support
+**Learning:** Upgrading a custom `div` element to a fully accessible slider requires more than just `role="slider"`. It fundamentally needs keyboard navigation (`onKeyDown`), focusability (`tabIndex={0}`), and must dynamically account for Right-To-Left (RTL) layouts so that the Left/Right arrow keys align with the visual and cultural expectations of increasing/decreasing values.
+**Action:** Always implement comprehensive keyboard handlers for custom interactive widgets, ensuring arrow key logic inverses correctly when the layout switches between LTR and RTL (e.g., using an `isRtl` check to swap increment/decrement keys).
