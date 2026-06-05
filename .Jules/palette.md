@@ -1,0 +1,3 @@
+## 2024-05-18 - Fallback ARIA labels in reusable icon components
+**Learning:** Reusable icon button components like `MushafButton` and `MushafCloseButton` are often used with just a `title` prop (for tooltips) but no explicit `aria-label`. This makes them inaccessible to screen readers in those instances.
+**Action:** Always map the `title` prop to `aria-label` as a fallback (e.g., `aria-label={props['aria-label'] || props.title}`) when building reusable icon-button components to guarantee baseline accessibility. Also, semantic ARIA attributes like `aria-pressed` should be mapped from functional props like `active`.
