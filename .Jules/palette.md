@@ -1,0 +1,3 @@
+## 2025-03-01 - Accessible Div-Based Sliders & RTL Navigation
+**Learning:** When turning arbitrary `<div>` elements into custom UI sliders, it's essential to supply standard ARIA slider attributes (`role="slider"`, `tabIndex={0}`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`). More importantly for apps supporting Arabic/RTL, keyboard event handlers (`onKeyDown`) for `ArrowLeft` and `ArrowRight` must be dynamically reversed based on the `isRtl` state to ensure the increment/decrement actions naturally map to the visual layout.
+**Action:** Always provide explicit ARIA roles and RTL-aware `onKeyDown` handlers with proper focus-visible styles when upgrading custom `div` blocks into interactive control mechanisms like volume and progress sliders.
