@@ -27,6 +27,8 @@ const MushafButton = forwardRef<HTMLButtonElement, MushafButtonProps>(
                 ref={ref}
                 className={`${baseClasses} ${variantClasses[variant]} ${className || ""}`.trim()}
                 {...props}
+                aria-label={props['aria-label'] || props.title}
+                aria-pressed={active !== undefined ? active : undefined}
             >
                 {/* Icon wrapper with hover animation */}
                 {icon && (
