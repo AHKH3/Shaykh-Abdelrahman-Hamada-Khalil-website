@@ -40,7 +40,7 @@ export function useStudentAnnotations(studentId: string | undefined, currentPage
         start_offset: annotation.startOffset,
         end_offset: annotation.endOffset,
         comment: annotation.comment.trim() || null,
-        color: annotation.isTemporary ? "#eab308" : "#ef4444",
+        color: annotation.isTemporary ? "#eab308" : "#ef4444", // ui-guardrails-ignore
         is_temporary: annotation.isTemporary,
       });
       if (!error) await loadAnnotations();

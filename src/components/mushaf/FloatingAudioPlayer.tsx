@@ -211,12 +211,15 @@ export default function FloatingAudioPlayer({
             disabled={!currentVerseKey}
             className="w-14 h-14 rounded-full disabled:opacity-20 flex-shrink-0"
             icon={<SkipBack size={24} className="rtl:rotate-180" />}
+            title={t.mushaf.prevVerse}
+            aria-label={t.mushaf.prevVerse}
           />
 
           <button
             onClick={isPlaying ? onPause : onPlay}
             className="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/90 text-primary-foreground shadow-[0_10px_30px_-10px_rgba(var(--color-primary-rgb),0.8),inset_0_2px_4px_rgba(255,255,255,0.3)] hover:shadow-[0_15px_35px_-10px_rgba(var(--color-primary-rgb),0.9),inset_0_2px_4px_rgba(255,255,255,0.3)] hover:-translate-y-1 active:translate-y-0.5 active:scale-95 transition-all duration-300 outline-none"
             title={isPlaying ? t.mushaf.pause : t.mushaf.audio}
+            aria-label={isPlaying ? t.mushaf.pause : t.mushaf.audio}
           >
             {isPlaying ? (
               <Pause size={34} fill="currentColor" className="animate-in fade-in zoom-in duration-300" />
@@ -231,6 +234,8 @@ export default function FloatingAudioPlayer({
             disabled={!currentVerseKey}
             className="w-14 h-14 rounded-full disabled:opacity-20 flex-shrink-0"
             icon={<SkipForward size={24} className="rtl:rotate-180" />}
+            title={t.mushaf.nextVerse}
+            aria-label={t.mushaf.nextVerse}
           />
         </div>
 
@@ -242,7 +247,8 @@ export default function FloatingAudioPlayer({
             active={repeatMode !== "none"}
             onClick={cycleRepeat}
             className={`min-w-10 h-10 px-3 py-0 rounded-xl flex items-center justify-center transition-all ${repeatMode !== "none" ? "shadow-md" : ""}`}
-            title="Toggle Repeat Mode"
+            title={t.mushaf.repeatMode}
+            aria-label={t.mushaf.repeatMode}
           >
             <RepeatIcon size={16} className={repeatMode !== "none" ? "animate-spin-slow" : ""} />
             {repeatMode !== "none" && (
@@ -263,7 +269,8 @@ export default function FloatingAudioPlayer({
               onSetSpeed(SPEEDS[nextIndex]);
             }}
             className="min-w-10 h-10 px-3 py-0 rounded-xl font-black text-sm tracking-widest text-primary/80"
-            title="Audio Speed"
+            title={t.mushaf.playbackSpeed}
+            aria-label={t.mushaf.playbackSpeed}
           >
             {audioSpeed}×
           </MushafButton>
@@ -277,6 +284,8 @@ export default function FloatingAudioPlayer({
               onClick={() => onSetVolume(audioVolume > 0 ? 0 : 1)}
               icon={<VolumeIcon size={16} className="text-primary/70 group-hover:text-primary transition-colors" />}
               className="w-8 h-8 p-0 rounded-lg"
+              title={t.mushaf.volume}
+              aria-label={t.mushaf.volume}
             />
             <div 
               className="w-16 sm:w-20 h-2 bg-primary/10 rounded-full cursor-pointer relative overflow-hidden"
@@ -285,6 +294,24 @@ export default function FloatingAudioPlayer({
                 const clickX = isRtl ? rect.right - e.clientX : e.clientX - rect.left;
                 onSetVolume(Math.max(0, Math.min(1, clickX / rect.width)));
               }}
+              onKeyDown={(e) => {
+                const increase = isRtl ? "ArrowLeft" : "ArrowRight";
+                const decrease = isRtl ? "ArrowRight" : "ArrowLeft";
+
+                if (e.key === increase || e.key === "ArrowUp") {
+                  e.preventDefault();
+                  onSetVolume(Math.min(1, audioVolume + 0.1));
+                } else if (e.key === decrease || e.key === "ArrowDown") {
+                  e.preventDefault();
+                  onSetVolume(Math.max(0, audioVolume - 0.1));
+                }
+              }}
+              role="slider"
+              tabIndex={0}
+              aria-label={t.mushaf.volume}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(audioVolume * 100)}
             >
               <div 
                 className="absolute inset-y-0 start-0 bg-primary/70 group-hover:bg-primary transition-all rounded-full"
@@ -302,6 +329,9 @@ export default function FloatingAudioPlayer({
                 onClick={() => setShowAdvancedRepeat(!showAdvancedRepeat)}
                 icon={showAdvancedRepeat ? <ChevronUp size={16} /> : <Settings2 size={16} />}
                 className="w-10 h-10 p-0 rounded-xl"
+                title={showAdvancedRepeat ? t.mushaf.collapse : t.mushaf.expand}
+                aria-label={showAdvancedRepeat ? t.mushaf.collapse : t.mushaf.expand}
+                aria-expanded={showAdvancedRepeat}
               />
             </>
           )}
