@@ -248,7 +248,7 @@ export default function TafsirDockedSidebar({
           >
             <div className="p-5 space-y-6">
               <div>
-                <label className="text-[11px] font-black text-primary/50 uppercase tracking-widest mb-3 block px-1">
+                <label className="mushaf-text-meta font-black text-primary/50 uppercase tracking-widest mb-3 block px-1">
                   نطاق التفسير
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -268,7 +268,7 @@ export default function TafsirDockedSidebar({
               </div>
 
               <div>
-                <label className="text-[11px] font-black text-primary/50 uppercase tracking-widest mb-3 block px-1">
+                <label className="mushaf-text-meta font-black text-primary/50 uppercase tracking-widest mb-3 block px-1">
                   حجم الخط
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -311,7 +311,7 @@ export default function TafsirDockedSidebar({
           <div className={`flex items-center justify-center w-8 h-4 rounded-full transition-colors ${followMode === "locked" ? "bg-primary" : "bg-primary/20"}`}>
             <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform ${followMode === "locked" ? "translate-x-[6px] rtl:-translate-x-[6px]" : "-translate-x-[6px] rtl:translate-x-[6px]"}`} />
           </div>
-          <span className="text-xs font-bold text-muted-foreground group-hover:text-primary transition-colors">
+          <span className="mushaf-text-compact font-bold text-muted-foreground group-hover:text-primary transition-colors">
             {t.mushaf.follow}
           </span>
         </button>
