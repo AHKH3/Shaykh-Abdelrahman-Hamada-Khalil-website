@@ -1425,6 +1425,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               }}
               icon={<BookOpen size={16} />}
               title={t.mushaf.verseRange}
+              aria-label={t.mushaf.verseRange}
               data-testid="open-verse-range-panel"
               className="hover:bg-primary/10 rounded-xl"
             />
@@ -1434,6 +1435,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               onClick={() => setShowBookmarks(true)}
               icon={<Bookmark size={16} />}
               title={locale === "ar" ? "الإشارات المرجعية" : "Bookmarks"}
+              aria-label={locale === "ar" ? "الإشارات المرجعية" : "Bookmarks"}
               className="hover:bg-primary/10 rounded-xl"
             />
             <MushafButton
@@ -1453,6 +1455,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               }}
               icon={<TafsirPanelIcon size={16} />}
               title={t.mushaf.openTafsirPanel}
+              aria-label={t.mushaf.openTafsirPanel}
               className="hover:bg-primary/10 rounded-xl"
               data-testid="open-tafsir-panel"
             />
@@ -1462,6 +1465,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               onClick={() => setShowAudioPlayer((v) => !v)}
               icon={<Volume2 size={16} />}
               title={locale === "ar" ? t.mushaf.audioPlayer : t.mushaf.audioPlayer}
+              aria-label={locale === "ar" ? t.mushaf.audioPlayer : t.mushaf.audioPlayer}
               data-testid="open-audio-panel"
               className="hover:bg-primary/10 rounded-xl"
             />
@@ -1471,6 +1475,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               onClick={() => setAutoScroll(!autoScroll)}
               icon={<Scroll size={16} />}
               title={locale === "ar" ? "التمرير التلقائي" : "Auto Scroll"}
+              aria-label={locale === "ar" ? "التمرير التلقائي" : "Auto Scroll"}
               className="hover:bg-primary/10 rounded-xl"
             />
             <MushafButton
@@ -1479,6 +1484,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               onClick={() => setShowDisplaySettings(true)}
               icon={<Settings size={16} />}
               title={t.mushaf.displaySettings}
+              aria-label={t.mushaf.displaySettings}
               data-testid="open-display-settings-panel"
               className="hover:bg-primary/10 rounded-xl"
             />
@@ -1490,6 +1496,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                 onClick={() => setShowScreenModeMenu(!showScreenModeMenu)}
                 icon={screenMode === "focus" ? <Scan size={18} /> : screenMode === "fullscreen" ? <Maximize2 size={18} /> : <Monitor size={18} />}
                 title={t.mushaf.screenMode}
+                aria-label={t.mushaf.screenMode}
               >
                 <ChevronDown size={14} className={`transition-transform duration-300 ${showScreenModeMenu ? "rotate-180" : ""}`} />
               </MushafButton>

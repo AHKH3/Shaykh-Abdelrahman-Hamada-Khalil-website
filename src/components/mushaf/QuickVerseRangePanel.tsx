@@ -358,6 +358,7 @@ export function VerseRangeForm({
                       onClick={() => handleVerseAdjust("from", -1)}
                       icon={<Minus size={14} />}
                       className="h-10 w-10 border border-border/40 bg-background"
+                      aria-label={locale === "ar" ? "تقليل آية البداية" : "Decrease from verse"}
                     />
                     <EngravedInput
                       type="number"
@@ -378,6 +379,7 @@ export function VerseRangeForm({
                       onClick={() => handleVerseAdjust("from", 1)}
                       icon={<Plus size={14} />}
                       className="h-10 w-10 border border-border/40 bg-background"
+                      aria-label={locale === "ar" ? "زيادة آية البداية" : "Increase from verse"}
                     />
                   </div>
                 </div>
@@ -396,6 +398,7 @@ export function VerseRangeForm({
                       onClick={() => handleVerseAdjust("to", -1)}
                       icon={<Minus size={14} />}
                       className="h-10 w-10 border border-border/40 bg-background"
+                      aria-label={locale === "ar" ? "تقليل آية النهاية" : "Decrease to verse"}
                     />
                     <EngravedInput
                       type="number"
@@ -416,6 +419,7 @@ export function VerseRangeForm({
                       onClick={() => handleVerseAdjust("to", 1)}
                       icon={<Plus size={14} />}
                       className="h-10 w-10 border border-border/40 bg-background"
+                      aria-label={locale === "ar" ? "زيادة آية النهاية" : "Increase to verse"}
                     />
                   </div>
                 </div>
