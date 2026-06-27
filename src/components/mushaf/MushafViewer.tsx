@@ -376,6 +376,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               className="absolute -top-3 -end-3 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center w-5 h-5 shadow-sm"
               style={{ zIndex: 60 }}
               title={locale === "ar" ? "حذف الملاحظة" : "Delete Annotation"}
+              aria-label={locale === "ar" ? "حذف الملاحظة" : "Delete Annotation"}
             >
               <Trash2 size={12} strokeWidth={3} />
             </button>
