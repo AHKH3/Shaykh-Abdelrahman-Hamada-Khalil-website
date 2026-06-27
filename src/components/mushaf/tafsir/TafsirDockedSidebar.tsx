@@ -172,7 +172,10 @@ export default function TafsirDockedSidebar({
   }
 
   const dropdownNode = (
-    <div className="relative shrink-0 p-1 mushaf-engraved-container flex items-center" ref={dropdownRef}>
+    <div className="relative shrink-0 p-1 mushaf-engraved-container flex items-center gap-1.5" ref={dropdownRef}>
+      <h2 className="mushaf-text-overline font-black uppercase tracking-[0.15em] text-primary/50 leading-none whitespace-nowrap select-none">
+        {t.mushaf.tafsir}
+      </h2>
       <button
         type="button"
         title={t.mushaf.selectTafsir}
@@ -248,7 +251,7 @@ export default function TafsirDockedSidebar({
           >
             <div className="p-5 space-y-6">
               <div>
-                <label className="text-[11px] font-black text-primary/50 uppercase tracking-widest mb-3 block px-1">
+                <label className="mushaf-text-meta font-black text-primary/50 uppercase tracking-widest mb-3 block px-1">
                   نطاق التفسير
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -268,7 +271,7 @@ export default function TafsirDockedSidebar({
               </div>
 
               <div>
-                <label className="text-[11px] font-black text-primary/50 uppercase tracking-widest mb-3 block px-1">
+                <label className="mushaf-text-meta font-black text-primary/50 uppercase tracking-widest mb-3 block px-1">
                   حجم الخط
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -304,12 +307,14 @@ export default function TafsirDockedSidebar({
       <div className="border-t border-primary/10 bg-primary/5 p-3 flex items-center justify-center gap-2 shrink-0">
         <button
           onClick={onToggleFollowMode}
-          className="flex items-center gap-2 group cursor-pointer"
+          role="switch"
+          aria-checked={followMode === "locked"}
+          className="flex items-center gap-2 group cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
         >
           <div className={`flex items-center justify-center w-8 h-4 rounded-full transition-colors ${followMode === "locked" ? "bg-primary" : "bg-primary/20"}`}>
             <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform ${followMode === "locked" ? "translate-x-[6px] rtl:-translate-x-[6px]" : "-translate-x-[6px] rtl:translate-x-[6px]"}`} />
           </div>
-          <span className="text-xs font-bold text-muted-foreground group-hover:text-primary transition-colors">
+          <span className="mushaf-text-compact font-bold text-muted-foreground group-hover:text-primary transition-colors">
             {t.mushaf.follow}
           </span>
         </button>

@@ -1,3 +1,7 @@
-## 2026-06-04 - Fully Accessible Custom Slider with RTL Support
-**Learning:** Upgrading a custom `div` element to a fully accessible slider requires more than just `role="slider"`. It fundamentally needs keyboard navigation (`onKeyDown`), focusability (`tabIndex={0}`), and must dynamically account for Right-To-Left (RTL) layouts so that the Left/Right arrow keys align with the visual and cultural expectations of increasing/decreasing values.
-**Action:** Always implement comprehensive keyboard handlers for custom interactive widgets, ensuring arrow key logic inverses correctly when the layout switches between LTR and RTL (e.g., using an `isRtl` check to swap increment/decrement keys).
+## 2026-04-29 - Add ARIA Labels to Icon-Only Buttons
+**Learning:** In standard icon-only buttons (e.g. Pin, Collapse, Erase), adding `aria-label` using the same text as the `title` property significantly improves screen reader accessibility with no visual regression.
+**Action:** Always add `aria-label` to any icon button that lacks visible text.
+
+## 2026-06-07 - MushafButton Accessibility Insights
+**Learning:** Found that custom reusable UI elements often lack robust fallback accessibility attributes natively provided by semantic HTML.
+**Action:** When building reusable UI elements (e.g., `MushafButton`), map `title` to `aria-label` as a fallback and visual active props to `aria-pressed` to guarantee accessibility for screen readers and semantic ARIA translation.

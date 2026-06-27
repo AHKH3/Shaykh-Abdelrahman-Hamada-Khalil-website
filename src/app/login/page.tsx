@@ -78,11 +78,12 @@ export default function LoginPage() {
               )}
 
               <div>
-                <label className="block text-sm font-medium mb-1.5">
+                <label htmlFor="email" className="block text-sm font-medium mb-1.5">
                   {t.login.email}
                 </label>
                 <div className="relative">
                   <EngravedInput
+                    id="email"
                     type="email"
                     value={email}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
@@ -96,11 +97,12 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1.5">
+                <label htmlFor="password" className="block text-sm font-medium mb-1.5">
                   {t.login.password}
                 </label>
                 <div className="relative">
                   <EngravedInput
+                    id="password"
                     type="password"
                     value={password}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
