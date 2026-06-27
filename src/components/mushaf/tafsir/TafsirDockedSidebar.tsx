@@ -172,7 +172,10 @@ export default function TafsirDockedSidebar({
   }
 
   const dropdownNode = (
-    <div className="relative shrink-0 p-1 mushaf-engraved-container flex items-center" ref={dropdownRef}>
+    <div className="relative shrink-0 p-1 mushaf-engraved-container flex items-center gap-1.5" ref={dropdownRef}>
+      <h2 className="mushaf-text-overline font-black uppercase tracking-[0.15em] text-primary/50 leading-none whitespace-nowrap select-none">
+        {t.mushaf.tafsir}
+      </h2>
       <button
         type="button"
         title={t.mushaf.selectTafsir}
