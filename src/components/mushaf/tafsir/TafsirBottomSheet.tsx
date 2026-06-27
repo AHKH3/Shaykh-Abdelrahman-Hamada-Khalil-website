@@ -131,6 +131,8 @@ export default function TafsirBottomSheet({
             <button
               type="button"
               onClick={() => setIsResourceOpen(!isResourceOpen)}
+              aria-expanded={isResourceOpen}
+              aria-controls="tafsir-dropdown-menu"
               className="flex h-12 w-full items-center justify-between gap-3 border border-primary/10 bg-card rounded-2xl px-5 text-sm font-bold shadow-sm transition-all hover:bg-primary/5 hover:border-primary/20 active:scale-[0.98] outline-none"
             >
               <span className="truncate text-primary">{selectedTafsir?.name || t.common.loading}</span>
@@ -143,6 +145,7 @@ export default function TafsirBottomSheet({
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
+                  id="tafsir-dropdown-menu"
                   className="absolute top-full left-0 right-0 mt-3 z-[var(--z-context-menu)] bg-card/95 backdrop-blur-2xl border border-primary/10 rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] overflow-hidden"
                 >
                   <div className="p-3 border-b border-primary/5">

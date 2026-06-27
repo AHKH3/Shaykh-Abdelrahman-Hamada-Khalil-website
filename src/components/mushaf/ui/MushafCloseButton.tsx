@@ -13,6 +13,7 @@ const MushafCloseButton = forwardRef<HTMLButtonElement, MushafCloseButtonProps>(
             <button
                 ref={ref}
                 title={title}
+                aria-label={props["aria-label"] || title}
                 className={`p-2 rounded-xl text-muted-foreground transition-all duration-300 ease-out cursor-pointer active:scale-90 hover:bg-destructive/10 hover:text-destructive group outline-none focus-visible:ring-2 focus-visible:ring-destructive/50 ${className}`.trim()}
                 {...props}
             >

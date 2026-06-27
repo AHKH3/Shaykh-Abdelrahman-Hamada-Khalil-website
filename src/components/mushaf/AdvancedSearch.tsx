@@ -204,6 +204,7 @@ export default function AdvancedSearch({
                 onClick={() => setShowFilters(!showFilters)}
                 icon={<Filter size={20} />}
                 className="w-11 h-11 border border-border/40 bg-background/70 shadow-sm"
+                aria-label={t.mushaf.filters}
               />
               <MushafCloseButton
                 onClick={onClose}
@@ -420,6 +421,7 @@ export default function AdvancedSearch({
               disabled={currentPage === 1}
               icon={locale === "ar" ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
               className="w-10 h-10 border border-border/40 bg-card shadow-sm disabled:opacity-30"
+              aria-label={t.mushaf.previous}
             />
             <div className="mushaf-text-compact font-bold text-muted-foreground">
               <span className="text-foreground">{currentPage}</span> / {totalPages}
@@ -430,6 +432,7 @@ export default function AdvancedSearch({
               disabled={currentPage === totalPages}
               icon={locale === "ar" ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
               className="w-10 h-10 border border-border/40 bg-card shadow-sm disabled:opacity-30"
+              aria-label={t.mushaf.next}
             />
           </div>
         )}

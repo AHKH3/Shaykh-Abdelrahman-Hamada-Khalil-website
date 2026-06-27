@@ -175,6 +175,7 @@ export default function DisplaySettings({
                 onClick={() => setMobileSection("font")}
                 className="w-full flex items-center justify-between"
                 aria-expanded={shouldShow("font")}
+                aria-controls="font-settings-content"
               >
                 <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
                   <Type size={16} className="text-muted-foreground" />
@@ -182,7 +183,7 @@ export default function DisplaySettings({
                 </span>
                 <ChevronDown size={16} className={`sm:hidden text-muted-foreground transition-transform ${shouldShow("font") ? "rotate-180" : ""}`} />
               </button>
-              <div className={`${shouldShow("font") ? "mt-3 block" : "hidden"} sm:block sm:mt-3`}>
+              <div id="font-settings-content" className={`${shouldShow("font") ? "mt-3 block" : "hidden"} sm:block sm:mt-3`}>
                 <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={t.mushaf.fontSize}>
                   {fontSizes.map((size) => {
                     const isActive = fontSize === size.value;
@@ -214,6 +215,7 @@ export default function DisplaySettings({
                 onClick={() => setMobileSection("width")}
                 className="w-full flex items-center justify-between"
                 aria-expanded={shouldShow("width")}
+                aria-controls="width-settings-content"
               >
                 <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
                   <Monitor size={16} className="text-muted-foreground" />
@@ -221,7 +223,7 @@ export default function DisplaySettings({
                 </span>
                 <ChevronDown size={16} className={`sm:hidden text-muted-foreground transition-transform ${shouldShow("width") ? "rotate-180" : ""}`} />
               </button>
-              <div className={`${shouldShow("width") ? "mt-3 block" : "hidden"} sm:block sm:mt-3`}>
+              <div id="width-settings-content" className={`${shouldShow("width") ? "mt-3 block" : "hidden"} sm:block sm:mt-3`}>
                 <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label={t.mushaf.pageWidth}>
                   {pageWidths.map((width) => {
                     const isActive = pageWidth === width.value;
@@ -254,6 +256,7 @@ export default function DisplaySettings({
                 onClick={() => setMobileSection("reading")}
                 className="w-full flex items-center justify-between"
                 aria-expanded={shouldShow("reading")}
+                aria-controls="reading-settings-content"
               >
                 <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
                   <Palette size={16} className="text-muted-foreground" />
@@ -261,7 +264,7 @@ export default function DisplaySettings({
                 </span>
                 <ChevronDown size={16} className={`sm:hidden text-muted-foreground transition-transform ${shouldShow("reading") ? "rotate-180" : ""}`} />
               </button>
-              <div className={`${shouldShow("reading") ? "mt-3 block" : "hidden"} sm:block sm:mt-3`}>
+              <div id="reading-settings-content" className={`${shouldShow("reading") ? "mt-3 block" : "hidden"} sm:block sm:mt-3`}>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label={t.mushaf.readingMode}>
                   {readingModes.map((mode) => {
                     const isActive = readingMode === mode.value;
@@ -313,6 +316,7 @@ export default function DisplaySettings({
                 onClick={() => setMobileSection("preview")}
                 className="w-full flex items-center justify-between"
                 aria-expanded={shouldShow("preview")}
+                aria-controls="preview-settings-content"
               >
                 <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
                   <Eye size={16} className="text-muted-foreground" />
@@ -320,7 +324,7 @@ export default function DisplaySettings({
                 </span>
                 <ChevronDown size={16} className={`sm:hidden text-muted-foreground transition-transform ${shouldShow("preview") ? "rotate-180" : ""}`} />
               </button>
-              <div className={`${shouldShow("preview") ? "mt-3 block" : "hidden"} sm:block sm:mt-3`}>
+              <div id="preview-settings-content" className={`${shouldShow("preview") ? "mt-3 block" : "hidden"} sm:block sm:mt-3`}>
                 <div
                   className={`mx-auto w-full ${previewWidthClass} rounded-xl border p-4 transition-all duration-300`}
                   style={{
@@ -342,6 +346,7 @@ export default function DisplaySettings({
                 onClick={() => setMobileSection("shortcuts")}
                 className="w-full flex items-center justify-between"
                 aria-expanded={shouldShow("shortcuts")}
+                aria-controls="shortcuts-settings-content"
               >
                 <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
                   <Keyboard size={16} className="text-muted-foreground" />
@@ -352,7 +357,7 @@ export default function DisplaySettings({
                 </span>
                 <ChevronDown size={16} className={`sm:hidden text-muted-foreground transition-transform ${shouldShow("shortcuts") ? "rotate-180" : ""}`} />
               </button>
-              <div className={`${shouldShow("shortcuts") ? "mt-3 block" : "hidden"} sm:block sm:mt-3`}>
+              <div id="shortcuts-settings-content" className={`${shouldShow("shortcuts") ? "mt-3 block" : "hidden"} sm:block sm:mt-3`}>
                 <div className="space-y-2.5">
                   {MUSHAF_SHORTCUTS.map((shortcut) => {
                     const shortLabel = SHORTCUT_LABELS[shortcut.id];

@@ -358,11 +358,11 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
       elements.push(
         <span 
           key={`ann-${ann.id}`}
-          className={`relative group inline-block ${ann.is_temporary ? 'bg-yellow-400/30 dark:bg-yellow-400/40 text-yellow-900 dark:text-yellow-100' : 'bg-red-400/30 dark:bg-red-400/40 text-red-900 dark:text-red-100'} rounded-[0.2em] px-0.5 mx-0.5`}
+          className={`relative group inline-block ${ann.is_temporary ? 'bg-warning/30 dark:bg-warning/40 text-warning-foreground' : 'bg-destructive/30 dark:bg-destructive/40 text-destructive-foreground'} rounded-[0.2em] px-0.5 mx-0.5`}
         >
           {verse.text_uthmani.slice(ann.start_offset, ann.end_offset)}
           {ann.comment && (
-            <span className="absolute bottom-full start-1/2 -translate-x-1/2 mb-1 hidden group-hover:block bg-popover text-popover-foreground text-xs p-2 rounded shadow-xl whitespace-nowrap z-50 border border-border">
+            <span className="absolute bottom-full start-1/2 -translate-x-1/2 mb-1 hidden group-hover:block bg-popover text-popover-foreground mushaf-text-compact p-2 rounded shadow-xl whitespace-nowrap z-50 border border-border">
               {ann.comment}
             </span>
           )}
@@ -373,9 +373,10 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                 e.stopPropagation();
                 deleteAnnotation(ann.id);
               }}
-              className="absolute -top-3 -end-3 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center w-5 h-5 shadow-sm"
+              className="absolute -top-3 -end-3 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center w-5 h-5 shadow-sm"
               style={{ zIndex: 60 }}
               title={locale === "ar" ? "حذف الملاحظة" : "Delete Annotation"}
+              aria-label={locale === "ar" ? "حذف الملاحظة" : "Delete Annotation"}
             >
               <Trash2 size={12} strokeWidth={3} />
             </button>
@@ -405,7 +406,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
       const canvas = await html2canvas(mushafRef.current, {
         scale: 2,
         useCORS: true,
-        backgroundColor: "#ffffff",
+        backgroundColor: "#ffffff", // ui-guardrails-ignore
       });
       const link = document.createElement("a");
       link.download = `${studentName || "mushaf"}-page-${currentPage}.png`;
@@ -426,7 +427,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
       const canvas = await html2canvas(mushafRef.current, {
         scale: 2,
         useCORS: true,
-        backgroundColor: "#ffffff",
+        backgroundColor: "#ffffff", // ui-guardrails-ignore
       });
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({
@@ -1424,6 +1425,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               }}
               icon={<BookOpen size={16} />}
               title={t.mushaf.verseRange}
+              aria-label={t.mushaf.verseRange}
               data-testid="open-verse-range-panel"
               className="hover:bg-primary/10 rounded-xl"
             />
@@ -1433,6 +1435,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               onClick={() => setShowBookmarks(true)}
               icon={<Bookmark size={16} />}
               title={locale === "ar" ? "الإشارات المرجعية" : "Bookmarks"}
+              aria-label={locale === "ar" ? "الإشارات المرجعية" : "Bookmarks"}
               className="hover:bg-primary/10 rounded-xl"
             />
             <MushafButton
@@ -1452,6 +1455,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               }}
               icon={<TafsirPanelIcon size={16} />}
               title={t.mushaf.openTafsirPanel}
+              aria-label={t.mushaf.openTafsirPanel}
               className="hover:bg-primary/10 rounded-xl"
               data-testid="open-tafsir-panel"
             />
@@ -1461,6 +1465,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               onClick={() => setShowAudioPlayer((v) => !v)}
               icon={<Volume2 size={16} />}
               title={locale === "ar" ? t.mushaf.audioPlayer : t.mushaf.audioPlayer}
+              aria-label={locale === "ar" ? t.mushaf.audioPlayer : t.mushaf.audioPlayer}
               data-testid="open-audio-panel"
               className="hover:bg-primary/10 rounded-xl"
             />
@@ -1470,6 +1475,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               onClick={() => setAutoScroll(!autoScroll)}
               icon={<Scroll size={16} />}
               title={locale === "ar" ? "التمرير التلقائي" : "Auto Scroll"}
+              aria-label={locale === "ar" ? "التمرير التلقائي" : "Auto Scroll"}
               className="hover:bg-primary/10 rounded-xl"
             />
             <MushafButton
@@ -1478,6 +1484,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               onClick={() => setShowDisplaySettings(true)}
               icon={<Settings size={16} />}
               title={t.mushaf.displaySettings}
+              aria-label={t.mushaf.displaySettings}
               data-testid="open-display-settings-panel"
               className="hover:bg-primary/10 rounded-xl"
             />
@@ -1489,6 +1496,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                 onClick={() => setShowScreenModeMenu(!showScreenModeMenu)}
                 icon={screenMode === "focus" ? <Scan size={18} /> : screenMode === "fullscreen" ? <Maximize2 size={18} /> : <Monitor size={18} />}
                 title={t.mushaf.screenMode}
+                aria-label={t.mushaf.screenMode}
               >
                 <ChevronDown size={14} className={`transition-transform duration-300 ${showScreenModeMenu ? "rotate-180" : ""}`} />
               </MushafButton>
@@ -1534,7 +1542,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               {locale === "ar" ? "مصحف الطالب:" : "Student Mushaf:"} <span className="text-primary">{studentName || "..."}</span>
             </span>
             {readOnly && (
-               <span className="px-2 py-0.5 rounded bg-muted/50 text-muted-foreground text-xs font-semibold">
+               <span className="px-2 py-0.5 rounded bg-muted/50 text-muted-foreground mushaf-text-compact font-semibold">
                  {locale === "ar" ? "للقراءة فقط" : "Read Only"}
                </span>
             )}
@@ -1546,13 +1554,13 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                 <div className="flex bg-background border border-border/50 rounded overflow-hidden shadow-sm mx-2">
                   <button
                     onClick={() => setIsTemporaryAnnotation(false)}
-                    className={`px-3 py-1.5 text-xs font-medium flex-1 transition-colors ${!isTemporaryAnnotation ? 'bg-primary/10 text-primary' : 'hover:bg-muted/50 text-muted-foreground'}`}
+                    className={`px-3 py-1.5 mushaf-text-compact font-medium flex-1 transition-colors ${!isTemporaryAnnotation ? 'bg-primary/10 text-primary' : 'hover:bg-muted/50 text-muted-foreground'}`}
                   >
                     {locale === "ar" ? "تعليق دائم" : "Perm. Note"}
                   </button>
                   <button
                     onClick={() => setIsTemporaryAnnotation(true)}
-                    className={`px-3 py-1.5 text-xs font-medium flex-1 transition-colors ${isTemporaryAnnotation ? 'bg-yellow-400/20 text-yellow-700' : 'hover:bg-muted/50 text-muted-foreground'}`}
+                    className={`px-3 py-1.5 mushaf-text-compact font-medium flex-1 transition-colors ${isTemporaryAnnotation ? 'bg-warning/20 text-warning-foreground' : 'hover:bg-muted/50 text-muted-foreground'}`}
                   >
                     {locale === "ar" ? "تحديد مؤقت" : "Temp Highlight"}
                   </button>
@@ -1561,7 +1569,8 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                 <button
                   onClick={() => clearTemporaryAnnotations()}
                   title={locale === "ar" ? "مسح التحديد المؤقت" : "Clear Temp Highlights"}
-                  className="p-1.5 text-xs font-medium bg-background border border-border/50 hover:bg-muted/50 text-muted-foreground hover:text-red-500 rounded shadow-sm transition-colors me-1"
+                  aria-label={locale === "ar" ? "مسح التحديد المؤقت" : "Clear Temp Highlights"}
+                  className="p-1.5 mushaf-text-compact font-medium bg-background border border-border/50 hover:bg-muted/50 text-muted-foreground hover:text-destructive rounded shadow-sm transition-colors me-1"
                 >
                   <Eraser size={14} />
                 </button>
@@ -1569,7 +1578,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                 <button
                   onClick={exportAsImage}
                   disabled={isExporting}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-background border border-border/50 hover:bg-muted/50 rounded shadow-sm transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 mushaf-text-compact font-medium bg-background border border-border/50 hover:bg-muted/50 rounded shadow-sm transition-colors"
                 >
                   <ImageIcon size={14} className="text-primary" />
                   <span>{locale === "ar" ? "صورة" : "Image"}</span>
@@ -1577,14 +1586,14 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                 <button
                   onClick={exportAsPDF}
                   disabled={isExporting}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-background border border-border/50 hover:bg-muted/50 rounded shadow-sm transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 mushaf-text-compact font-medium bg-background border border-border/50 hover:bg-muted/50 rounded shadow-sm transition-colors"
                 >
                   <FileText size={14} className="text-primary" />
                   <span>{locale === "ar" ? "PDF" : "PDF"}</span>
                 </button>
                 <button
                   onClick={copyShareLink}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 rounded shadow-sm transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 mushaf-text-compact font-medium bg-primary/10 text-primary hover:bg-primary/20 rounded shadow-sm transition-colors"
                 >
                   <LinkIcon size={14} />
                   <span>{locale === "ar" ? "رابط المشاركة" : "Share Link"}</span>
@@ -1595,7 +1604,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
                <button
                   onClick={exportAsImage}
                   disabled={isExporting}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-background border border-border/50 hover:bg-muted/50 rounded shadow-sm transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 mushaf-text-compact font-medium bg-background border border-border/50 hover:bg-muted/50 rounded shadow-sm transition-colors"
                 >
                   <ImageIcon size={14} className="text-primary" />
                   <span>{locale === "ar" ? "صورة" : "Image"}</span>
@@ -1895,7 +1904,7 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
           >
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{locale === "ar" ? "نص محدد" : "Selected Text"}</span>
+                <span className="mushaf-text-compact font-semibold text-muted-foreground uppercase tracking-widest">{locale === "ar" ? "نص محدد" : "Selected Text"}</span>
                 <MushafCloseButton onClick={() => setSelectionRange(null)} />
               </div>
               <p className="text-lg font-['Amiri',serif] leading-relaxed text-center px-4" dir="rtl">{selectionRange.text}</p>
@@ -1903,13 +1912,13 @@ export default function MushafViewer({ studentId, readOnly = false }: MushafView
               <div className="flex items-center gap-2">
                  <button
                    onClick={() => setIsTemporaryAnnotation(false)}
-                   className={`flex-1 py-1.5 px-2 rounded font-medium text-xs transition-colors ${!isTemporaryAnnotation ? 'bg-red-500 text-white' : 'bg-muted text-muted-foreground'}`}
+                   className={`flex-1 py-1.5 px-2 rounded font-medium mushaf-text-compact transition-colors ${!isTemporaryAnnotation ? 'bg-destructive text-destructive-foreground' : 'bg-muted text-muted-foreground'}`}
                  >
                    {locale === "ar" ? "خطأ دائم" : "Permanent"}
                  </button>
                  <button
                    onClick={() => setIsTemporaryAnnotation(true)}
-                   className={`flex-1 py-1.5 px-2 rounded font-medium text-xs transition-colors ${isTemporaryAnnotation ? 'bg-yellow-500 text-white' : 'bg-muted text-muted-foreground'}`}
+                   className={`flex-1 py-1.5 px-2 rounded font-medium mushaf-text-compact transition-colors ${isTemporaryAnnotation ? 'bg-warning text-warning-foreground' : 'bg-muted text-muted-foreground'}`}
                  >
                    {locale === "ar" ? "ملاحظة مؤقتة" : "Temporary"}
                  </button>
