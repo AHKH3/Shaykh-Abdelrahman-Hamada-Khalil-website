@@ -225,7 +225,7 @@ export default function FloatingAudioPlayer({
                 }}
               />
             </div>
-            <div className="flex justify-between items-center mushaf-text-meta font-black text-primary/50 tabular-nums px-1 tracking-widest">
+            <div className="flex justify-between items-center text-[11px] font-black text-primary/50 tabular-nums px-1 tracking-widest">
               <span>{formatTime(audioCurrentTime)}</span>
               <span>{formatTime(audioDuration)}</span>
             </div>
@@ -240,7 +240,7 @@ export default function FloatingAudioPlayer({
             disabled={!currentVerseKey}
             className="w-14 h-14 rounded-full disabled:opacity-20 flex-shrink-0"
             icon={<SkipBack size={24} className="rtl:rotate-180" />}
-            aria-label={t.mushaf.prevVerse}
+            title={t.mushaf.prevVerse}
           />
 
           <button
@@ -270,7 +270,7 @@ export default function FloatingAudioPlayer({
             disabled={!currentVerseKey}
             className="w-14 h-14 rounded-full disabled:opacity-20 flex-shrink-0"
             icon={<SkipForward size={24} className="rtl:rotate-180" />}
-            aria-label={t.mushaf.nextVerse}
+            title={t.mushaf.nextVerse}
           />
         </div>
 
@@ -283,14 +283,13 @@ export default function FloatingAudioPlayer({
             onClick={cycleRepeat}
             className={`min-w-10 h-10 px-3 py-0 rounded-xl flex items-center justify-center transition-all ${repeatMode !== "none" ? "shadow-md" : ""}`}
             title="Toggle Repeat Mode"
-            aria-label={t.mushaf.repeatMode}
           >
             <RepeatIcon
               size={16}
               className={repeatMode !== "none" ? "animate-spin-slow" : ""}
             />
             {repeatMode !== "none" && (
-              <span className="mushaf-text-overline font-black tracking-wider uppercase ml-1.5 rtl:ml-0 rtl:mr-1.5">
+              <span className="text-[10px] sm:text-[11px] font-black tracking-wider uppercase ml-1.5 rtl:ml-0 rtl:mr-1.5">
                 {repeatMode === "one"
                   ? "ONE"
                   : repeatMode === "all"
@@ -314,7 +313,6 @@ export default function FloatingAudioPlayer({
             }}
             className="min-w-10 h-10 px-3 py-0 rounded-xl font-black text-sm tracking-widest text-primary/80"
             title="Audio Speed"
-            aria-label={t.mushaf.playbackSpeed}
           >
             {audioSpeed}×
           </MushafButton>
@@ -333,7 +331,6 @@ export default function FloatingAudioPlayer({
                 />
               }
               className="w-8 h-8 p-0 rounded-lg"
-              aria-label={t.mushaf.volume}
             />
             <div
               className="w-16 sm:w-20 h-2 bg-primary/10 rounded-full cursor-pointer relative overflow-hidden"
@@ -368,8 +365,6 @@ export default function FloatingAudioPlayer({
                     )
                   }
                   className="w-10 h-10 p-0 rounded-xl"
-                  aria-label={t.mushaf.repeatMode}
-                  aria-expanded={showAdvancedRepeat}
                 />
               </>
             )}
@@ -388,7 +383,7 @@ export default function FloatingAudioPlayer({
               >
                 {repeatMode === "verse" && onSetVerseRepeatCount && (
                   <div className="space-y-3">
-                    <label className="mushaf-text-meta font-black text-primary/60 uppercase tracking-widest flex items-center gap-2 px-1">
+                    <label className="text-[11px] font-black text-primary/60 uppercase tracking-widest flex items-center gap-2 px-1">
                       <Repeat size={14} className="text-primary/70" />
                       {locale === "ar" ? "تكرار كل آية" : "Repeat each verse"}
                     </label>
@@ -400,7 +395,7 @@ export default function FloatingAudioPlayer({
                             verseRepeatCount === count ? "primary" : "ghost"
                           }
                           onClick={() => onSetVerseRepeatCount(count)}
-                          className={`h-9 px-0 mushaf-text-compact font-bold rounded-xl flex items-center justify-center ${verseRepeatCount === count ? "shadow-md" : "bg-card/50"}`}
+                          className={`h-9 px-0 text-xs font-bold rounded-xl flex items-center justify-center ${verseRepeatCount === count ? "shadow-md" : "bg-card/50"}`}
                         >
                           {count}×
                         </MushafButton>
@@ -411,7 +406,7 @@ export default function FloatingAudioPlayer({
 
                 {repeatMode === "range" && onSetRangeRepeatCount && (
                   <div className="space-y-3">
-                    <label className="mushaf-text-meta font-black text-primary/60 uppercase tracking-widest flex items-center gap-2 px-1">
+                    <label className="text-[11px] font-black text-primary/60 uppercase tracking-widest flex items-center gap-2 px-1">
                       <Repeat size={14} className="text-primary/70" />
                       {locale === "ar" ? "تكرار المدى" : "Repeat range"}
                     </label>
@@ -423,7 +418,7 @@ export default function FloatingAudioPlayer({
                             rangeRepeatCount === count ? "primary" : "ghost"
                           }
                           onClick={() => onSetRangeRepeatCount(count)}
-                          className={`h-9 px-0 mushaf-text-compact font-bold rounded-xl flex items-center justify-center ${rangeRepeatCount === count ? "shadow-md" : "bg-card/50"}`}
+                          className={`h-9 px-0 text-xs font-bold rounded-xl flex items-center justify-center ${rangeRepeatCount === count ? "shadow-md" : "bg-card/50"}`}
                         >
                           {count}×
                         </MushafButton>
@@ -434,7 +429,7 @@ export default function FloatingAudioPlayer({
 
                 {onSetPauseBetweenVerses && (
                   <div className="space-y-3 pt-1 border-t border-primary/10">
-                    <label className="mushaf-text-meta font-black text-primary/60 uppercase tracking-widest flex items-center gap-2 px-1 pt-1">
+                    <label className="text-[11px] font-black text-primary/60 uppercase tracking-widest flex items-center gap-2 px-1 pt-1">
                       <Timer size={14} className="text-primary/70" />
                       {locale === "ar"
                         ? "وقفة بين الآيات"
@@ -448,7 +443,7 @@ export default function FloatingAudioPlayer({
                             pauseBetweenVerses === seconds ? "primary" : "ghost"
                           }
                           onClick={() => onSetPauseBetweenVerses(seconds)}
-                          className={`h-9 px-0 mushaf-text-compact font-bold rounded-xl flex items-center justify-center ${pauseBetweenVerses === seconds ? "shadow-md" : "bg-card/50"}`}
+                          className={`h-9 px-0 text-xs font-bold rounded-xl flex items-center justify-center ${pauseBetweenVerses === seconds ? "shadow-md" : "bg-card/50"}`}
                         >
                           {seconds === 0
                             ? locale === "ar"
