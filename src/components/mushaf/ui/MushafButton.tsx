@@ -27,6 +27,8 @@ const MushafButton = forwardRef<HTMLButtonElement, MushafButtonProps>(
                 ref={ref}
                 aria-label={props["aria-label"] || props.title}
                 className={`${baseClasses} ${variantClasses[variant]} ${className || ""}`.trim()}
+                aria-pressed={active !== undefined ? active : undefined}
+                aria-label={props['aria-label'] || (!children && props.title ? props.title : undefined)}
                 {...props}
                 aria-label={props['aria-label'] || props.title}
                 aria-pressed={active !== undefined ? active : undefined}
