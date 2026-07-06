@@ -1,0 +1,66 @@
+{
+  "name": "al-mushaf-desktop",
+  "version": "1.0.0",
+  "description": "المصحف — تطبيق قرآن كريم لسطح المكتب",
+  "author": "Abdelrahman Hamada",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.shaykh.mushaf",
+    "productName": "المصحف",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../.next",
+        "to": "next-build",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "../public",
+        "to": "public",
+        "filter": ["**/*"]
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "icons/icon256.png",
+      "artifactName": "${productName}-Setup-${version}.${ext}",
+      "signAndEditExecutable": false,
+      "sign": false
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "icons/icon.icns"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "icons"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "language": "1041",
+      "unicode": true
+    }
+  }
+}

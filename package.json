@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node desktop/scripts/build-manifest.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
@@ -15,7 +16,10 @@
     "visual:cleanup": "node scripts/cleanup-playwright-artifacts.mjs",
     "visual:test": "node scripts/run-visual-tests.mjs",
     "visual:update": "node scripts/run-visual-tests.mjs",
-    "ui:verify": "npm run ui:guardrails && npm run ui:contrast:check && npm run visual:test"
+    "ui:verify": "npm run ui:guardrails && npm run ui:contrast:check && npm run visual:test",
+    "desktop:dev": "node desktop/scripts/dev.js",
+    "desktop": "npx electron desktop",
+    "desktop:build": "cd desktop && npm run build"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",

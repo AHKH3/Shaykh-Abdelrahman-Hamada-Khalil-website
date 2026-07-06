@@ -44,3 +44,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 firebase-debug.log
+
+# desktop app
+desktop/node_modules
+desktop/release
+desktop/dist
+desktop/out
+desktop/*.log
